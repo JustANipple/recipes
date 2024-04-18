@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Frontend Mentor - Recipe page solution
 
-## Getting Started
+This is a solution to the [Recipe page challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/recipe-page-KiTsR8QQKm). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
 
-First, run the development server:
+## Table of contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Overview](#overview)
+  - [The challenge](#the-challenge)
+  - [Screenshot](#screenshot)
+  - [Links](#links)
+- [My process](#my-process)
+  - [Built with](#built-with)
+  - [What I learned](#what-i-learned)
+  - [Continued development](#continued-development)
+  - [Useful resources](#useful-resources)
+- [Author](#author)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Overview
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+### Screenshot
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+![](./src/assets/screenshot-desktop.png)
 
-## Learn More
+### Links
 
-To learn more about Next.js, take a look at the following resources:
+- Solution URL: [Solution](https://github.com/JustANipple/Recipe_Page)
+- Live Site URL: [Live](https://recipe-page-justanipple.vercel.app/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## My process
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Built with
 
-## Deploy on Vercel
+- Semantic HTML5 markup
+- CSS custom properties
+- Flexbox
+- CSS Grid
+- Mobile-first workflow
+- [React](https://reactjs.org/) - JS library
+- TailwindCSS
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### What I learned
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This was the first time i used tailwind. I managed to assign custom styles in the tailwind config. I also learned how to use tailwind plugin for prettier, so everything gets organized and clean.
+
+### Continued development
+
+Next step will be to add more recipes, trying to make calls to a database using Prisma so i can define a table structure and use it.
+
+### Useful resources
+
+- [Tailwind](https://tailwindcss.com/docs/installation) - The official tailwidn website has a lot of helpful resources to get started
+
+## Author
+
+- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/JustANipple)

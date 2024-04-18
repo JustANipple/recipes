@@ -2,32 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer base {
+  @font-face {
+    font-family: "YoungSerif";
+    font-weight: 400;
+    font-style: normal;
+    src: url(/fonts/young-serif/YoungSerif-Regular.ttf) format("woff2");
   }
 }
 
+@layer base {
+  @font-face {
+    font-family: "Outfit";
+    font-weight: 400;
+    font-style: normal;
+    src: url(/fonts/outfit/Outfit-VariableFont_wght.ttf) format("woff2");
+  }
+}
+
+/*
+  Josh's Custom CSS Reset
+  https://www.joshwcomeau.com/css/custom-css-reset/
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  background-color: #f3e5d8;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+#root,
+#__next {
+  isolation: isolate;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
