@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { RxCross2, RxPlus } from "react-icons/rx";
+import { createRecipe } from "../lib/data";
 
 const Edit = () => {
   return (
@@ -14,7 +15,11 @@ const Edit = () => {
       </div>
       <hr className="border-LightGrey" />
       <div className="grid gap-y-5">
-        <form action="#" className="grid gap-y-4 font-Outfit text-WengeBrown">
+        <form
+          action={createRecipe}
+          className="grid gap-y-4 font-Outfit text-WengeBrown"
+          id="editForm"
+        >
           {/* ImageLink */}
           <div className="grid gap-y-2">
             <label htmlFor="imageLink" className="text-sm">
@@ -158,7 +163,11 @@ const Edit = () => {
         </form>
       </div>
       <hr className="border-LightGrey" />
-      <button className="text-black ml-auto flex gap-1 rounded-md bg-LightGrey px-4 py-2">
+      <button
+        className="text-black ml-auto flex gap-1 rounded-md bg-LightGrey px-4 py-2"
+        type="submit"
+        form="editForm"
+      >
         <p className="my-auto font-Outfit text-Nutmeg">Save</p>
       </button>
     </main>
