@@ -1,19 +1,9 @@
 import Link from "next/link";
-import { getRecipes, createRecipe } from "./lib/data";
-import { PrismaClient } from "@prisma/client";
 
 async function Home() {
-  const recipes = await getRecipes();
-  const prisma = new PrismaClient();
-
-  const handleClick = async () => {
-    await createRecipe();
-  };
-
   return (
     <>
       <main className="m-auto grid  gap-y-9 bg-White md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6">
-        {recipes[0].Title}
         <div className="relative truncate md:rounded-xl">
           <div className="absolute left-2 top-2 flex gap-3">
             <Link
@@ -28,10 +18,7 @@ async function Home() {
             >
               Edit
             </Link>
-            <button
-              className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1"
-              onClick={handleClick}
-            >
+            <button className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1">
               <p className="my-auto font-Outfit text-Nutmeg">Delete</p>
             </button>
           </div>
