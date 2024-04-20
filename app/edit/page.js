@@ -90,15 +90,32 @@ const Edit = () => {
             <label htmlFor="ingredients" className="text-sm">
               Ingredient
             </label>
-            <div className="flex gap-3 align-middle">
+            <div
+              className="grid grid-cols-10 items-center gap-x-3"
+              id="ingredientRow"
+            >
               <input
                 type="text"
                 name="ingredient"
                 id="ingredient"
                 placeholder="Ingredient"
-                className="rounded-md border border-[lightGrey] px-4 py-1.5"
+                className="col-span-4 rounded-md border border-[lightGrey] px-4 py-1.5"
               />
-              <button className="text-black aspect-square rounded-md bg-LightGrey">
+              <input
+                type="number"
+                name="quantity"
+                id="quantity"
+                placeholder="Quantity"
+                className="col-span-3 rounded-md border border-[lightGrey] px-4 py-1.5"
+              />
+              <input
+                type="text"
+                name="um"
+                id="um"
+                placeholder="Um"
+                className="col-span-2 rounded-md border border-[lightGrey] px-4 py-1.5"
+              />
+              <button className="text-black aspect-square h-8 rounded-md bg-LightGrey">
                 <RxPlus className="m-auto font-OutfitBold text-Nutmeg" />
               </button>
             </div>

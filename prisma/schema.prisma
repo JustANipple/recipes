@@ -8,15 +8,14 @@ datasource db {
 }
 
 model ingredients {
-  Id       Int     @id @default(autoincrement())
-  Name     String? @db.VarChar
-  Quantity Int?
-  UM       String? @db.VarChar
+  Name String  @id @db.VarChar
+  UM   String? @db.VarChar
 }
 
 model ingredientsRelationships {
   RecipeId     Int
   IngredientId Int
+  Quantity     Float? @db.Real
 
   @@id([RecipeId, IngredientId])
 }
