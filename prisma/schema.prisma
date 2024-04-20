@@ -8,8 +8,10 @@ datasource db {
 }
 
 model ingredients {
-  Name String  @id @db.VarChar
-  UM   String? @db.VarChar
+  Name String @db.VarChar
+  UM   String @db.VarChar
+
+  @@id([Name, UM])
 }
 
 model ingredientsRelationships {
