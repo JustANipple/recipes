@@ -94,3 +94,17 @@ export async function createRecipe(formData) {
     console.log("InstructionRelationship: " + instructionsRelationship);
   }
 }
+
+export async function getIngredients() {
+  const prisma = new PrismaClient();
+  return prisma.ingredients.findMany();
+}
+
+export async function getIngredient(id) {
+  const prisma = new PrismaClient();
+  return prisma.ingredients.findUnique({
+    where: {
+      Id: id,
+    },
+  });
+}

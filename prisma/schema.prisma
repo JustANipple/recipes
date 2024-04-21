@@ -8,8 +8,12 @@ datasource db {
 }
 
 model ingredients {
-  Name String @db.VarChar
-  UM   String @db.VarChar
+  Name      String   @db.VarChar
+  UM        String   @db.VarChar
+  Carbs     Float?   @db.Real
+  Proteins  Float?   @db.Real
+  Fat       Float?   @db.Real
+  Countable Boolean?
 
   @@id([Name, UM])
 }

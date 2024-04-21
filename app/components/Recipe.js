@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Edit from "./Edit";
+import Edit from "./RecipeForm";
 import { useState } from "react";
+import RecipeForm from "./RecipeForm";
 
 const Recipe = () => {
   const [showForm, setShowForm] = useState(false);
@@ -162,7 +163,7 @@ const Recipe = () => {
           </div>
         </div>
       </main>
-      <Edit showForm={showForm} handleClick={handleClick} />
+      <RecipeForm showForm={showForm} handleClick={handleClick} />
     </>
   );
 };

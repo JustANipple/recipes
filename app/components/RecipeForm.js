@@ -6,7 +6,7 @@ import { useState } from "react";
 import Ingredient from "./Ingredient";
 import Link from "next/link";
 
-const Edit = ({ showForm, handleClick }) => {
+const RecipeForm = ({ showForm, handleClick }) => {
   const [showIngredientsForm, setShowIngredientsForm] = useState(false);
 
   function handlePlusClick() {
@@ -148,45 +148,6 @@ const Edit = ({ showForm, handleClick }) => {
                 </button>
               </div>
             </div>
-            {/* Carbs */}
-            <div className="grid gap-y-2">
-              <label htmlFor="carbs" className="text-sm">
-                Carbs
-              </label>
-              <input
-                type="number"
-                name="carbs"
-                id="carbs"
-                placeholder="Carbs"
-                className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              />
-            </div>
-            {/* Protein */}
-            <div className="grid gap-y-2">
-              <label htmlFor="protein" className="text-sm">
-                Protein
-              </label>
-              <input
-                type="number"
-                name="protein"
-                id="protein"
-                placeholder="Protein"
-                className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              />
-            </div>
-            {/* Fat */}
-            <div className="grid gap-y-2">
-              <label htmlFor="fat" className="text-sm">
-                Fat
-              </label>
-              <input
-                type="number"
-                name="fat"
-                id="fat"
-                placeholder="Fat"
-                className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              />
-            </div>
           </form>
         </div>
         <hr className="border-LightGrey" />
@@ -198,13 +159,8 @@ const Edit = ({ showForm, handleClick }) => {
           <p className="my-auto font-Outfit text-Nutmeg">Save</p>
         </button>
       </main>
-      <Ingredient
-        showIngredientsForm={showIngredientsForm}
-        setShowIngredientsForm={setShowIngredientsForm}
-        handlePlusClick={handlePlusClick}
-      />
     </>
   );
 };
 
-export default Edit;
+export default RecipeForm;

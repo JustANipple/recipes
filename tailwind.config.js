@@ -25,6 +25,9 @@ module.exports = {
       LightGrey: "hsl(30, 18%, 87%)",
       WengeBrown: "hsl(30, 10%, 34%)",
       DarkCharcoal: "hsl(24, 5%, 18%)",
+      Cream: "hsl(29, 53%, 90%)",
+      Red: "hsl(0, 100%, 50%)",
+      Green: "hsl(120, 100%, 50%)",
     },
     maxWidth: {
       desktop: "46rem",
