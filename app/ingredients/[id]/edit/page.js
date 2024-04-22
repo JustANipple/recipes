@@ -1,30 +1,33 @@
-import React from "react";
+"use client";
+
+import { createIngredient, getIngredient } from "@/app/lib/data";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
-import { createIngredient } from "../lib/data";
 
-const IngredientForm = ({
-  showIngredientForm,
-  handleClick,
-  ingredientIndex,
-  ingredientId,
-}) => {
-  console.log("IngredientId: " + ingredientId);
+const Page = ({ params }) => {
+  const id = params.id;
 
+  const [name, setName] = useState("");
+
+  const [ingredient, setIngredient] = useState({});
+  useEffect(() => {
+    getIngredient(id).then((data) => {
+      setIngredient(data);
+      setName(data.Name);
+    });
+  }, []);
   return (
     <div
-      className={`m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6 ${showIngredientForm ? "" : "hidden"}`}
+      className={`m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6`}
     >
       <div className="flex justify-between">
         <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
-          New/Edit Recipe
+          New/Edit Ingredient
         </h1>
-        <button href="/">
-          <RxCross2
-            className="font-OutfitBold text-Nutmeg"
-            onClick={handleClick}
-            type="button"
-          />
-        </button>
+        <Link href="/">
+          <RxCross2 className="font-OutfitBold text-Nutmeg" />
+        </Link>
       </div>
       <hr className="border-LightGrey" />
       <div className="grid gap-y-5">
@@ -44,6 +47,8 @@ const IngredientForm = ({
               id="name"
               placeholder="Name"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
             />
           </div>
           {/* UM */}
@@ -125,4 +130,4 @@ const IngredientForm = ({
   );
 };
 
-export default IngredientForm;
+export default Page;

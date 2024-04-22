@@ -2,15 +2,20 @@
 
 import { RxCross2, RxPlus } from "react-icons/rx";
 import { MdEdit } from "react-icons/md";
-import { createRecipe } from "../lib/data";
-import { useState } from "react";
-import Ingredient from "./Ingredient";
+import { createRecipe, getIngredients } from "../lib/data";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getIngredients } from "../lib/data";
+import IngredientSelect from "./IngredientSelect";
 
-const RecipeForm = ({ showForm, handleClick, ingredients }) => {
+const RecipeForm = ({ showForm, handleClick }) => {
   const [showIngredientsForm, setShowIngredientsForm] = useState(false);
-  const [ingredientsList, setIngredientsList] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
+
+  useEffect(() => {
+    getIngredients().then((data) => {
+      setIngredients(data);
+    });
+  }, []);
 
   function handlePlusClick() {
     setShowIngredientsForm(!showIngredientsForm);
@@ -21,12 +26,11 @@ const RecipeForm = ({ showForm, handleClick, ingredients }) => {
       <main
         className={`m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6 ${showForm ? "" : "hidden"}`}
       >
-        {ingredientsList.length > 0 ? ingredients[0].Name : "Loading..."}
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
             New/Edit Recipe
           </h1>
-          <Link href="/">
+          <Link href="/" className="h-fit">
             <RxCross2
               className="font-OutfitBold text-Nutmeg"
               onClick={handleClick}
@@ -107,35 +111,14 @@ const RecipeForm = ({ showForm, handleClick, ingredients }) => {
             </div>
             {/* Ingredients */}
             <div className="grid gap-y-2">
+              {/* Make ingredients select with list of ingredients */}
               <label htmlFor="ingredients" className="text-sm">
                 Ingredient
               </label>
-              <div className="flex items-center gap-3" id="ingredientRow">
-                <input
-                  type="text"
-                  name="ingredient"
-                  id="ingredient"
-                  placeholder="Ingredient"
-                  className="w-full basis-1/2 rounded-md border border-[lightGrey] px-4 py-1.5"
-                />
-                <input
-                  type="number"
-                  name="quantity"
-                  id="quantity"
-                  placeholder="Qty"
-                  className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
-                />
-                <button className="text-black aspect-square h-full rounded-md bg-LightGrey">
-                  <MdEdit className="m-auto font-OutfitBold text-Nutmeg" />
-                </button>
-                <button
-                  className="text-black aspect-square h-full rounded-md bg-LightGrey"
-                  type="button"
-                  onClick={handlePlusClick}
-                >
-                  <RxPlus className="m-auto font-OutfitBold text-Nutmeg" />
-                </button>
-              </div>
+              <IngredientSelect
+                ingredients={ingredients}
+                handlePlusClick={handlePlusClick}
+              />
             </div>
             {/* Instructions */}
             <div className="grid gap-y-2">

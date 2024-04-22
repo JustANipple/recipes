@@ -136,9 +136,9 @@ export async function getIngredients() {
 
 export async function getIngredient(id) {
   const prisma = new PrismaClient();
-  return await prisma.ingredients.findUnique({
+  return await prisma.ingredients.findFirst({
     where: {
-      Id: id,
+      Id: parseInt(id),
     },
   });
 }
