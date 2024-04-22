@@ -14,8 +14,7 @@ model ingredients {
   Proteins  Float?   @db.Real
   Fat       Float?   @db.Real
   Countable Boolean?
-
-  @@id([Name, UM])
+  Id        Int      @id @unique @default(autoincrement())
 }
 
 model ingredientsRelationships {

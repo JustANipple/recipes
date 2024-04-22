@@ -1,5 +1,6 @@
 import React from "react";
 import { RxCross2 } from "react-icons/rx";
+import { createIngredient } from "../lib/data";
 
 const IngredientForm = ({
   showIngredientForm,
@@ -25,7 +26,7 @@ const IngredientForm = ({
       <hr className="border-LightGrey" />
       <div className="grid gap-y-5">
         <form
-          action="#"
+          action={createIngredient}
           className="grid gap-y-4 font-Outfit text-WengeBrown"
           id="editForm"
         >

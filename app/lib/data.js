@@ -1,6 +1,8 @@
 "use server";
 
 import { PrismaClient } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function createRecipe(formData) {
   const rawFormData = {
@@ -93,6 +95,37 @@ export async function createRecipe(formData) {
       });
     console.log("InstructionRelationship: " + instructionsRelationship);
   }
+}
+
+export async function createIngredient(formData) {
+  const rawFormData = {
+    name: formData.get("name"),
+    um: formData.get("um"),
+    carbs: formData.get("carbs"),
+    proteins: formData.get("proteins"),
+    fat: formData.get("fat"),
+    countable: formData.get("countable"),
+  };
+
+  console.log(rawFormData);
+
+  const prisma = new PrismaClient();
+
+  const ingredient = await prisma.ingredients.create({
+    data: {
+      Name: rawFormData.name,
+      UM: rawFormData.um,
+      Carbs: parseFloat(rawFormData.carbs),
+      Proteins: parseFloat(rawFormData.proteins),
+      Fat: parseFloat(rawFormData.fat),
+      Countable: rawFormData.countable === null ? false : true,
+    },
+  });
+
+  console.log(ingredient);
+
+  revalidatePath("/ingredients");
+  redirect("/");
 }
 
 export async function getIngredients() {
