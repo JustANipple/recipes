@@ -10,6 +10,7 @@ const Ingredient = () => {
   const [ingredients, setIngredients] = useState([]);
   const [ingredientIndex, setIngredientIndex] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [ingredientId, setIngredientId] = useState(-1);
 
   useEffect(() => {
     const fetchIngredients = async () => {
@@ -23,6 +24,7 @@ const Ingredient = () => {
 
   function handleClick(index) {
     setIngredientIndex(index);
+    setIngredientId(ingredients[index].Id);
     setShowIngredientForm(!showIngredientForm);
   }
 
@@ -58,7 +60,8 @@ const Ingredient = () => {
             {ingredients.map((ingredient, index) => {
               return (
                 <tr
-                  className="hover:bg-Cream/50 cursor-pointer transition-all ease-in-out"
+                  className="cursor-pointer transition-all ease-in-out hover:bg-Cream/50"
+                  key={index}
                   onClick={() => handleClick(ingredient.Id)}
                 >
                   <td className="py-3">{ingredient.Name}</td>
@@ -87,6 +90,7 @@ const Ingredient = () => {
           handleClick={handleClick}
           ingredientIndex={ingredientIndex}
           ingredients={ingredients}
+          ingredientId={ingredientId}
         />
       )}
     </>

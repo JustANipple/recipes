@@ -130,12 +130,13 @@ export async function createIngredient(formData) {
 
 export async function getIngredients() {
   const prisma = new PrismaClient();
-  return prisma.ingredients.findMany();
+  const ingredients = await prisma.ingredients.findMany();
+  return ingredients;
 }
 
 export async function getIngredient(id) {
   const prisma = new PrismaClient();
-  return prisma.ingredients.findUnique({
+  return await prisma.ingredients.findUnique({
     where: {
       Id: id,
     },

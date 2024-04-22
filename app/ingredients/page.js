@@ -1,12 +1,10 @@
 import Ingredient from "../components/Ingredient";
 import IngredientForm from "../components/IngredientForm";
 
-const Page = ({ id }) => {
-  console.log("ID:" + id);
+const Page = () => {
   return (
     <>
       <Ingredient />
-      <IngredientForm />
     </>
   );
 };

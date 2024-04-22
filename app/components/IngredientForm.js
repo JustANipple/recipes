@@ -6,7 +6,10 @@ const IngredientForm = ({
   showIngredientForm,
   handleClick,
   ingredientIndex,
+  ingredientId,
 }) => {
+  console.log("IngredientId: " + ingredientId);
+
   return (
     <div
       className={`m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6 ${showIngredientForm ? "" : "hidden"}`}

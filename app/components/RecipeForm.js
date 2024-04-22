@@ -1,13 +1,16 @@
 "use client";
 
 import { RxCross2, RxPlus } from "react-icons/rx";
+import { MdEdit } from "react-icons/md";
 import { createRecipe } from "../lib/data";
 import { useState } from "react";
 import Ingredient from "./Ingredient";
 import Link from "next/link";
+import { getIngredients } from "../lib/data";
 
-const RecipeForm = ({ showForm, handleClick }) => {
+const RecipeForm = ({ showForm, handleClick, ingredients }) => {
   const [showIngredientsForm, setShowIngredientsForm] = useState(false);
+  const [ingredientsList, setIngredientsList] = useState([]);
 
   function handlePlusClick() {
     setShowIngredientsForm(!showIngredientsForm);
@@ -18,6 +21,7 @@ const RecipeForm = ({ showForm, handleClick }) => {
       <main
         className={`m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6 ${showForm ? "" : "hidden"}`}
       >
+        {ingredientsList.length > 0 ? ingredients[0].Name : "Loading..."}
         <div className="flex justify-between">
           <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
             New/Edit Recipe
@@ -121,6 +125,9 @@ const RecipeForm = ({ showForm, handleClick }) => {
                   placeholder="Qty"
                   className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
                 />
+                <button className="text-black aspect-square h-full rounded-md bg-LightGrey">
+                  <MdEdit className="m-auto font-OutfitBold text-Nutmeg" />
+                </button>
                 <button
                   className="text-black aspect-square h-full rounded-md bg-LightGrey"
                   type="button"
