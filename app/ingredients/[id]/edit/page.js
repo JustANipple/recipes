@@ -126,14 +126,16 @@ const Page = ({ params }) => {
             <input
               type="checkbox"
               name="countable"
-              placeholder="Countable"
               id="countable"
               className="w-fit rounded-md border border-[lightGrey] px-4 py-1.5"
               onChange={(e) => setCountable(e.target.checked)}
-              defaultChecked={countable ? true : false}
+              checked={
+                ingredient ? (ingredient.Countable ? true : false) : false
+              }
             />
           </div>
-          è contabile o no? {ingredient.Countable ? "si" : "no"}
+          è contabile o no? {ingredient.Countable ? "si" : "no"} <br></br>è
+          contabile o no? {countable ? "si" : "no"} <br></br>
         </form>
       </div>
       <hr className="border-LightGrey" />

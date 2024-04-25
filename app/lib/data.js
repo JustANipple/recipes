@@ -166,9 +166,11 @@ export async function getIngredients() {
 
 export async function getIngredient(id) {
   const prisma = new PrismaClient();
-  return await prisma.ingredients.findFirst({
+  const ingredient = await prisma.ingredients.findFirst({
     where: {
       Id: parseInt(id),
     },
   });
+  console.log(ingredient.Countable);
+  return ingredient;
 }
