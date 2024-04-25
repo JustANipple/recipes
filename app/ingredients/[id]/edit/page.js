@@ -1,6 +1,10 @@
 "use client";
 
-import { createIngredient, getIngredient } from "@/app/lib/data";
+import {
+  createIngredient,
+  deleteIngredient,
+  getIngredient,
+} from "@/app/lib/data";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
@@ -9,14 +13,22 @@ const Page = ({ params }) => {
   const id = params.id;
 
   const [name, setName] = useState("");
+  const [um, setUm] = useState("");
+  const [carbs, setCarbs] = useState(0);
+  const [proteins, setProteins] = useState(0);
+  const [fat, setFat] = useState(0);
+  const [countable, setCountable] = useState(false);
 
   const [ingredient, setIngredient] = useState({});
+
   useEffect(() => {
     getIngredient(id).then((data) => {
       setIngredient(data);
-      setName(data.Name);
     });
   }, []);
+
+  const createIngredientWithId = createIngredient.bind(null, id);
+
   return (
     <div
       className={`m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6`}
@@ -32,7 +44,7 @@ const Page = ({ params }) => {
       <hr className="border-LightGrey" />
       <div className="grid gap-y-5">
         <form
-          action={createIngredient}
+          action={createIngredientWithId}
           className="grid gap-y-4 font-Outfit text-WengeBrown"
           id="editForm"
         >
@@ -44,11 +56,10 @@ const Page = ({ params }) => {
             <input
               type="text"
               name="name"
-              id="name"
               placeholder="Name"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
               onChange={(e) => setName(e.target.value)}
-              value={name}
+              defaultValue={ingredient != null ? ingredient.Name : ""}
             />
           </div>
           {/* UM */}
@@ -59,9 +70,10 @@ const Page = ({ params }) => {
             <input
               type="text"
               name="um"
-              id="um"
               placeholder="UM"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setUm(e.target.value)}
+              defaultValue={ingredient != null ? ingredient.UM : ""}
             />
           </div>
           {/* Carbs */}
@@ -72,9 +84,10 @@ const Page = ({ params }) => {
             <input
               type="number"
               name="carbs"
-              id="carbs"
               placeholder="Carbs"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setCarbs(e.target.value)}
+              defaultValue={ingredient != null ? ingredient.Carbs : ""}
             />
           </div>
           {/* Proteins */}
@@ -85,9 +98,10 @@ const Page = ({ params }) => {
             <input
               type="number"
               name="proteins"
-              id="proteins"
               placeholder="Proteins"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setProteins(e.target.value)}
+              defaultValue={ingredient != null ? ingredient.Proteins : ""}
             />
           </div>
           {/* Fat */}
@@ -98,9 +112,10 @@ const Page = ({ params }) => {
             <input
               type="number"
               name="fat"
-              id="fat"
               placeholder="Fat"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setFat(e.target.value)}
+              defaultValue={ingredient != null ? ingredient.Fat : ""}
             />
           </div>
           {/* Countable */}
@@ -111,21 +126,33 @@ const Page = ({ params }) => {
             <input
               type="checkbox"
               name="countable"
-              id="countable"
               placeholder="Countable"
+              id="countable"
               className="w-fit rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setCountable(e.target.checked)}
+              defaultChecked={countable ? true : false}
             />
           </div>
+          è contabile o no? {ingredient.Countable ? "si" : "no"}
         </form>
       </div>
       <hr className="border-LightGrey" />
-      <button
-        className="text-black ml-auto flex gap-1 rounded-md bg-LightGrey px-4 py-2"
-        type="submit"
-        form="editForm"
-      >
-        <p className="my-auto font-Outfit text-Nutmeg">Save</p>
-      </button>
+      <div className="flex justify-end gap-3 align-middle">
+        <button
+          className="text-black flex gap-1 rounded-md bg-Red/30 px-4 py-2"
+          type="button"
+          onClick={() => deleteIngredient(id)}
+        >
+          <p className="my-auto font-Outfit text-Nutmeg">Delete</p>
+        </button>
+        <button
+          className="text-black flex gap-1 rounded-md bg-LightGrey px-4 py-2"
+          type="submit"
+          form="editForm"
+        >
+          <p className="my-auto font-Outfit text-Nutmeg">Save</p>
+        </button>
+      </div>
     </div>
   );
 };

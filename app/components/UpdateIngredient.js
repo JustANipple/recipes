@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import { MdEdit } from "react-icons/md";
 
-const UpdateIngredient = ({ showEditIngredient, id }) => {
+const UpdateIngredient = ({ showEditIngredient, id, icon }) => {
   return (
     <>
       {showEditIngredient ? (
@@ -10,7 +10,8 @@ const UpdateIngredient = ({ showEditIngredient, id }) => {
           href={`/ingredients/${id}/edit`}
           className="text-black aspect-square h-full rounded-md bg-LightGrey"
         >
-          <MdEdit className="m-auto h-full font-OutfitBold text-Nutmeg" />
+          {/* <MdEdit className="m-auto h-full font-OutfitBold text-Nutmeg" /> */}
+          {icon}
         </Link>
       ) : null}
     </>

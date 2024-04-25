@@ -97,7 +97,8 @@ export async function createRecipe(formData) {
   }
 }
 
-export async function createIngredient(formData) {
+//Ingredients
+export async function createIngredient(id, formData) {
   const rawFormData = {
     name: formData.get("name"),
     um: formData.get("um"),
@@ -111,18 +112,47 @@ export async function createIngredient(formData) {
 
   const prisma = new PrismaClient();
 
-  const ingredient = await prisma.ingredients.create({
-    data: {
-      Name: rawFormData.name,
-      UM: rawFormData.um,
-      Carbs: parseFloat(rawFormData.carbs),
-      Proteins: parseFloat(rawFormData.proteins),
-      Fat: parseFloat(rawFormData.fat),
-      Countable: rawFormData.countable === null ? false : true,
-    },
-  });
+  let ingredient = {};
+  if (parseInt(id) <= 0) {
+    ingredient = await prisma.ingredients.create({
+      data: {
+        Name: rawFormData.name,
+        UM: rawFormData.um,
+        Carbs: parseFloat(rawFormData.carbs),
+        Proteins: parseFloat(rawFormData.proteins),
+        Fat: parseFloat(rawFormData.fat),
+        Countable: rawFormData.countable === null ? false : true,
+      },
+    });
+  } else {
+    ingredient = await prisma.ingredients.update({
+      where: {
+        Id: parseInt(id),
+      },
+      data: {
+        Name: rawFormData.name,
+        UM: rawFormData.um,
+        Carbs: parseFloat(rawFormData.carbs),
+        Proteins: parseFloat(rawFormData.proteins),
+        Fat: parseFloat(rawFormData.fat),
+        Countable: rawFormData.countable === null ? false : true,
+      },
+    });
+  }
 
   console.log(ingredient);
+
+  revalidatePath("/ingredients");
+  redirect("/");
+}
+
+export async function deleteIngredient(id) {
+  const prisma = new PrismaClient();
+  await prisma.ingredients.delete({
+    where: {
+      Id: parseInt(id),
+    },
+  });
 
   revalidatePath("/ingredients");
   redirect("/");

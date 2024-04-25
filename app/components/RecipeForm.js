@@ -1,7 +1,6 @@
 "use client";
 
 import { RxCross2, RxPlus } from "react-icons/rx";
-import { MdEdit } from "react-icons/md";
 import { createRecipe, getIngredients } from "../lib/data";
 import { useEffect, useState } from "react";
 import Link from "next/link";

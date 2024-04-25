@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { RxPlus } from "react-icons/rx";
 import UpdateIngredient from "./UpdateIngredient";
+import { MdEdit } from "react-icons/md";
 
 const IngredientSelect = ({ ingredients, handlePlusClick }) => {
   const [showEditIngredient, setShowEditIngredient] = useState(false);
-  const [id, setId] = useState(-1);
+  const [id, setId] = useState(0);
 
   function handleChange(e) {
     const select = e.target;
@@ -50,14 +51,16 @@ const IngredientSelect = ({ ingredients, handlePlusClick }) => {
         placeholder="Qty"
         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
       />
-      <UpdateIngredient showEditIngredient={showEditIngredient} id={id} />
-      <button
-        className="text-black aspect-square h-full rounded-md bg-LightGrey"
-        type="button"
-        onClick={handlePlusClick}
-      >
-        <RxPlus className="m-auto font-OutfitBold text-Nutmeg" />
-      </button>
+      <UpdateIngredient
+        showEditIngredient={showEditIngredient}
+        id={id}
+        icon={<MdEdit className="m-auto h-full font-OutfitBold text-Nutmeg" />}
+      />
+      <UpdateIngredient
+        showEditIngredient={true}
+        id={0}
+        icon={<RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />}
+      />
     </div>
   );
 };
