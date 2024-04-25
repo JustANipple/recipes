@@ -171,6 +171,5 @@ export async function getIngredient(id) {
       Id: parseInt(id),
     },
   });
-  console.log(ingredient.Countable);
   return ingredient;
 }

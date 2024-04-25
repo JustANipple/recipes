@@ -12,11 +12,11 @@ import { RxCross2 } from "react-icons/rx";
 const Page = ({ params }) => {
   const id = params.id;
 
-  const [name, setName] = useState("");
-  const [um, setUm] = useState("");
-  const [carbs, setCarbs] = useState(0);
-  const [proteins, setProteins] = useState(0);
-  const [fat, setFat] = useState(0);
+  const [name, setName] = useState();
+  const [um, setUm] = useState();
+  const [carbs, setCarbs] = useState();
+  const [proteins, setProteins] = useState();
+  const [fat, setFat] = useState();
   const [countable, setCountable] = useState(false);
 
   const [ingredient, setIngredient] = useState({});
@@ -24,6 +24,10 @@ const Page = ({ params }) => {
   useEffect(() => {
     getIngredient(id).then((data) => {
       setIngredient(data);
+      if (data != null) {
+        setFat(data.Fat);
+        setCountable(data.Countable);
+      }
     });
   }, []);
 
@@ -35,7 +39,7 @@ const Page = ({ params }) => {
     >
       <div className="flex justify-between">
         <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
-          New/Edit Ingredient
+          {id > 0 ? "Edit" : "New"} Ingredient
         </h1>
         <Link href="/">
           <RxCross2 className="font-OutfitBold text-Nutmeg" />
@@ -115,7 +119,7 @@ const Page = ({ params }) => {
               placeholder="Fat"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
               onChange={(e) => setFat(e.target.value)}
-              defaultValue={ingredient != null ? ingredient.Fat : ""}
+              defaultValue={fat}
             />
           </div>
           {/* Countable */}
@@ -129,13 +133,9 @@ const Page = ({ params }) => {
               id="countable"
               className="w-fit rounded-md border border-[lightGrey] px-4 py-1.5"
               onChange={(e) => setCountable(e.target.checked)}
-              checked={
-                ingredient ? (ingredient.Countable ? true : false) : false
-              }
+              checked={countable}
             />
           </div>
-          è contabile o no? {ingredient.Countable ? "si" : "no"} <br></br>è
-          contabile o no? {countable ? "si" : "no"} <br></br>
         </form>
       </div>
       <hr className="border-LightGrey" />
