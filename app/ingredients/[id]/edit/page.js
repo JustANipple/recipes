@@ -141,11 +141,11 @@ const Page = ({ params }) => {
       <hr className="border-LightGrey" />
       <div className="flex justify-end gap-3 align-middle">
         <button
-          className="text-black flex gap-1 rounded-md bg-Red/30 px-4 py-2"
+          className="text-black flex gap-1 rounded-md bg-Nutmeg px-4 py-2"
           type="button"
           onClick={() => deleteIngredient(id)}
         >
-          <p className="my-auto font-Outfit text-Nutmeg">Delete</p>
+          <p className="my-auto font-Outfit text-White">Delete</p>
         </button>
         <button
           className="text-black flex gap-1 rounded-md bg-LightGrey px-4 py-2"
