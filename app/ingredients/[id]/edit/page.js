@@ -7,6 +7,7 @@ import {
 } from "@/app/lib/data";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { RxCross2 } from "react-icons/rx";
 
 const Page = ({ params }) => {
@@ -19,12 +20,13 @@ const Page = ({ params }) => {
   const [fat, setFat] = useState();
   const [countable, setCountable] = useState(false);
 
-  const [ingredient, setIngredient] = useState({});
-
   useEffect(() => {
     getIngredient(id).then((data) => {
-      setIngredient(data);
       if (data != null) {
+        setName(data.Name);
+        setUm(data.UM);
+        setCarbs(data.Carbs);
+        setProteins(data.Proteins);
         setFat(data.Fat);
         setCountable(data.Countable);
       }
@@ -32,6 +34,15 @@ const Page = ({ params }) => {
   }, []);
 
   const createIngredientWithId = createIngredient.bind(null, id);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => console.log(data);
 
   return (
     <div
@@ -51,6 +62,7 @@ const Page = ({ params }) => {
           action={createIngredientWithId}
           className="grid gap-y-4 font-Outfit text-WengeBrown"
           id="editForm"
+          onSubmit={handleSubmit(onSubmit)}
         >
           {/* Name */}
           <div className="grid gap-y-2">
@@ -63,8 +75,12 @@ const Page = ({ params }) => {
               placeholder="Name"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
               onChange={(e) => setName(e.target.value)}
-              defaultValue={ingredient != null ? ingredient.Name : ""}
+              defaultValue={name}
+              {...register("name", { required: true })}
             />
+            {errors.name && (
+              <span className="text-xs text-Red">This field is required</span>
+            )}
           </div>
           {/* UM */}
           <div className="grid gap-y-2">
@@ -77,7 +93,7 @@ const Page = ({ params }) => {
               placeholder="UM"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
               onChange={(e) => setUm(e.target.value)}
-              defaultValue={ingredient != null ? ingredient.UM : ""}
+              defaultValue={um}
             />
           </div>
           {/* Carbs */}
@@ -91,7 +107,7 @@ const Page = ({ params }) => {
               placeholder="Carbs"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
               onChange={(e) => setCarbs(e.target.value)}
-              defaultValue={ingredient != null ? ingredient.Carbs : ""}
+              defaultValue={carbs}
             />
           </div>
           {/* Proteins */}
@@ -105,7 +121,7 @@ const Page = ({ params }) => {
               placeholder="Proteins"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
               onChange={(e) => setProteins(e.target.value)}
-              defaultValue={ingredient != null ? ingredient.Proteins : ""}
+              defaultValue={proteins}
             />
           </div>
           {/* Fat */}
