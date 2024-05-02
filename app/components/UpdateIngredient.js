@@ -10,7 +10,6 @@ const UpdateIngredient = ({ showEditIngredient, id, icon }) => {
           href={`/ingredients/${id}/edit`}
           className="text-black aspect-square h-full rounded-md bg-LightGrey"
         >
-          {/* <MdEdit className="m-auto h-full font-OutfitBold text-Nutmeg" /> */}
           {icon}
         </Link>
       ) : null}

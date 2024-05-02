@@ -1,14 +1,16 @@
 "use client";
 
-import { RxCross2, RxPlus } from "react-icons/rx";
+import { RxCrop, RxCross1, RxCross2, RxPlus } from "react-icons/rx";
 import { createRecipe, getIngredients } from "../lib/data";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import IngredientSelect from "./IngredientSelect";
+import { TbToolsKitchen } from "react-icons/tb";
 
 const RecipeForm = ({ showForm, handleClick }) => {
   const [showIngredientsForm, setShowIngredientsForm] = useState(false);
   const [ingredients, setIngredients] = useState([]);
+  const [ingredientSelects, setIngredientSelects] = useState([0]);
 
   useEffect(() => {
     getIngredients().then((data) => {
@@ -17,7 +19,13 @@ const RecipeForm = ({ showForm, handleClick }) => {
   }, []);
 
   function handlePlusClick() {
-    setShowIngredientsForm(!showIngredientsForm);
+    setIngredientSelects([...ingredientSelects, ingredientSelects.length]);
+  }
+
+  function handleCrossClick() {
+    if (ingredientSelects.length > 1) {
+      setIngredientSelects(ingredientSelects.slice(0, -1));
+    }
   }
 
   return (
@@ -110,14 +118,38 @@ const RecipeForm = ({ showForm, handleClick }) => {
             </div>
             {/* Ingredients */}
             <div className="grid gap-y-2">
-              {/* Make ingredients select with list of ingredients */}
-              <label htmlFor="ingredients" className="text-sm">
-                Ingredient
-              </label>
-              <IngredientSelect
-                ingredients={ingredients}
-                handlePlusClick={handlePlusClick}
-              />
+              <div className="flex justify-between">
+                <label htmlFor="ingredients" className="text-sm">
+                  Ingredient
+                </label>
+                <div className="flex justify-end gap-2">
+                  <button
+                    className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
+                    type="button"
+                    onClick={handlePlusClick}
+                  >
+                    <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
+                  </button>
+                  <button
+                    className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
+                    type="button"
+                    onClick={handleCrossClick}
+                  >
+                    <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
+                  </button>
+                </div>
+              </div>
+
+              {ingredientSelects.map((_, index) => {
+                return (
+                  <IngredientSelect
+                    index={index}
+                    ingredients={ingredients}
+                    handlePlusClick={handlePlusClick}
+                    handleCrossClick={handleCrossClick}
+                  />
+                );
+              })}
             </div>
             {/* Instructions */}
             <div className="grid gap-y-2">

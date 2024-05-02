@@ -2,8 +2,14 @@ import { useState } from "react";
 import { RxPlus } from "react-icons/rx";
 import UpdateIngredient from "./UpdateIngredient";
 import { MdEdit } from "react-icons/md";
+import { TbToolsKitchen3 } from "react-icons/tb";
 
-const IngredientSelect = ({ ingredients, handlePlusClick }) => {
+const IngredientSelect = ({
+  index,
+  ingredients,
+  handlePlusClick,
+  handleCrossClick,
+}) => {
   const [showEditIngredient, setShowEditIngredient] = useState(false);
   const [id, setId] = useState(0);
 
@@ -28,7 +34,7 @@ const IngredientSelect = ({ ingredients, handlePlusClick }) => {
   return (
     <div className="flex items-center gap-3" id="ingredientRow">
       <select
-        className="w-full basis-1/2 rounded-md border border-[lightGrey] bg-White px-4 py-1.5"
+        className="h-full w-full basis-1/2 rounded-md border border-[lightGrey] bg-White px-4 py-1.5"
         name="ingredient"
         id="ingredient"
         onChange={(e) => handleChange(e)}
