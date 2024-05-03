@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import IngredientSelect from "./IngredientSelect";
 import { TbToolsKitchen } from "react-icons/tb";
+import UpdateIngredient from "./UpdateIngredient";
 
 const RecipeForm = ({ showForm, handleClick }) => {
   const [showIngredientsForm, setShowIngredientsForm] = useState(false);
@@ -119,9 +120,18 @@ const RecipeForm = ({ showForm, handleClick }) => {
             {/* Ingredients */}
             <div className="grid gap-y-2">
               <div className="flex justify-between">
-                <label htmlFor="ingredients" className="text-sm">
-                  Ingredient
-                </label>
+                <div className="flex gap-3">
+                  <label htmlFor="ingredients" className="text-sm">
+                    Ingredient
+                  </label>
+                  <UpdateIngredient
+                    showEditIngredient={true}
+                    id={0}
+                    icon={
+                      <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
+                    }
+                  />
+                </div>
                 <div className="flex justify-end gap-2">
                   <button
                     className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
@@ -139,7 +149,6 @@ const RecipeForm = ({ showForm, handleClick }) => {
                   </button>
                 </div>
               </div>
-
               {ingredientSelects.map((_, index) => {
                 return (
                   <IngredientSelect

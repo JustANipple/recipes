@@ -4,12 +4,7 @@ import UpdateIngredient from "./UpdateIngredient";
 import { MdEdit } from "react-icons/md";
 import { TbToolsKitchen3 } from "react-icons/tb";
 
-const IngredientSelect = ({
-  index,
-  ingredients,
-  handlePlusClick,
-  handleCrossClick,
-}) => {
+const IngredientSelect = ({ ingredients }) => {
   const [showEditIngredient, setShowEditIngredient] = useState(false);
   const [id, setId] = useState(0);
 
@@ -34,7 +29,7 @@ const IngredientSelect = ({
   return (
     <div className="flex items-center gap-3" id="ingredientRow">
       <select
-        className="h-full w-full basis-1/2 rounded-md border border-[lightGrey] bg-White px-4 py-1.5"
+        className="h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5"
         name="ingredient"
         id="ingredient"
         onChange={(e) => handleChange(e)}
@@ -61,11 +56,6 @@ const IngredientSelect = ({
         showEditIngredient={showEditIngredient}
         id={id}
         icon={<MdEdit className="m-auto h-full font-OutfitBold text-Nutmeg" />}
-      />
-      <UpdateIngredient
-        showEditIngredient={true}
-        id={0}
-        icon={<RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />}
       />
     </div>
   );
