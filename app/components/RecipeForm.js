@@ -1,15 +1,13 @@
 "use client";
 
-import { RxCrop, RxCross1, RxCross2, RxPlus } from "react-icons/rx";
+import { RxCross2, RxPlus } from "react-icons/rx";
 import { createRecipe, getIngredients } from "../lib/data";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import IngredientSelect from "./IngredientSelect";
-import { TbToolsKitchen } from "react-icons/tb";
 import UpdateIngredient from "./UpdateIngredient";
 
 const RecipeForm = ({ showForm, handleClick }) => {
-  const [showIngredientsForm, setShowIngredientsForm] = useState(false);
   const [ingredients, setIngredients] = useState([]);
   const [ingredientSelects, setIngredientSelects] = useState([0]);
 
