@@ -1,8 +1,12 @@
 "use client";
 
+import IngredientSelect from "@/app/components/IngredientSelect";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { RxCross2 } from "react-icons/rx";
+import { RxCross2, RxPlus } from "react-icons/rx";
+import { createRecipe, getIngredients } from "@/app/lib/data";
+import { useForm } from "react-hook-form";
+import UpdateIngredient from "@/app/components/UpdateIngredient";
 
 const Page = ({ params, showForm, handleClick }) => {
   const id = params.id;
@@ -33,13 +37,22 @@ const Page = ({ params, showForm, handleClick }) => {
     }
   }
 
+  const createRecipeWithId = createRecipe.bind(null, id);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => console.log(data);
+
   return (
-    <main
-      className={`m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6 ${showForm ? "" : "hidden"}`}
-    >
+    <main className="m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6">
       <div className="flex items-center justify-between">
         <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
-          New/Edit Recipe
+          {id > 0 ? "Edit" : "New"} Recipe
         </h1>
         <Link href="/" className="h-fit">
           <RxCross2
@@ -51,9 +64,10 @@ const Page = ({ params, showForm, handleClick }) => {
       <hr className="border-LightGrey" />
       <div className="grid gap-y-5">
         <form
-          action={createRecipe}
+          action={createRecipeWithId}
           className="grid gap-y-4 font-Outfit text-WengeBrown"
           id="editForm"
+          onSubmit={handleSubmit(onSubmit)}
         >
           {/* ImageLink */}
           <div className="grid gap-y-2">
@@ -66,6 +80,9 @@ const Page = ({ params, showForm, handleClick }) => {
               id="imageLink"
               placeholder="ImageLink"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setImageLink(e.target.value)}
+              defaultValue={imageLink}
+              {...register("imageLink")}
             />
           </div>
           {/* Title */}
@@ -79,7 +96,13 @@ const Page = ({ params, showForm, handleClick }) => {
               id="title"
               placeholder="Title"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setTitle(e.target.value)}
+              defaultValue={title}
+              {...register("title", { required: true })}
             />
+            {errors.title && (
+              <span className="text-xs text-Red">This field is required</span>
+            )}
           </div>
           {/* Description */}
           <div className="grid gap-y-2">
@@ -92,6 +115,9 @@ const Page = ({ params, showForm, handleClick }) => {
               id="description"
               placeholder="Description"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setDescription(e.target.value)}
+              defaultValue={description}
+              {...register("description")}
             />
           </div>
           {/* Preparation time */}
@@ -105,6 +131,9 @@ const Page = ({ params, showForm, handleClick }) => {
               id="preparation-time"
               placeholder="Preparation Time"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setPreparationTime(e.target.value)}
+              defaultValue={preparationTime}
+              {...register("preparation-time")}
             />
           </div>
           {/* Cooking time */}
@@ -118,6 +147,9 @@ const Page = ({ params, showForm, handleClick }) => {
               id="cooking-time"
               placeholder="Cooking Time"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              onChange={(e) => setCookingTime(e.target.value)}
+              defaultValue={cookingTime}
+              {...register("cooking-time")}
             />
           </div>
           {/* Ingredients */}
@@ -155,10 +187,9 @@ const Page = ({ params, showForm, handleClick }) => {
             {ingredientSelects.map((_, index) => {
               return (
                 <IngredientSelect
-                  index={index}
+                  key={index}
                   ingredients={ingredients}
-                  handlePlusClick={handlePlusClick}
-                  handleCrossClick={handleCrossClick}
+                  setIngredients={setIngredients}
                 />
               );
             })}
@@ -175,6 +206,9 @@ const Page = ({ params, showForm, handleClick }) => {
                 id="instruction"
                 placeholder="Instruction"
                 className="rounded-md border border-[lightGrey] px-4 py-1.5"
+                onChange={(e) => setInstructions(e.target.value)}
+                defaultValue={instructions}
+                {...register("instructions")}
               />
               <button className="text-black aspect-square rounded-md bg-LightGrey">
                 <RxPlus className="m-auto font-OutfitBold text-Nutmeg" />

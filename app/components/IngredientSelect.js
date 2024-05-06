@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { RxPlus } from "react-icons/rx";
 import UpdateIngredient from "./UpdateIngredient";
 import { MdEdit } from "react-icons/md";
-import { TbToolsKitchen3 } from "react-icons/tb";
 
-const IngredientSelect = ({ ingredients }) => {
+const IngredientSelect = ({ index, ingredients, setIngredients }) => {
   const [showEditIngredient, setShowEditIngredient] = useState(false);
   const [id, setId] = useState(0);
 
@@ -35,15 +33,16 @@ const IngredientSelect = ({ ingredients }) => {
         onChange={(e) => handleChange(e)}
       >
         <option value="">-- Select an Ingredient --</option>
-        {ingredients.map((ingredient, index) => {
-          return (
-            <option key={index} value={ingredient.Id}>
-              Name: {ingredient.Name} - UM: {ingredient.UM} - Carbs:{" "}
-              {ingredient.Carbs} - Proteins: {ingredient.Proteins} - Fat:{" "}
-              {ingredient.Fat}
-            </option>
-          );
-        })}
+        {ingredients &&
+          ingredients.map((ingredient, index) => {
+            return (
+              <option key={index} value={ingredient.Id}>
+                Name: {ingredient.Name} - UM: {ingredient.UM} - Carbs:{" "}
+                {ingredient.Carbs} - Proteins: {ingredient.Proteins} - Fat:{" "}
+                {ingredient.Fat}
+              </option>
+            );
+          })}
       </select>
       <input
         type="number"
@@ -51,6 +50,7 @@ const IngredientSelect = ({ ingredients }) => {
         id="quantity"
         placeholder="Qty"
         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+        onChange={(e) => setIngredients(...ingredients, e.target.value)}
       />
       <UpdateIngredient
         showEditIngredient={showEditIngredient}

@@ -1,33 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import RecipeForm from "./RecipeForm";
+import Link from "next/link";
 
 const Recipe = () => {
-  const [showForm, setShowForm] = useState(false);
-  function handleClick() {
-    setShowForm(!showForm);
-  }
-
   return (
     <>
-      <main
-        className={`m-auto grid  gap-y-9 bg-White md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6 ${showForm ? "hidden" : ""}`}
-      >
+      <main className="m-auto grid  gap-y-9 bg-White md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6">
         <div className="relative truncate md:rounded-xl">
           <div className="absolute left-2 top-2 flex gap-3">
-            <button
+            <Link
+              href="recipes/0/edit" // Change this to the correct recipe ID
               className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
-              onClick={handleClick}
             >
               New
-            </button>
-            <button
+            </Link>
+            <Link
+              href="recipes/1/edit" // Change this to the correct recipe ID
               className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
-              onClick={handleClick}
             >
               Edit
-            </button>
+            </Link>
             <button className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1">
               <p className="my-auto font-Outfit text-Nutmeg">Delete</p>
             </button>
@@ -161,7 +153,6 @@ const Recipe = () => {
           </div>
         </div>
       </main>
-      <RecipeForm showForm={showForm} handleClick={handleClick} />
     </>
   );
 };
