@@ -7,6 +7,7 @@ import { RxCross2, RxPlus } from "react-icons/rx";
 import { createRecipe, getIngredients } from "@/app/lib/data";
 import { useForm } from "react-hook-form";
 import UpdateIngredient from "@/app/components/UpdateIngredient";
+import InstructionInput from "@/app/components/InstructionInput";
 
 const Page = ({ params, showForm, handleClick }) => {
   const id = params.id;
@@ -17,9 +18,11 @@ const Page = ({ params, showForm, handleClick }) => {
   const [preparationTime, setPreparationTime] = useState();
   const [cookingTime, setCookingTime] = useState();
   const [ingredients, setIngredients] = useState();
+  const [quantity, setQuantity] = useState([0]);
   const [instructions, setInstructions] = useState();
 
   const [ingredientSelects, setIngredientSelects] = useState([0]);
+  const [instructionInputs, setInstructionInputs] = useState([0]);
 
   useEffect(() => {
     getIngredients().then((data) => {
@@ -27,13 +30,23 @@ const Page = ({ params, showForm, handleClick }) => {
     });
   }, []);
 
-  function handlePlusClick() {
+  function handleIngredientPlusClick() {
     setIngredientSelects([...ingredientSelects, ingredientSelects.length]);
   }
 
-  function handleCrossClick() {
+  function handleIngredientCrossClick() {
     if (ingredientSelects.length > 1) {
       setIngredientSelects(ingredientSelects.slice(0, -1));
+    }
+  }
+
+  function handleInstructionPlusClick() {
+    setInstructionInputs([...instructionInputs, instructionInputs.length]);
+  }
+
+  function handleInstructionCrossClick() {
+    if (instructionInputs.length > 1) {
+      setInstructionInputs(instructionInputs.slice(0, -1));
     }
   }
 
@@ -171,14 +184,14 @@ const Page = ({ params, showForm, handleClick }) => {
                 <button
                   className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
                   type="button"
-                  onClick={handlePlusClick}
+                  onClick={handleIngredientPlusClick}
                 >
                   <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
                 </button>
                 <button
                   className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
                   type="button"
-                  onClick={handleCrossClick}
+                  onClick={handleIngredientCrossClick}
                 >
                   <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
                 </button>
@@ -189,31 +202,37 @@ const Page = ({ params, showForm, handleClick }) => {
                 <IngredientSelect
                   key={index}
                   ingredients={ingredients}
-                  setIngredients={setIngredients}
+                  setQuantity={setQuantity}
                 />
               );
             })}
           </div>
           {/* Instructions */}
           <div className="grid gap-y-2">
-            <label htmlFor="instructions" className="text-sm">
-              Instruction
-            </label>
-            <div className="flex gap-3 align-middle">
-              <input
-                type="text"
-                name="instruction"
-                id="instruction"
-                placeholder="Instruction"
-                className="rounded-md border border-[lightGrey] px-4 py-1.5"
-                onChange={(e) => setInstructions(e.target.value)}
-                defaultValue={instructions}
-                {...register("instructions")}
-              />
-              <button className="text-black aspect-square rounded-md bg-LightGrey">
-                <RxPlus className="m-auto font-OutfitBold text-Nutmeg" />
-              </button>
+            <div className="flex justify-between">
+              <label htmlFor="instructions" className="text-sm">
+                Instruction
+              </label>
+              <div className="flex justify-end gap-2">
+                <button
+                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
+                  type="button"
+                  onClick={handleInstructionPlusClick}
+                >
+                  <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
+                </button>
+                <button
+                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
+                  type="button"
+                  onClick={handleInstructionCrossClick}
+                >
+                  <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
+                </button>
+              </div>
             </div>
+            {instructionInputs.map((index) => {
+              return <InstructionInput key={index} register={register} />;
+            })}
           </div>
         </form>
       </div>

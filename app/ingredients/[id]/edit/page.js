@@ -18,7 +18,8 @@ const Page = ({ params }) => {
   const [carbs, setCarbs] = useState();
   const [proteins, setProteins] = useState();
   const [fat, setFat] = useState();
-  const [countable, setCountable] = useState(false);
+  const [countable, setCountable] = useState(true);
+  const [quantity, setQuantity] = useState();
 
   useEffect(() => {
     getIngredient(id).then((data) => {
@@ -29,6 +30,7 @@ const Page = ({ params }) => {
         setProteins(data.Proteins);
         setFat(data.Fat);
         setCountable(data.Countable);
+        setQuantity(data.Quantity);
       }
     });
   }, []);
@@ -152,6 +154,22 @@ const Page = ({ params }) => {
               checked={countable}
             />
           </div>
+          {/* Quantity */}
+          {!countable && (
+            <div className="grid gap-y-2">
+              <label htmlFor="quantity" className="text-sm">
+                Quantity
+              </label>
+              <input
+                type="number"
+                name="quantity"
+                placeholder="Quantity"
+                className="rounded-md border border-[lightGrey] px-4 py-1.5"
+                onChange={(e) => setQuantity(e.target.value)}
+                defaultValue={quantity}
+              />
+            </div>
+          )}
         </form>
       </div>
       <hr className="border-LightGrey" />

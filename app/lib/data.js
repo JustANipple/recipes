@@ -106,6 +106,7 @@ export async function createIngredient(id, formData) {
     proteins: formData.get("proteins"),
     fat: formData.get("fat"),
     countable: formData.get("countable"),
+    quantity: formData.get("quantity"),
   };
 
   console.log(rawFormData);
@@ -122,6 +123,7 @@ export async function createIngredient(id, formData) {
         Proteins: parseFloat(rawFormData.proteins),
         Fat: parseFloat(rawFormData.fat),
         Countable: rawFormData.countable === null ? false : true,
+        Quantity: parseFloat(rawFormData.quantity),
       },
     });
   } else {
@@ -136,6 +138,7 @@ export async function createIngredient(id, formData) {
         Proteins: parseFloat(rawFormData.proteins),
         Fat: parseFloat(rawFormData.fat),
         Countable: rawFormData.countable === null ? false : true,
+        Quantity: parseFloat(rawFormData.quantity),
       },
     });
   }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import UpdateIngredient from "./UpdateIngredient";
 import { MdEdit } from "react-icons/md";
 
-const IngredientSelect = ({ index, ingredients, setIngredients }) => {
+const IngredientSelect = ({ index, ingredients, setQuantity }) => {
   const [showEditIngredient, setShowEditIngredient] = useState(false);
   const [id, setId] = useState(0);
 
@@ -50,7 +50,7 @@ const IngredientSelect = ({ index, ingredients, setIngredients }) => {
         id="quantity"
         placeholder="Qty"
         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
-        onChange={(e) => setIngredients(...ingredients, e.target.value)}
+        onChange={(e) => setQuantity(...ingredients, e.target.value)}
       />
       <UpdateIngredient
         showEditIngredient={showEditIngredient}
