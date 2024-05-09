@@ -135,18 +135,18 @@ const Page = ({ params, showForm, handleClick }) => {
           </div>
           {/* Preparation time */}
           <div className="grid gap-y-2">
-            <label htmlFor="preparation-time" className="text-sm">
+            <label htmlFor="preparationTime" className="text-sm">
               Preparation Time (minutes)
             </label>
             <input
               type="number"
-              name="preparation-time"
-              id="preparation-time"
+              name="preparationTime"
+              id="preparationTime"
               placeholder="Preparation Time"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
               onChange={(e) => setPreparationTime(e.target.value)}
               defaultValue={preparationTime}
-              {...register("preparation-time")}
+              {...register("preparationTime")}
             />
           </div>
           {/* Cooking time */}
@@ -156,13 +156,13 @@ const Page = ({ params, showForm, handleClick }) => {
             </label>
             <input
               type="number"
-              name="cooking-time"
-              id="cooking-time"
+              name="cookingTime"
+              id="cookingTime"
               placeholder="Cooking Time"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
               onChange={(e) => setCookingTime(e.target.value)}
               defaultValue={cookingTime}
-              {...register("cooking-time")}
+              {...register("cookingTime")}
             />
           </div>
           {/* Ingredients */}
@@ -201,8 +201,9 @@ const Page = ({ params, showForm, handleClick }) => {
               return (
                 <IngredientSelect
                   key={index}
+                  index={index}
                   ingredients={ingredients}
-                  setQuantity={setQuantity}
+                  register={register}
                 />
               );
             })}
@@ -231,7 +232,13 @@ const Page = ({ params, showForm, handleClick }) => {
               </div>
             </div>
             {instructionInputs.map((index) => {
-              return <InstructionInput key={index} register={register} />;
+              return (
+                <InstructionInput
+                  key={index}
+                  index={index}
+                  register={register}
+                />
+              );
             })}
           </div>
         </form>

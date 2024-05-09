@@ -2,9 +2,12 @@ import { useState } from "react";
 import UpdateIngredient from "./UpdateIngredient";
 import { MdEdit } from "react-icons/md";
 
-const IngredientSelect = ({ index, ingredients, setQuantity }) => {
+const IngredientSelect = ({ index, ingredients, register }) => {
   const [showEditIngredient, setShowEditIngredient] = useState(false);
   const [id, setId] = useState(0);
+
+  const [ingredient, setIngredient] = useState({});
+  const [quantity, setQuantity] = useState(0);
 
   function handleChange(e) {
     const select = e.target;
@@ -13,6 +16,7 @@ const IngredientSelect = ({ index, ingredients, setQuantity }) => {
     for (let i = 0; i < options.length; i++) {
       if (options[i].selected) {
         setId(options[i].value);
+        setIngredient(options[i]);
         break;
       }
     }
@@ -29,8 +33,9 @@ const IngredientSelect = ({ index, ingredients, setQuantity }) => {
       <select
         className="h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5"
         name="ingredient"
-        id="ingredient"
+        id={`ingredient${index}`}
         onChange={(e) => handleChange(e)}
+        {...register(`ingredient${index}`)}
       >
         <option value="">-- Select an Ingredient --</option>
         {ingredients &&
@@ -44,13 +49,15 @@ const IngredientSelect = ({ index, ingredients, setQuantity }) => {
             );
           })}
       </select>
+
       <input
         type="number"
         name="quantity"
-        id="quantity"
+        id={`quantity${index}`}
         placeholder="Qty"
         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
-        onChange={(e) => setQuantity(...ingredients, e.target.value)}
+        value={quantity}
+        onChange={(e) => setQuantity(e.target.value)}
       />
       <UpdateIngredient
         showEditIngredient={showEditIngredient}
