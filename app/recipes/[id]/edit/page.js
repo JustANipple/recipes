@@ -59,7 +59,7 @@ const Page = ({ params, showForm, handleClick }) => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => createRecipeWithId(data);
 
   return (
     <main className="m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6">

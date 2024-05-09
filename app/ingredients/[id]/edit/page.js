@@ -44,7 +44,7 @@ const Page = ({ params }) => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => createIngredientWithId(data);
 
   return (
     <div
@@ -68,21 +68,18 @@ const Page = ({ params }) => {
         >
           {/* Name */}
           <div className="grid gap-y-2">
-            <label htmlFor="name" className="text-sm">
+            <label htmlFor="name" className={`text-sm`}>
               Name
             </label>
             <input
               type="text"
               name="name"
               placeholder="Name"
-              className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.name && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
               onChange={(e) => setName(e.target.value)}
               defaultValue={name}
               {...register("name", { required: true })}
             />
-            {errors.name && (
-              <span className="text-xs text-Red">This field is required</span>
-            )}
           </div>
           {/* UM */}
           <div className="grid gap-y-2">
@@ -93,9 +90,10 @@ const Page = ({ params }) => {
               type="text"
               name="um"
               placeholder="UM"
-              className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.um && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
               onChange={(e) => setUm(e.target.value)}
               defaultValue={um}
+              {...register("um", { required: true })}
             />
           </div>
           {/* Carbs */}
@@ -107,9 +105,10 @@ const Page = ({ params }) => {
               type="number"
               name="carbs"
               placeholder="Carbs"
-              className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.carbs && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
               onChange={(e) => setCarbs(e.target.value)}
               defaultValue={carbs}
+              {...register("carbs", { required: true })}
             />
           </div>
           {/* Proteins */}
@@ -121,9 +120,10 @@ const Page = ({ params }) => {
               type="number"
               name="proteins"
               placeholder="Proteins"
-              className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.proteins && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
               onChange={(e) => setProteins(e.target.value)}
               defaultValue={proteins}
+              {...register("proteins", { required: true })}
             />
           </div>
           {/* Fat */}
@@ -135,9 +135,10 @@ const Page = ({ params }) => {
               type="number"
               name="fat"
               placeholder="Fat"
-              className="rounded-md border border-[lightGrey] px-4 py-1.5"
+              className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.fat && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
               onChange={(e) => setFat(e.target.value)}
               defaultValue={fat}
+              {...register("fat", { required: true })}
             />
           </div>
           {/* Countable */}
@@ -150,8 +151,9 @@ const Page = ({ params }) => {
               name="countable"
               id="countable"
               className="w-fit rounded-md border border-[lightGrey] px-4 py-1.5"
-              onChange={(e) => setCountable(e.target.checked)}
+              onClick={(e) => setCountable(e.target.checked)}
               checked={countable}
+              {...register("countable")}
             />
           </div>
           {/* Quantity */}
@@ -164,9 +166,10 @@ const Page = ({ params }) => {
                 type="number"
                 name="quantity"
                 placeholder="Quantity"
-                className="rounded-md border border-[lightGrey] px-4 py-1.5"
+                className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.quantity && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
                 onChange={(e) => setQuantity(e.target.value)}
                 defaultValue={quantity}
+                {...register("quantity", { required: true })}
               />
             </div>
           )}
