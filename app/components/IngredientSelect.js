@@ -4,24 +4,14 @@ import { MdEdit } from "react-icons/md";
 
 const IngredientSelect = ({ index, ingredients, register }) => {
   const [showEditIngredient, setShowEditIngredient] = useState(false);
-  const [id, setId] = useState(0);
 
-  const [ingredient, setIngredient] = useState({});
-  const [quantity, setQuantity] = useState(0);
+  const [ingredientId, setIngredientId] = useState(0);
+  const [quantity, setQuantity] = useState();
 
-  function handleChange(e) {
-    const select = e.target;
+  function handleChange(value) {
+    setIngredientId(value);
 
-    const options = select.querySelectorAll("option");
-    for (let i = 0; i < options.length; i++) {
-      if (options[i].selected) {
-        setId(options[i].value);
-        setIngredient(options[i]);
-        break;
-      }
-    }
-
-    if (select.value != "") {
+    if (value != "") {
       setShowEditIngredient(true);
     } else {
       setShowEditIngredient(false);
@@ -34,14 +24,20 @@ const IngredientSelect = ({ index, ingredients, register }) => {
         className="h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5"
         name="ingredient"
         id={`ingredient${index}`}
-        onChange={(e) => handleChange(e)}
+        value={ingredientId}
         {...register(`ingredient${index}`)}
       >
-        <option value="">-- Select an Ingredient --</option>
+        <option value="" onClick={(e) => handleChange(e.target.value)}>
+          -- Select an Ingredient --
+        </option>
         {ingredients &&
           ingredients.map((ingredient, index) => {
             return (
-              <option key={index} value={ingredient.Id}>
+              <option
+                key={index}
+                value={ingredient.Id}
+                onClick={(e) => handleChange(e.target.value)}
+              >
                 Name: {ingredient.Name} - UM: {ingredient.UM} - Carbs:{" "}
                 {ingredient.Carbs} - Proteins: {ingredient.Proteins} - Fat:{" "}
                 {ingredient.Fat}
@@ -58,10 +54,11 @@ const IngredientSelect = ({ index, ingredients, register }) => {
         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
         value={quantity}
         onChange={(e) => setQuantity(e.target.value)}
+        {...register(`quantity${index}`)}
       />
       <UpdateIngredient
         showEditIngredient={showEditIngredient}
-        id={id}
+        id={ingredientId}
         icon={<MdEdit className="m-auto h-full font-OutfitBold text-Nutmeg" />}
       />
     </div>
