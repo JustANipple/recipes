@@ -52,11 +52,10 @@ model preparationsRelationships {
 }
 
 model recipes {
-  Id          Int     @id @default(autoincrement())
-  ImageLink   String? @db.VarChar
-  Title       String? @db.VarChar
-  Description String? @db.VarChar
-  Carbs       Int?
-  Protein     Int?
-  Fat         Int?
+  Id              Int     @id @default(autoincrement())
+  ImageLink       String? @db.VarChar
+  Title           String? @db.VarChar
+  Description     String? @db.VarChar
+  PreparationTime Float?
+  CookingTime     Float?
 }

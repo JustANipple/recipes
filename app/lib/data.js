@@ -12,12 +12,8 @@ export async function createRecipe(formData) {
     preparationTime: formData.get("preparationTime"),
     cookingTime: formData.get("cookingTime"),
     ingredient: formData.getAll("ingredient"),
-    um: formData.getAll("um"),
     quantity: formData.getAll("quantity"),
     instruction: formData.getAll("instruction"),
-    carbs: formData.get("carbs"),
-    protein: formData.get("protein"),
-    fat: formData.get("fat"),
   };
 
   console.log(rawFormData);
@@ -30,9 +26,8 @@ export async function createRecipe(formData) {
       ImageLink: rawFormData.imageLink,
       Title: rawFormData.title,
       Description: rawFormData.description,
-      Carbs: parseInt(rawFormData.carbs, 10),
-      Protein: parseInt(rawFormData.protein, 10),
-      Fat: parseInt(rawFormData.fat, 10),
+      PreparationTime: parseFloat(rawFormData.preparationTime, 10),
+      CookingTime: parseFloat(rawFormData.cookingTime, 10),
     },
   });
   console.log("Recipe: " + recipe);
