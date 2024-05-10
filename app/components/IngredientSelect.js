@@ -11,7 +11,7 @@ const IngredientSelect = ({ index, ingredients, register }) => {
   function handleChange(value) {
     setIngredientId(value);
 
-    if (value != "") {
+    if (value !== "") {
       setShowEditIngredient(true);
     } else {
       setShowEditIngredient(false);
@@ -25,7 +25,7 @@ const IngredientSelect = ({ index, ingredients, register }) => {
         name="ingredient"
         id={`ingredient${index}`}
         value={ingredientId}
-        {...register(`ingredient${index}`)}
+        {...register(`ingredientsArray[${index}]`)}
       >
         <option value="" onClick={(e) => handleChange(e.target.value)}>
           -- Select an Ingredient --
@@ -54,7 +54,7 @@ const IngredientSelect = ({ index, ingredients, register }) => {
         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
         value={quantity}
         onChange={(e) => setQuantity(e.target.value)}
-        {...register(`quantity${index}`)}
+        {...register(`quantitiesArray[${index}]`)}
       />
       <UpdateIngredient
         showEditIngredient={showEditIngredient}

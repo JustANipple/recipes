@@ -50,6 +50,7 @@ export async function createRecipe(id, data) {
   console.log("PreparationRelationship: " + preparationRelationship);
 
   //Create all the ingredients
+
   for (let i = 0; i < rawData.ingredient.length; i++) {
     const ingredients = await prisma.ingredients.create({
       data: {

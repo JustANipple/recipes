@@ -18,8 +18,6 @@ const Page = ({ params, showForm, handleClick }) => {
   const [preparationTime, setPreparationTime] = useState();
   const [cookingTime, setCookingTime] = useState();
   const [ingredients, setIngredients] = useState();
-  const [quantity, setQuantity] = useState([0]);
-  const [instructions, setInstructions] = useState();
 
   const [ingredientSelects, setIngredientSelects] = useState([0]);
   const [instructionInputs, setInstructionInputs] = useState([0]);
