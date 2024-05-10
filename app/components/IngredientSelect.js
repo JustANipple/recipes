@@ -23,9 +23,8 @@ const IngredientSelect = ({ index, ingredients, register }) => {
       <select
         className="h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5"
         name="ingredient"
-        id={`ingredient${index}`}
         value={ingredientId}
-        {...register(`formIngredients[${index}]`)}
+        {...register(`ingredients[${index}]`)}
       >
         <option value="" onClick={(e) => handleChange(e.target.value)}>
           -- Select an Ingredient --
@@ -49,12 +48,11 @@ const IngredientSelect = ({ index, ingredients, register }) => {
       <input
         type="number"
         name="quantity"
-        id={`quantity${index}`}
         placeholder="Qty"
         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
         value={quantity}
         onChange={(e) => setQuantity(e.target.value)}
-        {...register(`quantitiesArray[${index}]`)}
+        {...register(`quantities[${index}]`)}
       />
       <UpdateIngredient
         showEditIngredient={showEditIngredient}

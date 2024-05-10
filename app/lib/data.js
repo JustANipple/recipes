@@ -28,7 +28,6 @@ export async function createRecipe(id, data) {
       CookingTime: parseFloat(rawData.cookingTime, 10),
     },
   });
-  console.log("Recipe: " + recipe);
 
   //Create cooking and preparation times
   const preparation = await prisma.preparations.create({
@@ -37,7 +36,6 @@ export async function createRecipe(id, data) {
       CookingTime: parseInt(rawData.cookingTime, 10),
     },
   });
-  console.log("Preparation: " + preparation);
   //Create relations between preparation and recipe
   const preparationRelationship = await prisma.preparationsRelationships.create(
     {
@@ -47,47 +45,38 @@ export async function createRecipe(id, data) {
       },
     },
   );
-  console.log("PreparationRelationship: " + preparationRelationship);
 
   //Create all the ingredients
-
-  for (let i = 0; i < rawData.ingredient.length; i++) {
-    const ingredients = await prisma.ingredients.create({
-      data: {
-        Name: rawData.ingredient[i],
-        UM: rawData.um[i],
-      },
-    });
-    console.log("Ingredient: " + ingredients);
+  for (let i = 0; i < data.ingredients.length; i++) {
+    if (data.ingredients[i] === "" || data.quantities[i] === "") {
+      continue;
+    }
     //Create relations between ingredients and recipe
     const ingredientsRelationship =
       await prisma.ingredientsRelationships.create({
         data: {
           RecipeId: recipe.Id,
-          IngredientId: ingredients.Id,
-          Quantity: rawData.quantity[i],
+          IngredientId: parseInt(data.ingredients[i]),
+          Quantity: parseFloat(data.quantities[i]),
         },
       });
-    console.log("IngredientRelationship: " + ingredientsRelationship);
   }
 
   //Create all the instructions
-  for (let i = 0; i < rawData.instruction.length; i++) {
+  for (let i = 0; i < data.instructions.length; i++) {
     const instructions = await prisma.instructions.create({
       data: {
-        Description: rawData.instruction[i],
+        Description: data.instructions[i],
       },
     });
-    console.log("Instruction: " + instructions);
     //Create relations between instructions and recipe
     const instructionsRelationship =
       await prisma.instructionsRelationships.create({
         data: {
           RecipeId: recipe.Id,
-          InstructionId: instructions.Id,
+          InstructionId: parseInt(instructions.Id),
         },
       });
-    console.log("InstructionRelationship: " + instructionsRelationship);
   }
 }
 
