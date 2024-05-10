@@ -25,7 +25,7 @@ const IngredientSelect = ({ index, ingredients, register }) => {
         name="ingredient"
         id={`ingredient${index}`}
         value={ingredientId}
-        {...register(`ingredientsArray[${index}]`)}
+        {...register(`formIngredients[${index}]`)}
       >
         <option value="" onClick={(e) => handleChange(e.target.value)}>
           -- Select an Ingredient --
