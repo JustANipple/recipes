@@ -51,36 +51,17 @@ export async function createRecipe(id, data) {
     if (data.ingredients[i] === "" || data.quantities[i] === "") {
       continue;
     }
-    //Create relations between ingredients and recipe
-    const ingredientsRelationship =
-      await prisma.ingredientsRelationships.create({
-        data: {
-          RecipeId: recipe.Id,
-          IngredientId: parseInt(data.ingredients[i]),
-          Quantity: parseFloat(data.quantities[i]),
-        },
-      });
+    createIngredientRelationship(
+      data.ingredients[i],
+      data.quantities[i],
+      recipe.Id,
+    );
   }
 
-  //Create all the instructions
-  for (let i = 0; i < data.instructions.length; i++) {
-    const instructions = await prisma.instructions.create({
-      data: {
-        Description: data.instructions[i],
-      },
-    });
-    //Create relations between instructions and recipe
-    const instructionsRelationship =
-      await prisma.instructionsRelationships.create({
-        data: {
-          RecipeId: recipe.Id,
-          InstructionId: parseInt(instructions.Id),
-        },
-      });
-  }
+  createInstructions(data.instructions, recipe.Id);
 }
 
-//Ingredients
+//#region Ingredients
 export async function createIngredient(id, data) {
   const rawData = {
     name: data.name,
@@ -132,6 +113,35 @@ export async function createIngredient(id, data) {
   redirect("/recipes/0/edit");
 }
 
+export async function createIngredientRelationship(
+  ingredient,
+  quantity,
+  recipeId,
+) {
+  const ingredientsRelationship = await prisma.ingredientsRelationships.create({
+    data: {
+      RecipeId: recipeId,
+      IngredientId: parseInt(ingredient),
+      Quantity: parseFloat(quantity),
+    },
+  });
+}
+
+export async function getIngredients(id) {
+  const prisma = new PrismaClient();
+  let ingredients;
+  if (id != 0) {
+    ingredients = await prisma.ingredients.findFirst({
+      where: {
+        Id: parseInt(id),
+      },
+    });
+  } else {
+    ingredients = await prisma.ingredients.findMany();
+  }
+  return ingredients;
+}
+
 export async function deleteIngredient(id) {
   const prisma = new PrismaClient();
   await prisma.ingredients.delete({
@@ -143,19 +153,27 @@ export async function deleteIngredient(id) {
   revalidatePath("/ingredients");
   redirect("/");
 }
+//#endregion Ingredients
 
-export async function getIngredients() {
-  const prisma = new PrismaClient();
-  const ingredients = await prisma.ingredients.findMany();
-  return ingredients;
+//#region Instructions
+export async function createInstructions(instructionsList, recipeId) {
+  for (let i = 0; i < instructionsList.length; i++) {
+    const instructions = await prisma.instructions.create({
+      data: {
+        Description: instructionsList[i],
+      },
+    });
+    createInstructionRelationship(instructions, recipeId);
+  }
 }
 
-export async function getIngredient(id) {
-  const prisma = new PrismaClient();
-  const ingredient = await prisma.ingredients.findFirst({
-    where: {
-      Id: parseInt(id),
-    },
-  });
-  return ingredient;
+export async function createInstructionRelationship(instruction, recipeId) {
+  const instructionsRelationship =
+    await prisma.instructionsRelationships.create({
+      data: {
+        RecipeId: recipeId,
+        InstructionId: instruction.Id,
+      },
+    });
 }
+//#endregion Instructions
