@@ -3,7 +3,7 @@
 import {
   createIngredient,
   deleteIngredient,
-  getIngredient,
+  getIngredients,
 } from "@/app/lib/data";
 import Link from "next/link";
 import { useEffect, useState } from "react";
