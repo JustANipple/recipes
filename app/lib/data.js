@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
 
+//#region Recipes
 export async function createRecipe(id, data) {
   const rawData = {
     imageLink: data.imageLink,
@@ -15,34 +16,36 @@ export async function createRecipe(id, data) {
     cookingTime: data.cookingTime,
   };
 
-  console.log(rawData);
-
-  //Create a recipe
-  const recipe = await prisma.recipes.create({
-    data: {
-      ImageLink: rawData.imageLink,
-      Title: rawData.title,
-      Description: rawData.description,
-      PreparationTime: parseFloat(rawData.preparationTime, 10),
-      CookingTime: parseFloat(rawData.cookingTime, 10),
-    },
-  });
-  //Preparations
-  createPreparation(rawData.preparationTime, rawData.cookingTime);
-  //Ingredients
-  for (let i = 0; i < data.ingredients.length; i++) {
-    if (data.ingredients[i] === "" || data.quantities[i] === "") {
-      continue;
+  //Transaction so that if one of the queries fails, the others are not executed
+  await prisma.$transaction(async (prisma) => {
+    //Recipe
+    const recipe = await prisma.recipes.create({
+      data: {
+        ImageLink: rawData.imageLink,
+        Title: rawData.title,
+        Description: rawData.description,
+        PreparationTime: parseFloat(rawData.preparationTime, 10),
+        CookingTime: parseFloat(rawData.cookingTime, 10),
+      },
+    });
+    //Preparations
+    await createPreparation(rawData.preparationTime, rawData.cookingTime);
+    //Ingredients
+    for (let i = 0; i < data.ingredients.length; i++) {
+      if (data.ingredients[i] === "" || data.quantities[i] === "") {
+        continue;
+      }
+      await createIngredientRelationship(
+        data.ingredients[i],
+        data.quantities[i],
+        recipe.Id,
+      );
     }
-    createIngredientRelationship(
-      data.ingredients[i],
-      data.quantities[i],
-      recipe.Id,
-    );
-  }
-  //Instructions
-  createInstructions(data.instructions, recipe.Id);
+    //Instructions
+    await createInstructions(data.instructions, recipe.Id);
+  });
 }
+//#endregion Recipes
 
 //#region Preparations
 export async function createPreparation(
@@ -63,7 +66,7 @@ export async function createPreparationRelationship(recipeId, preparationId) {
   const preparationRelationship = await prisma.preparationsRelationships.create(
     {
       data: {
-        RecipeId: recipeId,
+        RecipeId: parseInt(recipeId),
         PreparationId: preparationId,
       },
     },
@@ -82,8 +85,6 @@ export async function createIngredient(id, data) {
     countable: data.countable,
     quantity: data.quantity || 0,
   };
-
-  console.log(rawData);
 
   let ingredient = {};
   if (parseInt(id) <= 0) {
@@ -114,8 +115,6 @@ export async function createIngredient(id, data) {
       },
     });
   }
-
-  console.log(ingredient);
 
   revalidatePath("/ingredients");
   redirect("/recipes/0/edit");
@@ -150,7 +149,7 @@ export async function getIngredients(id) {
 }
 
 export async function deleteIngredient(id) {
-  await prisma.ingredients.delete({
+  const ingredient = await prisma.ingredients.delete({
     where: {
       Id: parseInt(id),
     },
@@ -164,12 +163,15 @@ export async function deleteIngredient(id) {
 //#region Instructions
 export async function createInstructions(instructionsList, recipeId) {
   for (let i = 0; i < instructionsList.length; i++) {
-    const instructions = await prisma.instructions.create({
+    if (instructionsList[i] === "") {
+      continue;
+    }
+    const instruction = await prisma.instructions.create({
       data: {
         Description: instructionsList[i],
       },
     });
-    createInstructionRelationship(instructions, recipeId);
+    createInstructionRelationship(instruction, recipeId);
   }
 }
 
