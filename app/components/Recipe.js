@@ -1,40 +1,87 @@
 "use client";
 
 import Link from "next/link";
+import { getRecipes } from "../lib/data";
+import { useEffect, useState } from "react";
 
 const Recipe = () => {
+  const [recipes, setRecipes] = useState([]);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
+
+  useEffect(() => {
+    getRecipes().then((data) => {
+      setRecipes(data);
+      setSelectedRecipe(data[0]);
+      console.log(data[0]);
+    });
+  }, []);
+
+  //TODO: manage uncountables
+  function calculateCalories() {
+    let calories = 0;
+    selectedRecipe.Ingredients.forEach((ingredient) => {
+      if (ingredient.Countable) {
+        //Carbs: 4kcal
+        calories += ingredient.Carbs * 4 * ingredient.Quantity;
+        //Proteins: 4kcal
+        calories += ingredient.Proteins * 4 * ingredient.Quantity;
+        //Fat: 9kcal
+        calories += ingredient.Fat * 9 * ingredient.Quantity;
+      }
+    });
+    return calories;
+  }
+
   return (
     <>
       <main className="m-auto grid  gap-y-9 bg-White md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6">
         <div className="relative truncate md:rounded-xl">
-          <div className="absolute left-2 top-2 flex gap-3">
-            <Link
-              href="recipes/0/edit" // Change this to the correct recipe ID
-              className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
+          <div className="absolute left-2 right-2 top-2 flex justify-between">
+            <div className="flex gap-3">
+              <Link
+                href="recipes/0/edit" // Change this to the correct recipe ID
+                className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
+              >
+                New
+              </Link>
+              <Link
+                href="recipes/1/edit" // Change this to the correct recipe ID
+                className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
+              >
+                Edit
+              </Link>
+              <button className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1">
+                <p className="my-auto font-Outfit text-Nutmeg">Delete</p>
+              </button>
+            </div>
+            {/* Make a select that will contain a list of recipes */}
+            <select
+              name="recipes"
+              className="rounded-md border border-LightGrey px-4 py-1.5"
             >
-              New
-            </Link>
-            <Link
-              href="recipes/1/edit" // Change this to the correct recipe ID
-              className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
-            >
-              Edit
-            </Link>
-            <button className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1">
-              <p className="my-auto font-Outfit text-Nutmeg">Delete</p>
-            </button>
+              {recipes &&
+                recipes.map((recipe) => {
+                  return (
+                    <option key={recipe.Id} value={recipe.Id}>
+                      {recipe.Title}
+                    </option>
+                  );
+                })}
+            </select>
           </div>
           <img src="/images/image-omelette.jpeg" alt="food picture" />
         </div>
         <div className="grid gap-y-8 px-8 md:px-0">
           <div className="grid gap-y-6">
             <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
-              Simple Omelette Recipe
+              {/* Simple Omelette Recipe */}
+              {selectedRecipe && selectedRecipe.Title}
             </h1>
             <p className="font-Outfit text-WengeBrown">
-              An easy and quick dish, perfect for any meal. This classic
+              {/* An easy and quick dish, perfect for any meal. This classic
               omelette combines beaten eggs cooked to perfection, optionally
-              filled with your choice of cheese, vegetables, or meats.
+              filled with your choice of cheese, vegetables, or meats. */}
+              {selectedRecipe && selectedRecipe.Description}
             </p>
           </div>
 
@@ -45,17 +92,24 @@ const Recipe = () => {
             <ul className="grid list-disc gap-y-1 text-WengeBrown">
               <li className="flex items-center before:px-2 before:pe-7 before:text-xl before:content-['•']">
                 <p>
-                  <b>Total</b>: Approximately 10 minutes
+                  <b>Total</b>: Approximately
+                  {/* 10 minutes */}{" "}
+                  {selectedRecipe &&
+                    selectedRecipe.PreparationTime +
+                      selectedRecipe.CookingTime}{" "}
+                  minutes
                 </p>
               </li>
               <li className="flex items-center before:px-2 before:pe-7 before:text-xl before:content-['•']">
                 <p>
-                  <b>Preparation</b>: 5 minutes
+                  <b>Preparation</b>:{/* 5 */}{" "}
+                  {selectedRecipe && selectedRecipe.PreparationTime} minutes
                 </p>
               </li>
               <li className="flex items-center before:px-2 before:pe-7 before:text-xl before:content-['•']">
                 <p>
-                  <b>Cooking</b>: 5 minutes
+                  <b>Cooking</b>:{/* 5 */}{" "}
+                  {selectedRecipe && selectedRecipe.CookingTime} minutes
                 </p>
               </li>
             </ul>
@@ -66,7 +120,18 @@ const Recipe = () => {
               Ingredients
             </h2>
             <ul className="grid gap-y-1 px-2 font-Outfit text-WengeBrown">
-              <li className="flex items-center before:pe-7 before:text-xl before:content-['•']">
+              {selectedRecipe &&
+                selectedRecipe.Ingredients.map((ingredient) => {
+                  return (
+                    <li
+                      key={ingredient.Id}
+                      className="flex items-center before:pe-7 before:text-xl before:content-['•']"
+                    >
+                      {ingredient.Quantity} {ingredient.Name}
+                    </li>
+                  );
+                })}
+              {/* <li className="flex items-center before:pe-7 before:text-xl before:content-['•']">
                 2-3 large eggs
               </li>
               <li className="flex items-center before:pe-7 before:text-xl before:content-['•']">
@@ -80,7 +145,7 @@ const Recipe = () => {
               </li>
               <li className="flex items-center before:pe-7 before:text-xl before:content-['•']">
                 Optional fillings: cheese, diced vegetables, cooked meats, herbs
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -91,7 +156,16 @@ const Recipe = () => {
               Instructions
             </h2>
             <ol className="grid list-decimal gap-y-2 px-6 font-Outfit text-WengeBrown marker:font-Outfit marker:font-OutfitBold marker:text-Nutmeg">
-              <li className="ps-4">
+              {selectedRecipe &&
+                selectedRecipe.Preparations.map((preparation) => {
+                  return (
+                    <li key={preparation.Id} className="ps-4">
+                      {preparation.Description}
+                    </li>
+                  );
+                })}
+
+              {/* <li className="ps-4">
                 <b>Beat the eggs</b>: In a bowl, beat the eggs with a pinch of
                 salt and pepper until they are well mixed. You can add a
                 tablespoon of water or milk for a fluffier texture.
@@ -118,7 +192,7 @@ const Recipe = () => {
               <li className="ps-4">
                 <b>Enjoy</b>: Serve hot, with additional salt and pepper if
                 needed.
-              </li>
+              </li> */}
             </ol>
           </div>
 
@@ -132,22 +206,49 @@ const Recipe = () => {
               The table below shows nutritional values per serving without the
               additional fillings.
             </p>
+            {/* Calories per macro: Carbs: 4, Protein: 4, Fat: 9 */}
             <ul className="font-Outfit text-WengeBrown">
               <li className="grid grid-cols-2 gap-x-4 border-b border-LightGrey px-8 py-3">
                 Calories
-                <span className="font-OutfitBold text-Nutmeg">277kcal</span>
+                <span className="font-OutfitBold text-Nutmeg">
+                  {/* 277kcal */} {selectedRecipe && calculateCalories()} kcal
+                </span>
               </li>
               <li className="grid grid-cols-2 gap-x-4 border-b border-LightGrey px-8 py-3">
                 Carbs
-                <span className="font-OutfitBold text-Nutmeg">0g</span>
+                <span className="font-OutfitBold text-Nutmeg">
+                  {/* 0 */}{" "}
+                  {selectedRecipe &&
+                    selectedRecipe.Ingredients.reduce(
+                      (acc, ingredient) => acc + ingredient.Carbs,
+                      0,
+                    )}
+                  g
+                </span>
               </li>
               <li className="grid grid-cols-2 gap-x-4 border-b border-LightGrey px-8 py-3">
                 Protein
-                <span className="font-OutfitBold text-Nutmeg">20g</span>
+                <span className="font-OutfitBold text-Nutmeg">
+                  {/* 20 */}{" "}
+                  {selectedRecipe &&
+                    selectedRecipe.Ingredients.reduce(
+                      (acc, ingredient) => acc + ingredient.Proteins,
+                      0,
+                    )}
+                  g
+                </span>
               </li>
               <li className="grid grid-cols-2 gap-x-4 px-8 py-3">
                 Fat
-                <span className="font-OutfitBold text-Nutmeg">22g</span>
+                <span className="font-OutfitBold text-Nutmeg">
+                  {/* 22 */}{" "}
+                  {selectedRecipe &&
+                    selectedRecipe.Ingredients.reduce(
+                      (acc, ingredient) => acc + ingredient.Fat,
+                      0,
+                    )}
+                  g
+                </span>
               </li>
             </ul>
           </div>

@@ -45,6 +45,60 @@ export async function createRecipe(id, data) {
     await createInstructions(data.instructions, recipe.Id);
   });
 }
+
+export async function getRecipes(id) {
+  let recipes;
+  if (id && id !== 0) {
+    recipes = await prisma.recipes.findFirst({
+      where: {
+        Id: parseInt(id),
+      },
+    });
+  } else {
+    recipes = await prisma.recipes.findMany();
+  }
+
+  //For each recipe, get ingredients referring to ingredientsRelationships
+  for (let i = 0; i < recipes.length; i++) {
+    const ingredients = await prisma.ingredientsRelationships.findMany({
+      where: {
+        RecipeId: recipes[i].Id,
+      },
+    });
+    //For each ingredient, get the ingredient data
+    for (let j = 0; j < ingredients.length; j++) {
+      const ingredient = await prisma.ingredients.findFirst({
+        where: {
+          Id: ingredients[j].IngredientId,
+        },
+      });
+      ingredients[j].ingredient = ingredient;
+    }
+    recipes[i].ingredients = ingredients;
+  }
+
+  //For each recipe, get preparations referring to preparationsRelationships
+  for (let i = 0; i < recipes.length; i++) {
+    const preparations = await prisma.preparationsRelationships.findMany({
+      where: {
+        RecipeId: recipes[i].Id,
+      },
+    });
+    recipes[i].preparations = preparations;
+  }
+
+  //For each recipe, get instructions referring to instructionsRelationships
+  for (let i = 0; i < recipes.length; i++) {
+    const instructions = await prisma.instructionsRelationships.findMany({
+      where: {
+        RecipeId: recipes[i].Id,
+      },
+    });
+    recipes[i].instructions = instructions;
+  }
+  console.log(recipes[0].instructions[0]);
+  return recipes;
+}
 //#endregion Recipes
 
 //#region Preparations
