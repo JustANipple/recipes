@@ -53,9 +53,17 @@ export async function getRecipes(id) {
       where: {
         Id: parseInt(id),
       },
+      include: {
+        ingredients: {
+          through: { ingredientsRelationships: true },
+          include: { ingredients: true },
+        },
+      },
     });
   } else {
-    recipes = await prisma.recipes.findMany();
+    recipes = await prisma.recipes.findMany({
+      include: { Ingredients: true },
+    });
   }
 
   //For each recipe, get ingredients referring to ingredientsRelationships
