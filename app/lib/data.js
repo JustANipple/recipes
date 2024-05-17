@@ -72,9 +72,8 @@ export async function getRecipes(id) {
           Id: ingredients[j].IngredientId,
         },
       });
-      ingredients[j].ingredient = ingredient;
+      recipes[i].ingredients[j] = ingredient;
     }
-    recipes[i].ingredients = ingredients;
   }
 
   //For each recipe, get preparations referring to preparationsRelationships
