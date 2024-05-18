@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { getRecipes } from "../lib/data";
 import { useEffect, useState } from "react";
+import { seed } from "../lib/seed";
 
 const Recipe = () => {
   const [recipes, setRecipes] = useState([]);
@@ -10,6 +11,10 @@ const Recipe = () => {
 
   useEffect(() => {
     getRecipes().then((data) => {
+      if (data.length === 0) {
+        seed();
+        location.reload();
+      }
       setRecipes(data);
       setSelectedRecipe(data[0]);
       console.log(data[0]);
@@ -19,14 +24,14 @@ const Recipe = () => {
   //TODO: manage uncountables
   function calculateCalories() {
     let calories = 0;
-    selectedRecipe.Ingredients.forEach((ingredient) => {
-      if (ingredient.Countable) {
+    selectedRecipe.Ingredients.forEach((item) => {
+      if (item.Ingredient.Countable) {
         //Carbs: 4kcal
-        calories += ingredient.Carbs * 4 * ingredient.Quantity;
+        calories += item.Ingredient.Carbs * 4 * item.Ingredient.Quantity;
         //Proteins: 4kcal
-        calories += ingredient.Proteins * 4 * ingredient.Quantity;
+        calories += item.Ingredient.Proteins * 4 * item.Ingredient.Quantity;
         //Fat: 9kcal
-        calories += ingredient.Fat * 9 * ingredient.Quantity;
+        calories += item.Ingredient.Fat * 9 * item.Ingredient.Quantity;
       }
     });
     return calories;
@@ -54,7 +59,6 @@ const Recipe = () => {
                 <p className="my-auto font-Outfit text-Nutmeg">Delete</p>
               </button>
             </div>
-            {/* Make a select that will contain a list of recipes */}
             <select
               name="recipes"
               className="rounded-md border border-LightGrey px-4 py-1.5"
@@ -69,18 +73,17 @@ const Recipe = () => {
                 })}
             </select>
           </div>
-          <img src="/images/image-omelette.jpeg" alt="food picture" />
+          <img
+            src={selectedRecipe && selectedRecipe.ImageLink}
+            alt="food picture"
+          />
         </div>
         <div className="grid gap-y-8 px-8 md:px-0">
           <div className="grid gap-y-6">
             <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
-              {/* Simple Omelette Recipe */}
               {selectedRecipe && selectedRecipe.Title}
             </h1>
             <p className="font-Outfit text-WengeBrown">
-              {/* An easy and quick dish, perfect for any meal. This classic
-              omelette combines beaten eggs cooked to perfection, optionally
-              filled with your choice of cheese, vegetables, or meats. */}
               {selectedRecipe && selectedRecipe.Description}
             </p>
           </div>
@@ -121,31 +124,16 @@ const Recipe = () => {
             </h2>
             <ul className="grid gap-y-1 px-2 font-Outfit text-WengeBrown">
               {selectedRecipe &&
-                selectedRecipe.Ingredients.map((ingredient) => {
+                selectedRecipe.Ingredients.map((item) => {
                   return (
                     <li
-                      key={ingredient.Id}
+                      key={item.Ingredient.Id}
                       className="flex items-center before:pe-7 before:text-xl before:content-['•']"
                     >
-                      {ingredient.Quantity} {ingredient.Name}
+                      {item.Ingredient.Quantity} {item.Ingredient.Name}
                     </li>
                   );
                 })}
-              {/* <li className="flex items-center before:pe-7 before:text-xl before:content-['•']">
-                2-3 large eggs
-              </li>
-              <li className="flex items-center before:pe-7 before:text-xl before:content-['•']">
-                Salt, to taste
-              </li>
-              <li className="flex items-center before:pe-7 before:text-xl before:content-['•']">
-                Pepper, to taste
-              </li>
-              <li className="flex items-center before:pe-7 before:text-xl before:content-['•']">
-                1 tablespoon of butter or oil
-              </li>
-              <li className="flex items-center before:pe-7 before:text-xl before:content-['•']">
-                Optional fillings: cheese, diced vegetables, cooked meats, herbs
-              </li> */}
             </ul>
           </div>
 
@@ -157,42 +145,13 @@ const Recipe = () => {
             </h2>
             <ol className="grid list-decimal gap-y-2 px-6 font-Outfit text-WengeBrown marker:font-Outfit marker:font-OutfitBold marker:text-Nutmeg">
               {selectedRecipe &&
-                selectedRecipe.Preparations.map((preparation) => {
+                selectedRecipe.Instructions.map((item) => {
                   return (
-                    <li key={preparation.Id} className="ps-4">
-                      {preparation.Description}
+                    <li key={item.Instruction.Id} className="ps-4">
+                      {item.Instruction.Description}
                     </li>
                   );
                 })}
-
-              {/* <li className="ps-4">
-                <b>Beat the eggs</b>: In a bowl, beat the eggs with a pinch of
-                salt and pepper until they are well mixed. You can add a
-                tablespoon of water or milk for a fluffier texture.
-              </li>
-              <li className="ps-4">
-                <b>Heat the pan</b>: Place a non-stick frying pan over medium
-                heat and add butter or oil.
-              </li>
-              <li className="ps-4">
-                <b>Cook the omelette</b>: Once the butter is melted and
-                bubbling, pour in the eggs. Tilt the pan to ensure the eggs
-                evenly coat the surface.
-              </li>
-              <li className="ps-4">
-                <b>Add fillings (optional)</b>: When the eggs begin to set at
-                the edges but are still slightly runny in the middle, sprinkle
-                your chosen fillings over one half of the omelette.
-              </li>
-              <li className="ps-4">
-                <b>Fold and serve</b>: As the omelette continues to cook,
-                carefully lift one edge and fold it over the fillings. Let it
-                cook for another minute, then slide it onto a plate.
-              </li>
-              <li className="ps-4">
-                <b>Enjoy</b>: Serve hot, with additional salt and pepper if
-                needed.
-              </li> */}
             </ol>
           </div>
 
@@ -211,16 +170,15 @@ const Recipe = () => {
               <li className="grid grid-cols-2 gap-x-4 border-b border-LightGrey px-8 py-3">
                 Calories
                 <span className="font-OutfitBold text-Nutmeg">
-                  {/* 277kcal */} {selectedRecipe && calculateCalories()} kcal
+                  {selectedRecipe && calculateCalories()} kcal
                 </span>
               </li>
               <li className="grid grid-cols-2 gap-x-4 border-b border-LightGrey px-8 py-3">
                 Carbs
                 <span className="font-OutfitBold text-Nutmeg">
-                  {/* 0 */}{" "}
                   {selectedRecipe &&
                     selectedRecipe.Ingredients.reduce(
-                      (acc, ingredient) => acc + ingredient.Carbs,
+                      (acc, item) => acc + item.Ingredient.Carbs,
                       0,
                     )}
                   g
@@ -229,10 +187,9 @@ const Recipe = () => {
               <li className="grid grid-cols-2 gap-x-4 border-b border-LightGrey px-8 py-3">
                 Protein
                 <span className="font-OutfitBold text-Nutmeg">
-                  {/* 20 */}{" "}
                   {selectedRecipe &&
                     selectedRecipe.Ingredients.reduce(
-                      (acc, ingredient) => acc + ingredient.Proteins,
+                      (acc, item) => acc + item.Ingredient.Proteins,
                       0,
                     )}
                   g
@@ -241,10 +198,9 @@ const Recipe = () => {
               <li className="grid grid-cols-2 gap-x-4 px-8 py-3">
                 Fat
                 <span className="font-OutfitBold text-Nutmeg">
-                  {/* 22 */}{" "}
                   {selectedRecipe &&
                     selectedRecipe.Ingredients.reduce(
-                      (acc, ingredient) => acc + ingredient.Fat,
+                      (acc, item) => acc + item.Ingredient.Fat,
                       0,
                     )}
                   g

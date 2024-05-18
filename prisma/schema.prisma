@@ -8,73 +8,46 @@ datasource db {
 }
 
 model ingredients {
-  Name                     String                     @db.VarChar
-  UM                       String                     @db.VarChar
-  Carbs                    Float?                     @db.Real
-  Proteins                 Float?                     @db.Real
-  Fat                      Float?                     @db.Real
-  Countable                Boolean?
-  Id                       Int                        @id @unique @default(autoincrement())
-  Quantity                 Float?                     @db.Real
-  
-  ingredientsRelationships ingredientsRelationships[]
+  Name      String                     @db.VarChar
+  UM        String                     @db.VarChar
+  Carbs     Float?                     @db.Real
+  Proteins  Float?                     @db.Real
+  Fat       Float?                     @db.Real
+  Countable Boolean?
+  Id        Int                        @unique @default(autoincrement())
+  Quantity  Float?                     @db.Real
+  Recipes   ingredientsRelationships[]
+
+  @@id([Name, Id])
 }
 
 model ingredientsRelationships {
   RecipeId     Int
   IngredientId Int
   Quantity     Float?      @db.Real
-
-  ingredients  ingredients @relation(fields: [IngredientId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
-  recipes      recipes     @relation(fields: [RecipeId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
+  Ingredient   ingredients @relation(fields: [IngredientId], references: [Id], onDelete: Cascade, onUpdate: NoAction)
+  Recipe       recipes     @relation(fields: [RecipeId], references: [Id], onDelete: Cascade, onUpdate: NoAction)
 
   @@id([RecipeId, IngredientId])
 }
 
 model instructions {
-  Id                        Int                         @id @default(autoincrement())
-  Description               String?                     @db.VarChar
+  Id          Int      @default(autoincrement())
+  Title       String   @db.VarChar
+  Description String?  @db.VarChar
+  RecipeId    Int?
+  Recipe      recipes? @relation(fields: [RecipeId], references: [Id], onDelete: Cascade, onUpdate: NoAction)
 
-  instructionsRelationships instructionsRelationships[]
-}
-
-model instructionsRelationships {
-  RecipeId      Int
-  InstructionId Int
-
-  instructions  instructions @relation(fields: [InstructionId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
-  recipes       recipes      @relation(fields: [RecipeId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@id([RecipeId, InstructionId])
-}
-
-model preparations {
-  Id                        Int                         @id @default(autoincrement())
-  PreparationTime           Int?
-  CookingTime               Int?
-
-  preparationsRelationships preparationsRelationships[]
-}
-
-model preparationsRelationships {
-  RecipeId      Int
-  PreparationId Int
-
-  preparations  preparations @relation(fields: [PreparationId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
-  recipes       recipes      @relation(fields: [RecipeId], references: [Id], onDelete: NoAction, onUpdate: NoAction)
-
-  @@id([RecipeId, PreparationId])
+  @@id([Id, Title])
 }
 
 model recipes {
-  Id                        Int                         @id @default(autoincrement())
-  ImageLink                 String?                     @db.VarChar
-  Title                     String?                     @db.VarChar
-  Description               String?                     @db.VarChar
-  PreparationTime           Float?
-  CookingTime               Float?
-
-  Ingredients  ingredientsRelationships[]
-  Instructions instructionsRelationships[]
-  Preparations preparationsRelationships[]
+  Id              Int                        @id @default(autoincrement())
+  ImageLink       String?                    @db.VarChar
+  Title           String?                    @db.VarChar
+  Description     String?                    @db.VarChar
+  PreparationTime Float?
+  CookingTime     Float?
+  Ingredients     ingredientsRelationships[]
+  Instructions    instructions[]
 }

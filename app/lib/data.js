@@ -54,56 +54,31 @@ export async function getRecipes(id) {
         Id: parseInt(id),
       },
       include: {
-        ingredients: {
-          through: { ingredientsRelationships: true },
-          include: { ingredients: true },
+        Ingredients: {
+          include: {
+            Ingredient: true,
+          },
+        },
+        Instructions: {
+          include: {
+            Instruction: true,
+          },
         },
       },
     });
   } else {
     recipes = await prisma.recipes.findMany({
-      include: { Ingredients: true },
-    });
-  }
-
-  //For each recipe, get ingredients referring to ingredientsRelationships
-  for (let i = 0; i < recipes.length; i++) {
-    const ingredients = await prisma.ingredientsRelationships.findMany({
-      where: {
-        RecipeId: recipes[i].Id,
-      },
-    });
-    //For each ingredient, get the ingredient data
-    for (let j = 0; j < ingredients.length; j++) {
-      const ingredient = await prisma.ingredients.findFirst({
-        where: {
-          Id: ingredients[j].IngredientId,
+      include: {
+        Ingredients: {
+          include: {
+            Ingredient: true,
+          },
         },
-      });
-      recipes[i].ingredients[j] = ingredient;
-    }
-  }
-
-  //For each recipe, get preparations referring to preparationsRelationships
-  for (let i = 0; i < recipes.length; i++) {
-    const preparations = await prisma.preparationsRelationships.findMany({
-      where: {
-        RecipeId: recipes[i].Id,
+        Instructions: true,
       },
     });
-    recipes[i].preparations = preparations;
   }
 
-  //For each recipe, get instructions referring to instructionsRelationships
-  for (let i = 0; i < recipes.length; i++) {
-    const instructions = await prisma.instructionsRelationships.findMany({
-      where: {
-        RecipeId: recipes[i].Id,
-      },
-    });
-    recipes[i].instructions = instructions;
-  }
-  console.log(recipes[0].instructions[0]);
   return recipes;
 }
 //#endregion Recipes
