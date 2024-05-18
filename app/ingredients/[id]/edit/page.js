@@ -18,11 +18,12 @@ const Page = ({ params }) => {
   const [carbs, setCarbs] = useState();
   const [proteins, setProteins] = useState();
   const [fat, setFat] = useState();
+  const [calories, setCalories] = useState();
   const [countable, setCountable] = useState(true);
   const [quantity, setQuantity] = useState();
 
   useEffect(() => {
-    getIngredient(id).then((data) => {
+    getIngredients(id).then((data) => {
       if (data != null) {
         setName(data.Name);
         setUm(data.UM);
@@ -105,6 +106,7 @@ const Page = ({ params }) => {
               type="number"
               name="carbs"
               placeholder="Carbs"
+              step={0.1}
               className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.carbs && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
               onChange={(e) => setCarbs(e.target.value)}
               defaultValue={carbs}
@@ -120,6 +122,7 @@ const Page = ({ params }) => {
               type="number"
               name="proteins"
               placeholder="Proteins"
+              step={0.1}
               className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.proteins && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
               onChange={(e) => setProteins(e.target.value)}
               defaultValue={proteins}
@@ -135,10 +138,26 @@ const Page = ({ params }) => {
               type="number"
               name="fat"
               placeholder="Fat"
+              step={0.1}
               className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.fat && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
               onChange={(e) => setFat(e.target.value)}
               defaultValue={fat}
               {...register("fat", { required: true })}
+            />
+          </div>
+          {/* Calories */}
+          <div className="grid gap-y-2">
+            <label htmlFor="name" className="text-sm">
+              Calories
+            </label>
+            <input
+              type="number"
+              name="calories"
+              placeholder="Calories"
+              className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.fat && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
+              onChange={(e) => setCalories(e.target.value)}
+              defaultValue={fat}
+              {...register("calories", { required: true })}
             />
           </div>
           {/* Countable */}

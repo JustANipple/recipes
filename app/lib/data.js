@@ -8,41 +8,55 @@ const prisma = new PrismaClient();
 
 //#region Recipes
 export async function createRecipe(id, data) {
-  const rawData = {
-    imageLink: data.imageLink,
-    title: data.title,
-    description: data.description,
-    preparationTime: data.preparationTime,
-    cookingTime: data.cookingTime,
-  };
-
-  //Transaction so that if one of the queries fails, the others are not executed
   await prisma.$transaction(async (prisma) => {
-    //Recipe
     const recipe = await prisma.recipes.create({
       data: {
-        ImageLink: rawData.imageLink,
-        Title: rawData.title,
-        Description: rawData.description,
-        PreparationTime: parseFloat(rawData.preparationTime, 10),
-        CookingTime: parseFloat(rawData.cookingTime, 10),
+        ImageLink: data.imageLink,
+        Title: data.title,
+        Description: data.description,
+        PreparationTime: parseFloat(data.preparationTime, 10),
+        CookingTime: parseFloat(data.cookingTime, 10),
+
+        Ingredients: {
+          create: data.ingredients.map((ingredient, index) => ({
+            IngredientId: parseInt(ingredient),
+            Quantity: parseFloat(data.quantities[index]),
+          })),
+        },
+
+        Instructions: {
+          create: data.instructions.map((instruction) => ({
+            Title: "ahahaha",
+            Description: instruction,
+          })),
+        },
       },
     });
-    //Preparations
-    await createPreparation(rawData.preparationTime, rawData.cookingTime);
-    //Ingredients
-    for (let i = 0; i < data.ingredients.length; i++) {
-      if (data.ingredients[i] === "" || data.quantities[i] === "") {
-        continue;
-      }
-      await createIngredientRelationship(
-        data.ingredients[i],
-        data.quantities[i],
-        recipe.Id,
-      );
-    }
-    //Instructions
-    await createInstructions(data.instructions, recipe.Id);
+
+    // //Recipe
+    // const recipe = await prisma.recipes.create({
+    //   data: {
+    //     ImageLink: data.imageLink,
+    //     Title: data.title,
+    //     Description: data.description,
+    //     PreparationTime: parseFloat(data.preparationTime, 10),
+    //     CookingTime: parseFloat(data.cookingTime, 10),
+    //   },
+    // });
+
+    // //Ingredients
+    // for (let i = 0; i < data.ingredients.length; i++) {
+    //   if (data.ingredients[i] === "" || data.quantities[i] === "") {
+    //     continue;
+    //   }
+    //   await createIngredientRelationship(
+    //     data.ingredients[i],
+    //     data.quantities[i],
+    //     recipe.Id,
+    //   );
+    // }
+    // //Instructions
+    // await createInstructions(data.instructions, recipe.Id);
   });
 }
 
@@ -83,71 +97,48 @@ export async function getRecipes(id) {
 }
 //#endregion Recipes
 
-//#region Preparations
-export async function createPreparation(
-  recipeId,
-  preparationTime,
-  cookingTime,
-) {
-  const preparation = await prisma.preparations.create({
-    data: {
-      PreparationTime: parseInt(preparationTime, 10),
-      CookingTime: parseInt(cookingTime, 10),
-    },
-  });
-  createPreparationRelationship(recipeId, preparation.Id);
-}
-
-export async function createPreparationRelationship(recipeId, preparationId) {
-  const preparationRelationship = await prisma.preparationsRelationships.create(
-    {
-      data: {
-        RecipeId: parseInt(recipeId),
-        PreparationId: preparationId,
-      },
-    },
-  );
-}
-//#endregion Preparations
-
 //#region Ingredients
 export async function createIngredient(id, data) {
-  const rawData = {
-    name: data.name,
-    um: data.um,
-    carbs: data.carbs,
-    proteins: data.proteins,
-    fat: data.fat,
-    countable: data.countable,
-    quantity: data.quantity || 0,
-  };
-
-  let ingredient = {};
+  let ingredients = {};
   if (parseInt(id) <= 0) {
-    ingredient = await prisma.ingredients.create({
+    ingredients = await prisma.ingredients.create({
       data: {
-        Name: rawData.name,
-        UM: rawData.um,
-        Carbs: parseFloat(rawData.carbs),
-        Proteins: parseFloat(rawData.proteins),
-        Fat: parseFloat(rawData.fat),
-        Countable: rawData.countable === null ? false : true,
-        Quantity: parseFloat(rawData.quantity),
+        Name: data.name,
+        UM: data.um,
+        Carbs: parseFloat(data.carbs),
+        Proteins: parseFloat(data.proteins),
+        Fat: parseFloat(data.fat),
+        Countable: data.countable === null ? false : true,
+        Quantity: parseFloat(data.quantity),
+        Calories: calculateCalories(
+          data.carbs,
+          data.proteins,
+          data.fat,
+          data.countable,
+          data.quantity || 0,
+        ),
       },
     });
   } else {
-    ingredient = await prisma.ingredients.update({
+    ingredients = await prisma.ingredients.update({
       where: {
         Id: parseInt(id),
       },
       data: {
-        Name: rawData.name,
-        UM: rawData.um,
-        Carbs: parseFloat(rawData.carbs),
-        Proteins: parseFloat(rawData.proteins),
-        Fat: parseFloat(rawData.fat),
-        Countable: rawData.countable === null ? false : true,
-        Quantity: parseFloat(rawData.quantity),
+        Name: data.name,
+        UM: data.um,
+        Carbs: parseFloat(data.carbs),
+        Proteins: parseFloat(data.proteins),
+        Fat: parseFloat(data.fat),
+        Countable: data.countable === null ? false : true,
+        Quantity: parseFloat(data.quantity),
+        Calories: calculateCalories(
+          data.carbs,
+          data.proteins,
+          data.fat,
+          data.countable,
+          data.quantity || 0,
+        ),
       },
     });
   }
@@ -156,18 +147,15 @@ export async function createIngredient(id, data) {
   redirect("/recipes/0/edit");
 }
 
-export async function createIngredientRelationship(
-  ingredient,
-  quantity,
-  recipeId,
-) {
-  const ingredientsRelationship = await prisma.ingredientsRelationships.create({
-    data: {
-      RecipeId: recipeId,
-      IngredientId: parseInt(ingredient),
-      Quantity: parseFloat(quantity),
-    },
-  });
+function calculateCalories(carbs, proteins, fat, countable, quantity) {
+  let calories = 0;
+  //Carbs: 4kcal
+  calories += parseFloat(carbs) * 4;
+  //Proteins: 4kcal
+  calories += parseFloat(proteins) * 4;
+  //Fat: 9kcal
+  calories += parseFloat(fat) * 9;
+  return calories;
 }
 
 export async function getIngredients(id) {
@@ -195,29 +183,3 @@ export async function deleteIngredient(id) {
   redirect("/");
 }
 //#endregion Ingredients
-
-//#region Instructions
-export async function createInstructions(instructionsList, recipeId) {
-  for (let i = 0; i < instructionsList.length; i++) {
-    if (instructionsList[i] === "") {
-      continue;
-    }
-    const instruction = await prisma.instructions.create({
-      data: {
-        Description: instructionsList[i],
-      },
-    });
-    createInstructionRelationship(instruction, recipeId);
-  }
-}
-
-export async function createInstructionRelationship(instruction, recipeId) {
-  const instructionsRelationship =
-    await prisma.instructionsRelationships.create({
-      data: {
-        RecipeId: recipeId,
-        InstructionId: instruction.Id,
-      },
-    });
-}
-//#endregion Instructions

@@ -8,7 +8,7 @@ datasource db {
 }
 
 model ingredients {
-  Name      String                     @db.VarChar
+  Name      String                     @id @db.VarChar
   UM        String                     @db.VarChar
   Carbs     Float?                     @db.Real
   Proteins  Float?                     @db.Real
@@ -16,9 +16,8 @@ model ingredients {
   Countable Boolean?
   Id        Int                        @unique @default(autoincrement())
   Quantity  Float?                     @db.Real
+  Calories  Float?                     @db.Real
   Recipes   ingredientsRelationships[]
-
-  @@id([Name, Id])
 }
 
 model ingredientsRelationships {
@@ -32,13 +31,11 @@ model ingredientsRelationships {
 }
 
 model instructions {
-  Id          Int      @default(autoincrement())
-  Title       String   @db.VarChar
+  Id          Int      @unique @default(autoincrement())
+  Title       String   @id @db.VarChar
   Description String?  @db.VarChar
   RecipeId    Int?
   Recipe      recipes? @relation(fields: [RecipeId], references: [Id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([Id, Title])
 }
 
 model recipes {

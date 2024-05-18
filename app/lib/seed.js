@@ -4,7 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-async function seed() {
+export async function seed() {
   await prisma.recipes.create({
     data: {
       ImageLink: "./images/image-omelette.jpeg",
@@ -14,9 +14,9 @@ async function seed() {
       PreparationTime: 5,
       CookingTime: 5,
       Ingredients: {
-        create: [
+        connectOrCreate: [
           {
-            Quantity: 3,
+            Quantity: 2,
             Ingredient: {
               create: {
                 UM: "#",
@@ -24,6 +24,8 @@ async function seed() {
                 Carbs: 1.1,
                 Proteins: 13,
                 Fat: 11,
+                Countable: true,
+                Calories: 156 * 3,
               },
             },
           },
@@ -36,6 +38,7 @@ async function seed() {
                 Carbs: 0,
                 Proteins: 0,
                 Fat: 0,
+                Countable: false,
               },
             },
           },
@@ -48,6 +51,7 @@ async function seed() {
                 Carbs: 0,
                 Proteins: 0,
                 Fat: 0,
+                Countable: false,
               },
             },
           },
@@ -61,6 +65,7 @@ async function seed() {
                 Carbs: 0,
                 Proteins: 0,
                 Fat: 14,
+                Countable: false,
               },
             },
           },
@@ -73,62 +78,43 @@ async function seed() {
                 Carbs: 0,
                 Proteins: 0,
                 Fat: 0,
+                Countable: false,
               },
             },
           },
         ],
       },
       Instructions: {
-        create: [
+        connectOrCreate: [
           {
             Title: "Beat the eggs",
             Description:
               "In a bowl, beat the eggs with a pinch of salt and pepper until they are well mixed. You can add a tablespoon of water or milk for a fluffier texture.",
           },
           {
-            Instruction: {
-              create: {
-                Title: "Heat the pan",
-                Description:
-                  "Place a non-stick frying pan over medium heat and add butter or oil.",
-              },
-            },
+            Title: "Heat the pan",
+            Description:
+              "Place a non-stick frying pan over medium heat and add butter or oil.",
           },
           {
-            Instruction: {
-              create: {
-                Title: "Cook the omelette",
-                Description:
-                  "Once the butter is melted and bubbling, pour in the eggs. Tilt the pan to ensure the eggs evenly coat the surface.",
-              },
-            },
+            Title: "Cook the omelette",
+            Description:
+              "Once the butter is melted and bubbling, pour in the eggs. Tilt the pan to ensure the eggs evenly coat the surface.",
           },
           {
-            Instruction: {
-              create: {
-                Title: "Add fillings (optional)",
-                Description:
-                  "When the eggs begin to set at the edges but are still slightly runny in the middle, sprinkle your chosen fillings over one half of the omelette.",
-              },
-            },
+            Title: "Add fillings (optional)",
+            Description:
+              "When the eggs begin to set at the edges but are still slightly runny in the middle, sprinkle your chosen fillings over one half of the omelette.",
           },
           {
-            Instruction: {
-              create: {
-                Title: "Fold and serve",
-                Description:
-                  "As the omelette continues to cook, carefully lift one edge and fold it over the fillings. Let it cook for another minute, then slide it onto a plate.",
-              },
-            },
+            Title: "Fold and serve",
+            Description:
+              "As the omelette continues to cook, carefully lift one edge and fold it over the fillings. Let it cook for another minute, then slide it onto a plate.",
           },
           {
-            Instruction: {
-              create: {
-                Title: "Enjoy",
-                Description:
-                  "Serve hot, with additional salt and pepper if needed.",
-              },
-            },
+            Title: "Enjoy",
+            Description:
+              "Serve hot, with additional salt and pepper if needed.",
           },
         ],
       },
@@ -136,10 +122,11 @@ async function seed() {
   });
 }
 
-async function removeSeed() {
-  await prisma.recipes.deleteMany({});
-  await prisma.ingredients.deleteMany({});
-  await prisma.instructions.deleteMany({});
-}
-
-seed();
+seed()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
