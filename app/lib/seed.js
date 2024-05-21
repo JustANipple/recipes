@@ -14,7 +14,7 @@ async function seed() {
       PreparationTime: 5,
       CookingTime: 5,
       Ingredients: {
-        connectOrCreate: [
+        create: [
           {
             Quantity: 2,
             Ingredient: {
@@ -85,7 +85,7 @@ async function seed() {
         ],
       },
       Instructions: {
-        connectOrCreate: [
+        create: [
           {
             Title: "Beat the eggs",
             Description:

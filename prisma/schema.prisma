@@ -8,13 +8,13 @@ datasource db {
 }
 
 model ingredients {
-  Name      String                     @id @db.VarChar
+  Name      String                     @db.VarChar
   UM        String                     @db.VarChar
   Carbs     Float?                     @db.Real
   Proteins  Float?                     @db.Real
   Fat       Float?                     @db.Real
   Countable Boolean?
-  Id        Int                        @unique @default(autoincrement())
+  Id        Int                        @id @unique @default(autoincrement())
   Quantity  Float?                     @db.Real
   Calories  Float?                     @db.Real
   Recipes   ingredientsRelationships[]

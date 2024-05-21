@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { getRecipes } from "../lib/data";
 import { useEffect, useState } from "react";
-import { seed } from "../lib/seed";
 
 const Recipe = () => {
   const [recipes, setRecipes] = useState([]);
