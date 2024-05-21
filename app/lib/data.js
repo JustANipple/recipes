@@ -18,8 +18,8 @@ export async function createRecipe(id, data) {
         CookingTime: parseFloat(data.cookingTime, 10),
 
         Ingredients: {
-          create: data.ingredients.map((ingredient, index) => ({
-            IngredientId: parseInt(ingredient),
+          connect: data.ingredients.map((ingredient, index) => ({
+            where: { Id: parseInt(ingredient) },
             Quantity: parseFloat(data.quantities[index]),
           })),
         },
@@ -84,9 +84,7 @@ export async function getRecipes(id) {
     recipes = await prisma.recipes.findMany({
       include: {
         Ingredients: {
-          include: {
-            Ingredient: true,
-          },
+          include: {},
         },
         Instructions: true,
       },

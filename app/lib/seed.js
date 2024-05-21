@@ -4,7 +4,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
-export async function seed() {
+async function seed() {
   await prisma.recipes.create({
     data: {
       ImageLink: "./images/image-omelette.jpeg",
