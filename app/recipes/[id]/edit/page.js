@@ -18,13 +18,22 @@ const Page = ({ params, showForm, handleClick }) => {
   const [preparationTime, setPreparationTime] = useState();
   const [cookingTime, setCookingTime] = useState();
   const [ingredients, setIngredients] = useState();
+  const [instructions, setInstructions] = useState();
 
   const [ingredientSelects, setIngredientSelects] = useState([0]);
   const [instructionInputs, setInstructionInputs] = useState([0]);
 
   useEffect(() => {
-    getIngredients().then((data) => {
-      setIngredients(data);
+    getIngredients(id).then((data) => {
+      if (data != null) {
+        setImageLink(data.ImageLink);
+        setTitle(data.Title);
+        setDescription(data.Description);
+        setPreparationTime(data.PreparationTime);
+        setCookingTime(data.CookingTime);
+        setIngredients(data);
+        setInstructions(data);
+      }
     });
   }, []);
 
