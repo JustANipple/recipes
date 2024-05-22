@@ -1,18 +1,30 @@
 import { useState } from "react";
 
 const InstructionInput = ({ index, register }) => {
-  const [instruction, setInstruction] = useState();
+  const [instructionDesc, setInstructionDesc] = useState();
+  const [instructionTitle, setInstructionTitle] = useState();
 
   return (
-    <input
-      type="text"
-      name="instruction"
-      placeholder="Instruction"
-      className="rounded-md border border-[lightGrey] px-4 py-1.5"
-      onChange={(e) => setInstruction(e.target.value)}
-      value={instruction}
-      {...register(`instructions[${index}]`)}
-    />
+    <div className="flex gap-3">
+      <input
+        type="text"
+        name="instructionTitle"
+        placeholder="Title"
+        className="basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+        onChange={(e) => setInstructionTitle(e.target.value)}
+        value={instructionTitle}
+        {...register(`instructions[${index}].title`)}
+      />
+      <input
+        type="text"
+        name="instructionDescription"
+        placeholder="Description"
+        className="basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+        onChange={(e) => setInstructionDesc(e.target.value)}
+        value={instructionDesc}
+        {...register(`instructions[${index}].description`)}
+      />
+    </div>
   );
 };
 

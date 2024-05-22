@@ -8,56 +8,37 @@ const prisma = new PrismaClient();
 
 //#region Recipes
 export async function createRecipe(id, data) {
-  await prisma.$transaction(async (prisma) => {
-    const recipe = await prisma.recipes.create({
-      data: {
-        ImageLink: data.imageLink,
-        Title: data.title,
-        Description: data.description,
-        PreparationTime: parseFloat(data.preparationTime, 10),
-        CookingTime: parseFloat(data.cookingTime, 10),
+  let recipe;
+  if (id && id !== 0) {
+    await prisma.$transaction(async (prisma) => {
+      if (id && id !== 0) {
+        recipe = await prisma.recipes.create({
+          data: {
+            ImageLink: data.imageLink,
+            Title: data.title,
+            Description: data.description,
+            PreparationTime: parseFloat(data.preparationTime, 10),
+            CookingTime: parseFloat(data.cookingTime, 10),
 
-        Ingredients: {
-          create: data.ingredients.map((ingredient, index) => ({
-            Ingredient: { connect: { Id: parseInt(ingredient) } },
-            Quantity: parseFloat(data.quantities[index]),
-          })),
-        },
+            Ingredients: {
+              create: data.ingredients.map((ingredient) => ({
+                Ingredient: { connect: { Id: parseInt(ingredient.id) } },
+                Quantity: parseFloat(ingredient.quantity, 10),
+              })),
+            },
 
-        Instructions: {
-          create: data.instructions.map((instruction, index) => ({
-            Title: "Instruction" + index,
-            Description: instruction,
-          })),
-        },
-      },
+            Instructions: {
+              create: data.instructions.map((instruction) => ({
+                Title: instruction.title,
+                Description: instruction.description,
+              })),
+            },
+          },
+        });
+      }
     });
-
-    // //Recipe
-    // const recipe = await prisma.recipes.create({
-    //   data: {
-    //     ImageLink: data.imageLink,
-    //     Title: data.title,
-    //     Description: data.description,
-    //     PreparationTime: parseFloat(data.preparationTime, 10),
-    //     CookingTime: parseFloat(data.cookingTime, 10),
-    //   },
-    // });
-
-    // //Ingredients
-    // for (let i = 0; i < data.ingredients.length; i++) {
-    //   if (data.ingredients[i] === "" || data.quantities[i] === "") {
-    //     continue;
-    //   }
-    //   await createIngredientRelationship(
-    //     data.ingredients[i],
-    //     data.quantities[i],
-    //     recipe.Id,
-    //   );
-    // }
-    // //Instructions
-    // await createInstructions(data.instructions, recipe.Id);
-  });
+  }
+  // TODO: Implement the logic to update a recipe
 }
 
 export async function getRecipes(id) {
