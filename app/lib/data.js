@@ -39,6 +39,34 @@ export async function createRecipe(id, data) {
     });
   }
   // TODO: Implement the logic to update a recipe
+  else {
+    recipe = await prisma.recipes.update({
+      where: {
+        Id: parseInt(id),
+      },
+      data: {
+        ImageLink: data.imageLink,
+        Title: data.title,
+        Description: data.description,
+        PreparationTime: parseFloat(data.preparationTime, 10),
+        CookingTime: parseFloat(data.cookingTime, 10),
+
+        Ingredients: {
+          create: data.ingredients.map((ingredient) => ({
+            Ingredient: { connect: { Id: parseInt(ingredient.id) } },
+            Quantity: parseFloat(ingredient.quantity, 10),
+          })),
+        },
+
+        Instructions: {
+          create: data.instructions.map((instruction) => ({
+            Title: instruction.title,
+            Description: instruction.description,
+          })),
+        },
+      },
+    });
+  }
 }
 
 export async function getRecipes(id) {
@@ -54,11 +82,7 @@ export async function getRecipes(id) {
             Ingredient: true,
           },
         },
-        Instructions: {
-          include: {
-            Instruction: true,
-          },
-        },
+        Instructions: true,
       },
     });
   } else {
@@ -140,13 +164,18 @@ function calculateCalories(carbs, proteins, fat, countable, quantity) {
 export async function getIngredients(id) {
   let ingredients;
   if (id && id !== 0) {
-    ingredients = await prisma.ingredients.findFirst({
+    ingredients = await prisma.ingredientsRelationships.findFirst({
       where: {
-        Id: parseInt(id),
+        RecipeId: parseInt(id),
+      },
+      include: {
+        Ingredient: true,
       },
     });
   } else {
-    ingredients = await prisma.ingredients.findMany();
+    ingredients = await prisma.ingredientsRelationships.findMany({
+      include: { Ingredients: true },
+    });
   }
   return ingredients;
 }

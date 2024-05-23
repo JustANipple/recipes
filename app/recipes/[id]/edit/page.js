@@ -4,7 +4,7 @@ import IngredientSelect from "@/app/components/IngredientSelect";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { RxCross2, RxPlus } from "react-icons/rx";
-import { createRecipe, getIngredients } from "@/app/lib/data";
+import { createRecipe, getIngredients, getRecipes } from "@/app/lib/data";
 import { useForm } from "react-hook-form";
 import UpdateIngredient from "@/app/components/UpdateIngredient";
 import InstructionInput from "@/app/components/InstructionInput";
@@ -26,12 +26,17 @@ const Page = ({ params, showForm, handleClick }) => {
   useEffect(() => {
     getIngredients(id).then((data) => {
       if (data != null) {
+        setIngredients(data.Ingredients);
+      }
+    });
+    getRecipes(id).then((data) => {
+      if (data != null) {
         setImageLink(data.ImageLink);
         setTitle(data.Title);
         setDescription(data.Description);
         setPreparationTime(data.PreparationTime);
         setCookingTime(data.CookingTime);
-        setIngredients(data);
+        setIngredients(data.Ingredients);
         setInstructions(data);
       }
     });

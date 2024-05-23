@@ -32,7 +32,7 @@ const Recipe = () => {
                   New
                 </Link>
                 <Link
-                  href="recipes/1/edit" // Change this to the correct recipe ID
+                  href={`recipes/${selectedRecipe.Id}/edit`} // Change this to the correct recipe ID
                   className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
                 >
                   Edit
@@ -77,7 +77,7 @@ const Recipe = () => {
               <ul className="grid list-disc gap-y-1 text-WengeBrown">
                 <li className="flex items-center before:px-2 before:pe-7 before:text-xl before:content-['•']">
                   <p>
-                    <b>Total</b>: Approximately
+                    <b>Total</b>: Approximately{" "}
                     {selectedRecipe &&
                       selectedRecipe.PreparationTime +
                         selectedRecipe.CookingTime}{" "}
