@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import UpdateIngredient from "@/app/components/UpdateIngredient";
 import InstructionInput from "@/app/components/InstructionInput";
 
-const Page = ({ params, showForm, handleClick }) => {
+const Page = ({ params, handleClick }) => {
   const id = params.id;
 
   const [imageLink, setImageLink] = useState();
@@ -25,8 +25,11 @@ const Page = ({ params, showForm, handleClick }) => {
 
   useEffect(() => {
     getIngredients(id).then((data) => {
-      if (data != null) {
-        setIngredients(data.Ingredients);
+      if (parseInt(id) > 0 && data != null) {
+        setIngredients(data.ingredients);
+      } else {
+        setIngredients(data);
+        console.log("Lista di ingredienti: " + data);
       }
     });
     getRecipes(id).then((data) => {
@@ -37,7 +40,9 @@ const Page = ({ params, showForm, handleClick }) => {
         setPreparationTime(data.PreparationTime);
         setCookingTime(data.CookingTime);
         setIngredients(data.Ingredients);
-        setInstructions(data);
+        setInstructions(data.Instructions);
+        setIngredientSelects(data.Ingredients.map((item) => item));
+        setInstructionInputs(data.Instructions.map((item) => item));
       }
     });
   }, []);
@@ -209,13 +214,14 @@ const Page = ({ params, showForm, handleClick }) => {
                 </button>
               </div>
             </div>
-            {ingredientSelects.map((_, index) => {
+            {ingredientSelects.map((item, index) => {
               return (
                 <IngredientSelect
                   key={index}
                   index={index}
                   ingredients={ingredients}
                   register={register}
+                  defaultValue={item}
                 />
               );
             })}
@@ -243,12 +249,13 @@ const Page = ({ params, showForm, handleClick }) => {
                 </button>
               </div>
             </div>
-            {instructionInputs.map((index) => {
+            {instructionInputs.map((item, index) => {
               return (
                 <InstructionInput
                   key={index}
                   index={index}
                   register={register}
+                  defaultValue={item}
                 />
               );
             })}

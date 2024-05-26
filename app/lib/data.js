@@ -163,7 +163,7 @@ function calculateCalories(carbs, proteins, fat, countable, quantity) {
 
 export async function getIngredients(id) {
   let ingredients;
-  if (id && id !== 0) {
+  if (id && parseInt(id) !== 0) {
     ingredients = await prisma.ingredientsRelationships.findFirst({
       where: {
         RecipeId: parseInt(id),
@@ -173,9 +173,7 @@ export async function getIngredients(id) {
       },
     });
   } else {
-    ingredients = await prisma.ingredientsRelationships.findMany({
-      include: { Ingredients: true },
-    });
+    ingredients = await prisma.ingredients.findMany();
   }
   return ingredients;
 }

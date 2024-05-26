@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UpdateIngredient from "./UpdateIngredient";
 import { MdEdit } from "react-icons/md";
 
-const IngredientSelect = ({ index, ingredients, register }) => {
+const IngredientSelect = ({ index, ingredients, register, defaultValue }) => {
   const [showEditIngredient, setShowEditIngredient] = useState(false);
 
   const [ingredientId, setIngredientId] = useState(0);
   const [quantity, setQuantity] = useState();
+
+  useEffect(() => {
+    if (defaultValue) {
+      setIngredientId(defaultValue.IngredientId);
+      setQuantity(defaultValue.Quantity);
+    }
+  }, [defaultValue]);
 
   function handleChange(value) {
     setIngredientId(value);
@@ -26,20 +33,25 @@ const IngredientSelect = ({ index, ingredients, register }) => {
         value={ingredientId}
         {...register(`ingredients[${index}].id`)}
       >
-        <option value="" onClick={(e) => handleChange(e.target.value)}>
-          -- Select an Ingredient --
+        <option
+          value={ingredientId}
+          onClick={(e) => handleChange(e.target.value)}
+        >
+          {defaultValue
+            ? defaultValue.Ingredient.Name
+            : "-- Select an Ingredient --"}
         </option>
         {ingredients &&
-          ingredients.map((ingredient, index) => {
+          ingredients.map((item, index) => {
             return (
               <option
                 key={index}
-                value={ingredient.Id}
+                value={item.Ingredient.Id}
                 onClick={(e) => handleChange(e.target.value)}
               >
-                Name: {ingredient.Name} - UM: {ingredient.UM} - Carbs:{" "}
-                {ingredient.Carbs} - Proteins: {ingredient.Proteins} - Fat:{" "}
-                {ingredient.Fat}
+                Name: {item.Ingredient.Name} - UM: {item.Ingredient.UM} - Carbs:{" "}
+                {item.Ingredient.Carbs} - Proteins: {item.Ingredient.Proteins} -
+                Fat: {item.Ingredient.Fat}
               </option>
             );
           })}
