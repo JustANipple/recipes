@@ -98,6 +98,17 @@ export async function getRecipes(id) {
 
   return recipes;
 }
+
+export async function deleteRecipe(id) {
+  const recipe = await prisma.recipes.delete({
+    where: {
+      Id: parseInt(id),
+    },
+  });
+
+  revalidatePath("/recipes");
+  redirect("/");
+}
 //#endregion Recipes
 
 //#region Ingredients
@@ -150,17 +161,6 @@ export async function createIngredient(id, data) {
   redirect("/recipes/0/edit");
 }
 
-function calculateCalories(carbs, proteins, fat, countable, quantity) {
-  let calories = 0;
-  //Carbs: 4kcal
-  calories += parseFloat(carbs) * 4;
-  //Proteins: 4kcal
-  calories += parseFloat(proteins) * 4;
-  //Fat: 9kcal
-  calories += parseFloat(fat) * 9;
-  return calories;
-}
-
 export async function getIngredients(id) {
   let ingredients;
   if (id && parseInt(id) !== 0) {
@@ -189,3 +189,14 @@ export async function deleteIngredient(id) {
   redirect("/");
 }
 //#endregion Ingredients
+
+function calculateCalories(carbs, proteins, fat) {
+  let calories = 0;
+  //Carbs: 4kcal
+  calories += parseFloat(carbs) * 4;
+  //Proteins: 4kcal
+  calories += parseFloat(proteins) * 4;
+  //Fat: 9kcal
+  calories += parseFloat(fat) * 9;
+  return calories;
+}
