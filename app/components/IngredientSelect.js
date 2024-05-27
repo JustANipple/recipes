@@ -46,12 +46,11 @@ const IngredientSelect = ({ index, ingredients, register, defaultValue }) => {
             return (
               <option
                 key={index}
-                value={item.Ingredient.Id}
+                value={item.Id}
                 onClick={(e) => handleChange(e.target.value)}
               >
-                Name: {item.Ingredient.Name} - UM: {item.Ingredient.UM} - Carbs:{" "}
-                {item.Ingredient.Carbs} - Proteins: {item.Ingredient.Proteins} -
-                Fat: {item.Ingredient.Fat}
+                Name: {item.Name} - UM: {item.UM} - Carbs: {item.Carbs} -
+                Proteins: {item.Proteins} - Fat: {item.Fat}
               </option>
             );
           })}
