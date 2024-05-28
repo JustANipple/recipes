@@ -29,7 +29,6 @@ const Page = ({ params, handleClick }) => {
         setIngredients(data.ingredients);
       } else {
         setIngredients(data);
-        console.log("Lista di ingredienti: " + data);
       }
     });
     getRecipes(id).then((data) => {
@@ -48,6 +47,7 @@ const Page = ({ params, handleClick }) => {
   }, []);
 
   function handleIngredientPlusClick() {
+    console.log(ingredientSelects.map((item) => item));
     setIngredientSelects([...ingredientSelects, ingredientSelects.length]);
   }
 
@@ -221,7 +221,7 @@ const Page = ({ params, handleClick }) => {
                   index={index}
                   ingredients={ingredients}
                   register={register}
-                  defaultValue={item}
+                  defaultValue={item ? item : null}
                 />
               );
             })}

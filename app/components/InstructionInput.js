@@ -12,7 +12,7 @@ const InstructionInput = ({ index, register, defaultValue }) => {
         placeholder="Title"
         className="basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
         onChange={(e) => setInstructionTitle(e.target.value)}
-        value={defaultValue ? defaultValue.Title : ""}
+        value={defaultValue ? instructionTitle : ""}
         {...register(`instructions[${index}].title`)}
       />
       <input
@@ -21,7 +21,7 @@ const InstructionInput = ({ index, register, defaultValue }) => {
         placeholder="Description"
         className="basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
         onChange={(e) => setInstructionDesc(e.target.value)}
-        value={defaultValue ? defaultValue.Description : ""}
+        value={defaultValue ? instructionDesc : ""}
         {...register(`instructions[${index}].description`)}
       />
     </div>

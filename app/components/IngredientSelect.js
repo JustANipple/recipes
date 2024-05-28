@@ -16,6 +16,7 @@ const IngredientSelect = ({ index, ingredients, register, defaultValue }) => {
   }, [defaultValue]);
 
   function handleChange(value) {
+    console.log(value);
     setIngredientId(value);
 
     if (value !== "") {
@@ -34,10 +35,10 @@ const IngredientSelect = ({ index, ingredients, register, defaultValue }) => {
         {...register(`ingredients[${index}].id`)}
       >
         <option
-          value={ingredientId}
+          value={defaultValue ? ingredientId : ""}
           onClick={(e) => handleChange(e.target.value)}
         >
-          {defaultValue
+          {defaultValue && defaultValue.Ingredient
             ? defaultValue.Ingredient.Name
             : "-- Select an Ingredient --"}
         </option>
