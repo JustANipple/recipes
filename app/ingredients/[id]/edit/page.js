@@ -6,44 +6,40 @@ import {
   getIngredients,
 } from "@/app/lib/data";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { RxCross2 } from "react-icons/rx";
 
 const Page = ({ params }) => {
   const id = params.id;
 
-  const [name, setName] = useState();
-  const [um, setUm] = useState();
-  const [carbs, setCarbs] = useState();
-  const [proteins, setProteins] = useState();
-  const [fat, setFat] = useState();
-  const [calories, setCalories] = useState();
-  const [countable, setCountable] = useState(true);
-  const [quantity, setQuantity] = useState();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     getIngredients(id).then((data) => {
       if (data != null) {
-        setName(data.Name);
-        setUm(data.UM);
-        setCarbs(data.Carbs);
-        setProteins(data.Proteins);
-        setFat(data.Fat);
-        setCountable(data.Countable);
-        setQuantity(data.Quantity);
+        console.log(data);
+        reset({
+          name: data.Name,
+          um: data.UM,
+          carbs: data.Carbs,
+          proteins: data.Proteins,
+          fat: data.Fat,
+          countable: data.Countable,
+          quantity: data.Quantity,
+          calories: data.Calories,
+        });
       }
     });
   }, []);
 
   const createIngredientWithId = createIngredient.bind(null, id);
-
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm();
 
   const onSubmit = (data) => createIngredientWithId(data);
 
@@ -77,8 +73,6 @@ const Page = ({ params }) => {
               name="name"
               placeholder="Name"
               className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.name && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
-              onChange={(e) => setName(e.target.value)}
-              defaultValue={name}
               {...register("name", { required: true })}
             />
           </div>
@@ -92,8 +86,6 @@ const Page = ({ params }) => {
               name="um"
               placeholder="UM"
               className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.um && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
-              onChange={(e) => setUm(e.target.value)}
-              defaultValue={um}
               {...register("um", { required: true })}
             />
           </div>
@@ -108,8 +100,6 @@ const Page = ({ params }) => {
               placeholder="Carbs"
               step={0.1}
               className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.carbs && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
-              onChange={(e) => setCarbs(e.target.value)}
-              defaultValue={carbs}
               {...register("carbs", { required: true })}
             />
           </div>
@@ -124,8 +114,6 @@ const Page = ({ params }) => {
               placeholder="Proteins"
               step={0.1}
               className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.proteins && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
-              onChange={(e) => setProteins(e.target.value)}
-              defaultValue={proteins}
               {...register("proteins", { required: true })}
             />
           </div>
@@ -140,8 +128,6 @@ const Page = ({ params }) => {
               placeholder="Fat"
               step={0.1}
               className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.fat && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
-              onChange={(e) => setFat(e.target.value)}
-              defaultValue={fat}
               {...register("fat", { required: true })}
             />
           </div>
@@ -155,8 +141,6 @@ const Page = ({ params }) => {
               name="calories"
               placeholder="Calories"
               className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.fat && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
-              onChange={(e) => setCalories(e.target.value)}
-              defaultValue={fat}
               {...register("calories", { required: true })}
             />
           </div>
@@ -170,13 +154,11 @@ const Page = ({ params }) => {
               name="countable"
               id="countable"
               className="w-fit rounded-md border border-[lightGrey] px-4 py-1.5"
-              onClick={(e) => setCountable(e.target.checked)}
-              checked={countable}
               {...register("countable")}
             />
           </div>
           {/* Quantity */}
-          {!countable && (
+          {!watch("countable") && (
             <div className="grid gap-y-2">
               <label htmlFor="quantity" className="text-sm">
                 Quantity
@@ -186,8 +168,6 @@ const Page = ({ params }) => {
                 name="quantity"
                 placeholder="Quantity"
                 className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.quantity && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
-                onChange={(e) => setQuantity(e.target.value)}
-                defaultValue={quantity}
                 {...register("quantity", { required: true })}
               />
             </div>

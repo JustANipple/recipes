@@ -67,6 +67,8 @@ export async function createRecipe(id, data) {
       },
     });
   }
+
+  redirect("/recipes");
 }
 
 export async function getRecipes(id) {
@@ -161,15 +163,13 @@ export async function createIngredient(id, data) {
   redirect("/recipes/0/edit");
 }
 
-export async function getIngredients(id) {
+export async function getIngredients(ingredientId, recipeId) {
   let ingredients;
-  if (id && parseInt(id) !== 0) {
-    ingredients = await prisma.ingredientsRelationships.findFirst({
+
+  if (ingredientId && parseInt(ingredientId) !== 0) {
+    ingredients = await prisma.ingredients.findFirst({
       where: {
-        RecipeId: parseInt(id),
-      },
-      include: {
-        Ingredient: true,
+        Id: parseInt(ingredientId),
       },
     });
   } else {

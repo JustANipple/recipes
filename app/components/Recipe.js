@@ -44,6 +44,13 @@ const Recipe = () => {
               <select
                 name="recipes"
                 className="rounded-md border border-LightGrey px-4 py-1.5"
+                onChange={(e) => {
+                  setSelectedRecipe(
+                    recipes.find(
+                      (recipe) => recipe.Id === parseInt(e.target.value),
+                    ),
+                  );
+                }}
               >
                 {recipes &&
                   recipes.map((recipe) => {

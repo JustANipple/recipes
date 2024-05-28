@@ -7,18 +7,11 @@ import { RxCross2, RxPlus } from "react-icons/rx";
 import { createRecipe, getIngredients, getRecipes } from "@/app/lib/data";
 import { useForm } from "react-hook-form";
 import UpdateIngredient from "@/app/components/UpdateIngredient";
-import InstructionInput from "@/app/components/InstructionInput";
 
 const Page = ({ params, handleClick }) => {
   const id = params.id;
 
-  const [imageLink, setImageLink] = useState();
-  const [title, setTitle] = useState();
-  const [description, setDescription] = useState();
-  const [preparationTime, setPreparationTime] = useState();
-  const [cookingTime, setCookingTime] = useState();
-  const [ingredients, setIngredients] = useState();
-  const [instructions, setInstructions] = useState();
+  const [ingredients, setIngredients] = useState([0]);
 
   const [ingredientSelects, setIngredientSelects] = useState([0]);
   const [instructionInputs, setInstructionInputs] = useState([0]);
@@ -26,28 +19,30 @@ const Page = ({ params, handleClick }) => {
   useEffect(() => {
     getIngredients(id).then((data) => {
       if (parseInt(id) > 0 && data != null) {
-        setIngredients(data.ingredients);
+        setIngredients(data);
       } else {
         setIngredients(data);
       }
     });
     getRecipes(id).then((data) => {
       if (data != null) {
-        setImageLink(data.ImageLink);
-        setTitle(data.Title);
-        setDescription(data.Description);
-        setPreparationTime(data.PreparationTime);
-        setCookingTime(data.CookingTime);
-        setIngredients(data.Ingredients);
-        setInstructions(data.Instructions);
         setIngredientSelects(data.Ingredients.map((item) => item));
         setInstructionInputs(data.Instructions.map((item) => item));
+
+        reset({
+          imageLink: data.ImageLink,
+          title: data.Title,
+          description: data.Description,
+          preparationTime: data.PreparationTime,
+          cookingTime: data.CookingTime,
+          ingredients: data.Ingredients,
+          instructions: data.Instructions,
+        });
       }
     });
   }, []);
 
   function handleIngredientPlusClick() {
-    console.log(ingredientSelects.map((item) => item));
     setIngredientSelects([...ingredientSelects, ingredientSelects.length]);
   }
 
@@ -74,6 +69,7 @@ const Page = ({ params, handleClick }) => {
     handleSubmit,
     watch,
     formState: { errors },
+    reset,
   } = useForm();
 
   const onSubmit = (data) => createRecipeWithId(data);
@@ -110,8 +106,6 @@ const Page = ({ params, handleClick }) => {
               id="imageLink"
               placeholder="ImageLink"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              onChange={(e) => setImageLink(e.target.value)}
-              defaultValue={imageLink}
               {...register("imageLink")}
             />
           </div>
@@ -126,8 +120,6 @@ const Page = ({ params, handleClick }) => {
               id="title"
               placeholder="Title"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              onChange={(e) => setTitle(e.target.value)}
-              defaultValue={title}
               {...register("title", { required: true })}
             />
             {errors.title && (
@@ -145,8 +137,6 @@ const Page = ({ params, handleClick }) => {
               id="description"
               placeholder="Description"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              onChange={(e) => setDescription(e.target.value)}
-              defaultValue={description}
               {...register("description")}
             />
           </div>
@@ -161,8 +151,6 @@ const Page = ({ params, handleClick }) => {
               id="preparationTime"
               placeholder="Preparation Time"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              onChange={(e) => setPreparationTime(e.target.value)}
-              defaultValue={preparationTime}
               {...register("preparationTime")}
             />
           </div>
@@ -177,8 +165,6 @@ const Page = ({ params, handleClick }) => {
               id="cookingTime"
               placeholder="Cooking Time"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              onChange={(e) => setCookingTime(e.target.value)}
-              defaultValue={cookingTime}
               {...register("cookingTime")}
             />
           </div>
@@ -214,17 +200,17 @@ const Page = ({ params, handleClick }) => {
                 </button>
               </div>
             </div>
-            {ingredientSelects.map((item, index) => {
-              return (
-                <IngredientSelect
-                  key={index}
-                  index={index}
-                  ingredients={ingredients}
-                  register={register}
-                  defaultValue={item ? item : null}
-                />
-              );
-            })}
+            {ingredientSelects &&
+              ingredientSelects.map((_, index) => {
+                return (
+                  <IngredientSelect
+                    key={index}
+                    index={index}
+                    ingredients={ingredients}
+                    register={register}
+                  />
+                );
+              })}
           </div>
           {/* Instructions */}
           <div className="grid gap-y-2">
@@ -249,14 +235,24 @@ const Page = ({ params, handleClick }) => {
                 </button>
               </div>
             </div>
-            {instructionInputs.map((item, index) => {
+            {instructionInputs.map((_, index) => {
               return (
-                <InstructionInput
-                  key={index}
-                  index={index}
-                  register={register}
-                  defaultValue={item}
-                />
+                <div className="flex gap-3" key={index}>
+                  <input
+                    type="text"
+                    name="instructionTitle"
+                    placeholder="Title"
+                    className="basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+                    {...register(`instructions[${index}].Title`)}
+                  />
+                  <input
+                    type="text"
+                    name="instructionDescription"
+                    placeholder="Description"
+                    className="basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+                    {...register(`instructions[${index}].Description`)}
+                  />
+                </div>
               );
             })}
           </div>
