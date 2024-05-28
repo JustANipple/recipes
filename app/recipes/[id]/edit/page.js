@@ -17,7 +17,7 @@ const Page = ({ params, handleClick }) => {
   const [instructionInputs, setInstructionInputs] = useState([0]);
 
   useEffect(() => {
-    getIngredients(id).then((data) => {
+    getIngredients(0, id).then((data) => {
       if (parseInt(id) > 0 && data != null) {
         setIngredients(data);
       } else {

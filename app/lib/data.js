@@ -166,7 +166,16 @@ export async function createIngredient(id, data) {
 export async function getIngredients(ingredientId, recipeId) {
   let ingredients;
 
-  if (ingredientId && parseInt(ingredientId) !== 0) {
+  if (recipeId && parseInt(recipeId) !== 0) {
+    ingredients = await prisma.ingredientsRelationships.findMany({
+      where: {
+        RecipeId: parseInt(recipeId),
+      },
+      include: {
+        Ingredient: true,
+      },
+    });
+  } else if (ingredientId && parseInt(ingredientId) !== 0) {
     ingredients = await prisma.ingredients.findFirst({
       where: {
         Id: parseInt(ingredientId),
