@@ -62,7 +62,7 @@ export async function createRecipe(id, data) {
     for (let ingredient of data.ingredients) {
       await prisma.ingredients.update({
         where: { Id: parseInt(ingredient.Ingredient.Id) },
-        data: { Quantity: parseFloat(ingredient.quantity, 10) },
+        data: { Quantity: parseFloat(ingredient.Ingredient.quantity, 10) },
       });
     }
 

@@ -202,15 +202,17 @@ const Page = ({ params, handleClick }) => {
               </div>
               <div className="flex justify-end gap-2">
                 <button
-                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
+                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
                   type="button"
+                  disabled={id > 0}
                   onClick={handleIngredientPlusClick}
                 >
                   <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
                 </button>
                 <button
-                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
+                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
                   type="button"
+                  disabled={id > 0}
                   onClick={handleIngredientCrossClick}
                 >
                   <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
@@ -240,15 +242,17 @@ const Page = ({ params, handleClick }) => {
               </label>
               <div className="flex justify-end gap-2">
                 <button
-                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
+                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
                   type="button"
+                  disabled={id > 0}
                   onClick={handleInstructionPlusClick}
                 >
                   <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
                 </button>
                 <button
-                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm"
+                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
                   type="button"
+                  disabled={id > 0}
                   onClick={handleInstructionCrossClick}
                 >
                   <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
@@ -262,7 +266,8 @@ const Page = ({ params, handleClick }) => {
                     type="text"
                     name="instructionTitle"
                     placeholder="Title"
-                    className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+                    disabled={id > 0}
+                    className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
                     {...register(`instructions[${index}].Title`)}
                   />
                   <input

@@ -13,20 +13,23 @@ const IngredientSelect = ({
   const [showEditIngredient, setShowEditIngredient] = useState(false);
 
   useEffect(() => {
-    if (ingredients && id > 0) {
-      setValue(
-        `ingredients[${index}].Ingredient.Id`,
-        ingredients[index].Ingredient.Id,
-      );
-      setValue(`ingredients[${index}].quantity`, ingredients[index].Quantity);
+    if (id > 0) {
       setShowEditIngredient(true);
+      if (ingredients) {
+        setValue(
+          `ingredients[${index}].Ingredient.Id`,
+          ingredients[index].Ingredient.Id,
+        );
+        setValue(`ingredients[${index}].quantity`, ingredients[index].Quantity);
+      }
     }
-  });
+  }, [setValue]);
 
   return (
     <div className="flex items-center gap-3" id="ingredientRow">
       <select
-        className="h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5"
+        className={` h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5 disabled:opacity-50`}
+        disabled={id > 0}
         name="ingredient"
         {...register(`ingredients[${index}].Ingredient.Id`)}
       >
@@ -49,10 +52,10 @@ const IngredientSelect = ({
 
       <input
         type="number"
-        name={`ingredients[${index}].quantity`}
+        name={`ingredients[${index}].Quantity`}
         placeholder="Qty"
         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
-        {...register(`ingredients[${index}].quantity`)}
+        {...register(`ingredients[${index}].Quantity`)}
       />
       <UpdateIngredient
         showEditIngredient={showEditIngredient}
