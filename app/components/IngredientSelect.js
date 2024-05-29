@@ -28,7 +28,7 @@ const IngredientSelect = ({
   return (
     <div className="flex items-center gap-3" id="ingredientRow">
       <select
-        className={` h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5 disabled:opacity-50`}
+        className={`h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5 disabled:opacity-50`}
         disabled={id > 0}
         name="ingredient"
         {...register(`ingredients[${index}].Ingredient.Id`)}
