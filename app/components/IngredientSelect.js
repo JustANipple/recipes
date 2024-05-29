@@ -15,8 +15,8 @@ const IngredientSelect = ({
   useEffect(() => {
     if (ingredients && id > 0) {
       setValue(
-        `ingredients[${index}].Ingredient.Name`,
-        ingredients[index].Ingredient.Name,
+        `ingredients[${index}].Ingredient.Id`,
+        ingredients[index].Ingredient.Id,
       );
       setValue(`ingredients[${index}].quantity`, ingredients[index].Quantity);
       setShowEditIngredient(true);
@@ -28,7 +28,7 @@ const IngredientSelect = ({
       <select
         className="h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5"
         name="ingredient"
-        {...register(`ingredients[${index}].Ingredient.Name`)}
+        {...register(`ingredients[${index}].Ingredient.Id`)}
       >
         <option value="" onClick={() => setShowEditIngredient(false)}>
           Select Ingredient
@@ -36,7 +36,11 @@ const IngredientSelect = ({
         {ingredients &&
           ingredients.map((item, index) => {
             return (
-              <option key={index} onClick={() => setShowEditIngredient(true)}>
+              <option
+                key={index}
+                onClick={() => setShowEditIngredient(true)}
+                value={item.Ingredient.Id}
+              >
                 {item.Ingredient.Name}
               </option>
             );
@@ -52,7 +56,7 @@ const IngredientSelect = ({
       />
       <UpdateIngredient
         showEditIngredient={showEditIngredient}
-        id={watch(`ingredients[${index}].IngredientId`)}
+        id={watch(`ingredients[${index}].Ingredient.Id`)}
         icon={<MdEdit className="m-auto h-full font-OutfitBold text-Nutmeg" />}
       />
     </div>

@@ -8,38 +8,43 @@ const prisma = new PrismaClient();
 
 //#region Recipes
 export async function createRecipe(id, data) {
+  data.ingredients = data.ingredients.filter(
+    (ingredient) => ingredient.Ingredient.Id !== "",
+  );
+  data.instructions = data.instructions.filter(
+    (instruction) => instruction.Title !== "" && instruction.Description !== "",
+  );
   let recipe;
-  if (id && id !== 0) {
+  if (id && parseInt(id) == 0) {
     await prisma.$transaction(async (prisma) => {
-      if (id && id !== 0) {
-        recipe = await prisma.recipes.create({
-          data: {
-            ImageLink: data.imageLink,
-            Title: data.title,
-            Description: data.description,
-            PreparationTime: parseFloat(data.preparationTime, 10),
-            CookingTime: parseFloat(data.cookingTime, 10),
+      recipe = await prisma.recipes.create({
+        data: {
+          ImageLink: data.imageLink,
+          Title: data.title,
+          Description: data.description,
+          PreparationTime: parseFloat(data.preparationTime, 10),
+          CookingTime: parseFloat(data.cookingTime, 10),
 
-            Ingredients: {
-              create: data.ingredients.map((ingredient) => ({
-                Ingredient: { connect: { Id: parseInt(ingredient.id) } },
-                Quantity: parseFloat(ingredient.quantity, 10),
-              })),
-            },
-
-            Instructions: {
-              create: data.instructions.map((instruction) => ({
-                Title: instruction.title,
-                Description: instruction.description,
-              })),
-            },
+          Ingredients: {
+            create: data.ingredients.map((ingredient) => ({
+              Ingredient: {
+                connect: { Id: parseInt(ingredient.Ingredient.Id) },
+              },
+              Quantity: parseFloat(ingredient.quantity, 10),
+            })),
           },
-        });
-      }
+
+          Instructions: {
+            create: data.instructions.map((instruction) => ({
+              Title: instruction.Title,
+              Description: instruction.Description,
+            })),
+          },
+        },
+      });
     });
-  }
-  // TODO: Implement the logic to update a recipe
-  else {
+  } else {
+    // Update the recipe
     recipe = await prisma.recipes.update({
       where: {
         Id: parseInt(id),
@@ -50,25 +55,29 @@ export async function createRecipe(id, data) {
         Description: data.description,
         PreparationTime: parseFloat(data.preparationTime, 10),
         CookingTime: parseFloat(data.cookingTime, 10),
-
-        Ingredients: {
-          create: data.ingredients.map((ingredient) => ({
-            Ingredient: { connect: { Id: parseInt(ingredient.id) } },
-            Quantity: parseFloat(ingredient.quantity, 10),
-          })),
-        },
-
-        Instructions: {
-          create: data.instructions.map((instruction) => ({
-            Title: instruction.title,
-            Description: instruction.description,
-          })),
-        },
       },
     });
+
+    // Update the ingredients
+    for (let ingredient of data.ingredients) {
+      await prisma.ingredients.update({
+        where: { Id: parseInt(ingredient.Ingredient.Id) },
+        data: { Quantity: parseFloat(ingredient.quantity, 10) },
+      });
+    }
+
+    // Update the instructions
+    for (let instruction of data.instructions) {
+      await prisma.instructions.update({
+        where: { Title: instruction.Title },
+        data: {
+          Description: instruction.Description,
+        },
+      });
+    }
   }
 
-  redirect("/recipes");
+  redirect("/");
 }
 
 export async function getRecipes(id) {
@@ -161,6 +170,19 @@ export async function createIngredient(id, data) {
 
   revalidatePath("/ingredients");
   redirect("/recipes/0/edit");
+}
+
+export async function getIngredientById(id) {
+  let ingredient;
+  if (id && parseInt(id) !== 0) {
+    ingredient = await prisma.ingredients.findFirst({
+      where: {
+        Id: parseInt(id),
+      },
+    });
+  }
+
+  return ingredient;
 }
 
 export async function getIngredientsById(id) {

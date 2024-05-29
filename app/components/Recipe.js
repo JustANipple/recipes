@@ -40,7 +40,7 @@ const Recipe = () => {
               </div>
               <select
                 name="recipes"
-                className="rounded-md border border-LightGrey px-4 py-1.5"
+                className="rounded-md bg-LightGrey/75 px-4 py-1.5 font-Outfit text-Nutmeg"
                 onChange={(e) => {
                   setSelectedRecipe(
                     recipes.find(
@@ -62,6 +62,7 @@ const Recipe = () => {
             <img
               src={selectedRecipe && selectedRecipe.ImageLink}
               alt="food picture"
+              className="max-h-72 w-full object-cover"
             />
           </div>
           <div className="grid gap-y-8 px-8 md:px-0">
