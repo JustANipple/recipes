@@ -262,14 +262,14 @@ const Page = ({ params, handleClick }) => {
                     type="text"
                     name="instructionTitle"
                     placeholder="Title"
-                    className="basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+                    className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
                     {...register(`instructions[${index}].Title`)}
                   />
                   <input
                     type="text"
                     name="instructionDescription"
                     placeholder="Description"
-                    className="basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+                    className="w-full basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
                     {...register(`instructions[${index}].Description`)}
                   />
                 </div>
