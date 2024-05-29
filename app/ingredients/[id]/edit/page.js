@@ -3,7 +3,7 @@
 import {
   createIngredient,
   deleteIngredient,
-  getIngredients,
+  getIngredientsById,
 } from "@/app/lib/data";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -22,18 +22,18 @@ const Page = ({ params }) => {
   } = useForm();
 
   useEffect(() => {
-    getIngredients(id).then((data) => {
+    getIngredientsById(id).then((data) => {
+      console.log(data);
       if (data != null) {
-        console.log(data);
         reset({
-          name: data.Name,
-          um: data.UM,
-          carbs: data.Carbs,
-          proteins: data.Proteins,
-          fat: data.Fat,
-          countable: data.Countable,
-          quantity: data.Quantity,
-          calories: data.Calories,
+          name: data.Ingredient.Name,
+          um: data.Ingredient.UM,
+          carbs: data.Ingredient.Carbs,
+          proteins: data.Ingredient.Proteins,
+          fat: data.Ingredient.Fat,
+          countable: data.Ingredient.Countable,
+          quantity: data.Ingredient.Quantity,
+          calories: data.Ingredient.Calories,
         });
       }
     });

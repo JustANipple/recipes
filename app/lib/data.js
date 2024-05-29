@@ -163,28 +163,31 @@ export async function createIngredient(id, data) {
   redirect("/recipes/0/edit");
 }
 
-export async function getIngredients(ingredientId, recipeId) {
+export async function getIngredientsById(id) {
   let ingredients;
-
-  if (recipeId && parseInt(recipeId) !== 0) {
+  if (id && parseInt(id) !== 0) {
     ingredients = await prisma.ingredientsRelationships.findMany({
       where: {
-        RecipeId: parseInt(recipeId),
+        RecipeId: parseInt(id),
       },
       include: {
         Ingredient: true,
       },
     });
-  } else if (ingredientId && parseInt(ingredientId) !== 0) {
-    ingredients = await prisma.ingredients.findFirst({
-      where: {
-        Id: parseInt(ingredientId),
-      },
-    });
-  } else {
-    ingredients = await prisma.ingredients.findMany();
   }
+
   return ingredients;
+}
+
+export async function getIngredients() {
+  let ingredientsArray = [];
+  const ingredients = await prisma.ingredients.findMany();
+
+  ingredients.forEach((ingredient) => {
+    ingredientsArray.push({ Ingredient: ingredient });
+  });
+
+  return ingredientsArray;
 }
 
 export async function deleteIngredient(id) {

@@ -2,24 +2,44 @@ import { useEffect, useState } from "react";
 import UpdateIngredient from "./UpdateIngredient";
 import { MdEdit } from "react-icons/md";
 
-const IngredientSelect = ({ index, ingredients, register }) => {
+const IngredientSelect = ({
+  index,
+  ingredients,
+  register,
+  setValue,
+  id,
+  watch,
+}) => {
   const [showEditIngredient, setShowEditIngredient] = useState(false);
 
-  const [ingredientId, setIngredientId] = useState(0);
+  useEffect(() => {
+    if (ingredients && id > 0) {
+      setValue(
+        `ingredients[${index}].Ingredient.Name`,
+        ingredients[index].Ingredient.Name,
+      );
+      setValue(`ingredients[${index}].quantity`, ingredients[index].Quantity);
+      setShowEditIngredient(true);
+    }
+  });
 
-  console.log(ingredients);
   return (
     <div className="flex items-center gap-3" id="ingredientRow">
       <select
         className="h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5"
-        name={`ingredients[${index}].id`}
-        {...register(`ingredients[${index}].id`)}
+        name="ingredient"
+        {...register(`ingredients[${index}].Ingredient.Name`)}
       >
-        <option value="">Select Ingredient</option>
+        <option value="" onClick={() => setShowEditIngredient(false)}>
+          Select Ingredient
+        </option>
         {ingredients &&
-          ingredients.length > 1 &&
           ingredients.map((item, index) => {
-            return <option key={index}>{item.Name}</option>;
+            return (
+              <option key={index} onClick={() => setShowEditIngredient(true)}>
+                {item.Ingredient.Name}
+              </option>
+            );
           })}
       </select>
 
@@ -32,7 +52,7 @@ const IngredientSelect = ({ index, ingredients, register }) => {
       />
       <UpdateIngredient
         showEditIngredient={showEditIngredient}
-        id={ingredientId}
+        id={watch(`ingredients[${index}].IngredientId`)}
         icon={<MdEdit className="m-auto h-full font-OutfitBold text-Nutmeg" />}
       />
     </div>

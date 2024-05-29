@@ -4,26 +4,42 @@ import IngredientSelect from "@/app/components/IngredientSelect";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { RxCross2, RxPlus } from "react-icons/rx";
-import { createRecipe, getIngredients, getRecipes } from "@/app/lib/data";
+import {
+  createRecipe,
+  deleteRecipe,
+  getIngredients,
+  getIngredientsById,
+  getRecipes,
+} from "@/app/lib/data";
 import { useForm } from "react-hook-form";
 import UpdateIngredient from "@/app/components/UpdateIngredient";
 
 const Page = ({ params, handleClick }) => {
   const id = params.id;
 
-  const [ingredients, setIngredients] = useState([0]);
+  const [ingredients, setIngredients] = useState();
 
   const [ingredientSelects, setIngredientSelects] = useState([0]);
   const [instructionInputs, setInstructionInputs] = useState([0]);
 
   useEffect(() => {
-    getIngredients(0, id).then((data) => {
-      if (parseInt(id) > 0 && data != null) {
-        setIngredients(data);
-      } else {
-        setIngredients(data);
-      }
-    });
+    if (id == 0) {
+      getIngredients().then((data) => {
+        if (parseInt(id) > 0 && data != null) {
+          setIngredients(data);
+        } else {
+          setIngredients(data);
+        }
+      });
+    } else {
+      getIngredientsById(id).then((data) => {
+        if (parseInt(id) > 0 && data != null) {
+          setIngredients(data);
+        } else {
+          setIngredients(data);
+        }
+      });
+    }
     getRecipes(id).then((data) => {
       if (data != null) {
         setIngredientSelects(data.Ingredients.map((item) => item));
@@ -70,6 +86,7 @@ const Page = ({ params, handleClick }) => {
     watch,
     formState: { errors },
     reset,
+    setValue,
   } = useForm();
 
   const onSubmit = (data) => createRecipeWithId(data);
@@ -208,6 +225,9 @@ const Page = ({ params, handleClick }) => {
                     index={index}
                     ingredients={ingredients}
                     register={register}
+                    setValue={setValue}
+                    id={id}
+                    watch={watch}
                   />
                 );
               })}
@@ -259,13 +279,22 @@ const Page = ({ params, handleClick }) => {
         </form>
       </div>
       <hr className="border-LightGrey" />
-      <button
-        className="text-black ml-auto flex gap-1 rounded-md bg-LightGrey px-4 py-2"
-        type="submit"
-        form="editForm"
-      >
-        <p className="my-auto font-Outfit text-Nutmeg">Save</p>
-      </button>
+      <div className="flex justify-end gap-3 align-middle">
+        <button
+          className="text-black flex gap-1 rounded-md bg-Nutmeg px-4 py-2"
+          type="button"
+          onClick={() => deleteRecipe(id)}
+        >
+          <p className="my-auto font-Outfit text-White">Delete</p>
+        </button>
+        <button
+          className="text-black flex gap-1 rounded-md bg-LightGrey px-4 py-2"
+          type="submit"
+          form="editForm"
+        >
+          <p className="my-auto font-Outfit text-Nutmeg">Save</p>
+        </button>
+      </div>
     </main>
   );
 };

@@ -27,19 +27,16 @@ const Recipe = () => {
               <div className="flex gap-3">
                 <Link
                   href="recipes/0/edit" // Change this to the correct recipe ID
-                  className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
+                  className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
                 >
                   New
                 </Link>
                 <Link
                   href={`recipes/${selectedRecipe.Id}/edit`} // Change this to the correct recipe ID
-                  className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
+                  className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
                 >
                   Edit
                 </Link>
-                <button className="text-black flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1">
-                  <p className="my-auto font-Outfit text-Nutmeg">Delete</p>
-                </button>
               </div>
               <select
                 name="recipes"
