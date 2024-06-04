@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { getIngredients } from "../lib/data";
 import Link from "next/link";
 import { RxCross2 } from "react-icons/rx";
+import { MdEdit } from "react-icons/md";
+import UpdateIngredient from "../components/UpdateIngredient";
 
 const Table = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -35,64 +37,86 @@ const Table = () => {
         </Link>
       </div>
 
-      <table className="text-gray-500 dark:text-gray-400 w-full text-left text-sm rtl:text-right">
-        <thead className="text-gray-700 bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-xs uppercase">
-          <tr>
-            <th scope="col" className="py3 px-6">
-              Name
-            </th>
-            <th scope="col" className="px-6 py-3">
-              UM
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Carbs
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Proteins
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Fat
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Countable
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Quantity
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Calories
-            </th>
-            <th scope="col" className="px-6 py-3">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {ingredients.map((ingredient, index) => (
-            <tr
-              key={index}
-              className="bg-white dark:bg-gray-800 dark:border-gray-700 border-b "
-            >
-              <td className="px-6 py-4">{ingredient.Name}</td>
-              <td className="px-6 py-4">{ingredient.UM}</td>
-              <td className="px-6 py-4">{ingredient.Carbs}</td>
-              <td className="px-6 py-4">{ingredient.Proteins}</td>
-              <td className="px-6 py-4">{ingredient.Fat}</td>
-              <td className="px-6 py-4">{ingredient.Countable}</td>
-              <td className="px-6 py-4">{ingredient.Quantity}</td>
-              <td className="px-6 py-4">{ingredient.Calories}</td>
-              <td className="px-6 py-4">
-                <Link
-                  href={`/ingredients/${ingredient.Id}/edit`}
-                  className="text-indigo-600 hover:text-indigo-900"
-                >
-                  Edit
-                </Link>
-              </td>
+      <div className="overflow-scroll">
+        <table className="text-gray-500 dark:text-gray-400 w-full text-left text-sm rtl:text-right">
+          <thead className="bg-gray-50 dark:bg-gray-700 dark:text-gray-400 font-Outfit text-Nutmeg">
+            <tr>
+              <th scope="col" className="px-3 py-3">
+                Name
+              </th>
+              <th scope="col" className="px-3 py-3">
+                UM
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Carbs
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Proteins
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Fat
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Countable
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Quantity
+              </th>
+              <th scope="col" className="px-3 py-3">
+                Calories
+              </th>
+              <th
+                scope="col"
+                className="sticky right-0 bg-White px-3 py-3 shadow-md"
+              >
+                Actions
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ingredients.map((ingredient, index) => (
+              <tr
+                key={index}
+                className="bg-white dark:bg-gray-800 dark:border-gray-700 border-t border-LightGrey font-Outfit text-WengeBrown"
+              >
+                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                  {ingredient.Name}
+                </td>
+                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                  {ingredient.UM}
+                </td>
+                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                  {ingredient.Carbs}
+                </td>
+                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                  {ingredient.Proteins}
+                </td>
+                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                  {ingredient.Fat}
+                </td>
+                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                  {ingredient.Countable ? "Yes" : "No"}
+                </td>
+                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                  {ingredient.Quantity || 0}
+                </td>
+                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                  {ingredient.Calories || 0}
+                </td>
+                <td className="sticky right-0 bg-White shadow-md">
+                  <UpdateIngredient
+                    showEditIngredient={true}
+                    id={ingredient.Id}
+                    icon={
+                      <MdEdit className="m-auto h-7 w-7 rounded-md bg-LightGrey p-2 font-OutfitBold text-Nutmeg" />
+                    }
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
