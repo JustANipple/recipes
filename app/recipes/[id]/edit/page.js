@@ -7,7 +7,7 @@ import { RxCross2, RxPlus } from "react-icons/rx";
 import {
   createRecipe,
   deleteRecipe,
-  getIngredients,
+  getIngredientsForRecipe,
   getIngredientsById,
   getRecipes,
 } from "@/app/lib/data";
@@ -24,7 +24,7 @@ const Page = ({ params, handleClick }) => {
 
   useEffect(() => {
     if (id == 0) {
-      getIngredients().then((data) => {
+      getIngredientsForRecipe().then((data) => {
         if (parseInt(id) > 0 && data != null) {
           setIngredients(data);
         } else {
@@ -225,7 +225,7 @@ const Page = ({ params, handleClick }) => {
                   <IngredientSelect
                     key={index}
                     index={index}
-                    ingredients={ingredients}
+                    ingredientsRecipe={ingredients}
                     register={register}
                     setValue={setValue}
                     id={id}

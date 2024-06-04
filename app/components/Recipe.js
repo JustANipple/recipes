@@ -18,9 +18,13 @@ const Recipe = () => {
     fetchRecipes();
   }, []);
 
+  useEffect(() => {
+    if (selectedRecipe) console.log(selectedRecipe.Ingredients);
+  });
+
   return (
     <>
-      {selectedRecipe && (
+      {selectedRecipe ? (
         <main className="m-auto grid  gap-y-9 bg-White md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6">
           <div className="relative truncate md:rounded-xl">
             <div className="absolute left-2 right-2 top-2 flex justify-between">
@@ -158,10 +162,17 @@ const Recipe = () => {
                   Calories
                   <span className="font-OutfitBold text-Nutmeg">
                     {selectedRecipe &&
-                      selectedRecipe.Ingredients.reduce(
-                        (acc, item) => acc + item.Ingredient.Calories,
-                        0,
-                      )}
+                      selectedRecipe.Ingredients.reduce((acc, item) => {
+                        if (!item.Ingredient.Countable) {
+                          return (
+                            acc +
+                            (item.Quantity * item.Ingredient.Calories) /
+                              item.Ingredient.Quantity
+                          );
+                        } else {
+                          return acc + item.Ingredient.Calories / item.Quantity;
+                        }
+                      }, 0)}{" "}
                     kcal
                   </span>
                 </li>
@@ -169,10 +180,17 @@ const Recipe = () => {
                   Carbs
                   <span className="font-OutfitBold text-Nutmeg">
                     {selectedRecipe &&
-                      selectedRecipe.Ingredients.reduce(
-                        (acc, item) => acc + item.Ingredient.Carbs,
-                        0,
-                      )}
+                      selectedRecipe.Ingredients.reduce((acc, item) => {
+                        if (!item.Ingredient.Countable) {
+                          return (
+                            acc +
+                            (item.Quantity * item.Ingredient.Carbs) /
+                              item.Ingredient.Quantity
+                          );
+                        } else {
+                          return acc + item.Ingredient.Carbs / item.Quantity;
+                        }
+                      }, 0)}
                     g
                   </span>
                 </li>
@@ -180,10 +198,17 @@ const Recipe = () => {
                   Protein
                   <span className="font-OutfitBold text-Nutmeg">
                     {selectedRecipe &&
-                      selectedRecipe.Ingredients.reduce(
-                        (acc, item) => acc + item.Ingredient.Proteins,
-                        0,
-                      )}
+                      selectedRecipe.Ingredients.reduce((acc, item) => {
+                        if (!item.Ingredient.Countable) {
+                          return (
+                            acc +
+                            (item.Quantity * item.Ingredient.Proteins) /
+                              item.Ingredient.Quantity
+                          );
+                        } else {
+                          return acc + item.Ingredient.Proteins / item.Quantity;
+                        }
+                      }, 0)}
                     g
                   </span>
                 </li>
@@ -191,15 +216,36 @@ const Recipe = () => {
                   Fat
                   <span className="font-OutfitBold text-Nutmeg">
                     {selectedRecipe &&
-                      selectedRecipe.Ingredients.reduce(
-                        (acc, item) => acc + item.Ingredient.Fat,
-                        0,
-                      )}
+                      selectedRecipe.Ingredients.reduce((acc, item) => {
+                        if (!item.Ingredient.Countable) {
+                          return (
+                            acc +
+                            (item.Quantity * item.Ingredient.Fat) /
+                              item.Ingredient.Quantity
+                          );
+                        } else {
+                          return acc + item.Ingredient.Fat / item.Quantity;
+                        }
+                      }, 0)}
                     g
                   </span>
                 </li>
               </ul>
             </div>
+          </div>
+        </main>
+      ) : (
+        <main className="m-auto grid w-fit gap-y-9 bg-White md:my-32 md:rounded-3xl md:p-6 md:pb-6">
+          <div className="relative flex items-center justify-center gap-2 truncate">
+            <span className="font-Outfit text-WengeBrown">
+              Non hai creato ricette, crea la prima!
+            </span>
+            <Link
+              href="recipes/0/edit" // Change this to the correct recipe ID
+              className="text-black my-auto flex w-fit gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
+            >
+              New
+            </Link>
           </div>
         </main>
       )}

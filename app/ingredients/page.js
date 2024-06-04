@@ -1,11 +1,11 @@
 "use client";
 
+import UpdateIngredient from "../components/UpdateIngredient";
 import React, { useEffect, useState } from "react";
-import { getIngredients } from "../lib/data";
 import Link from "next/link";
+import { getIngredients } from "../lib/data";
 import { RxCross2 } from "react-icons/rx";
 import { MdEdit } from "react-icons/md";
-import UpdateIngredient from "../components/UpdateIngredient";
 
 const Table = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -13,29 +13,28 @@ const Table = () => {
   useEffect(() => {
     getIngredients().then((data) => {
       setIngredients(data);
-      console.log(data);
     });
   }, []);
 
   return (
     <div
-      className={`m-auto grid gap-y-9 bg-White p-8 md:mx-10 md:my-32 md:rounded-3xl md:p-10 md:pb-6`}
+      className={`m-auto grid gap-y-4 bg-White p-8 md:mx-10 md:my-32 md:rounded-3xl md:p-10 md:pb-6`}
     >
       <div className="flex justify-between">
         <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
           Ingredients
         </h1>
-        {/* Create new button to create a new ingredient */}
-        <Link
-          href="/ingredients/0/edit"
-          className="text-indigo-600 hover:text-indigo-900"
-        >
-          New Ingredient
-        </Link>
         <Link href="/" className="my-auto">
           <RxCross2 className="font-OutfitBold text-Nutmeg" />
         </Link>
       </div>
+      <Link
+        href="/ingredients/0/edit"
+        className="flex w-fit items-center gap-2 rounded-md bg-LightGrey p-2 text-xs font-OutfitBold text-Nutmeg"
+      >
+        <MdEdit className="h-3 w-3 rounded-md bg-LightGrey font-OutfitBold text-Nutmeg" />
+        <span>New Ingredient</span>
+      </Link>
 
       <div className="overflow-scroll">
         <table className="text-gray-500 dark:text-gray-400 w-full text-left text-sm rtl:text-right">

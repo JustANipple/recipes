@@ -30,7 +30,7 @@ export async function createRecipe(id, data) {
               Ingredient: {
                 connect: { Id: parseInt(ingredient.Ingredient.Id) },
               },
-              Quantity: parseFloat(ingredient.quantity, 10),
+              Quantity: parseFloat(ingredient.Quantity, 10),
             })),
           },
 
@@ -60,9 +60,14 @@ export async function createRecipe(id, data) {
 
     // Update the ingredients
     for (let ingredient of data.ingredients) {
-      await prisma.ingredients.update({
-        where: { Id: parseInt(ingredient.Ingredient.Id) },
-        data: { Quantity: parseFloat(ingredient.Ingredient.quantity, 10) },
+      await prisma.ingredientsRelationships.update({
+        where: {
+          RecipeId_IngredientId: {
+            RecipeId: parseInt(id),
+            IngredientId: parseInt(ingredient.Ingredient.Id),
+          },
+        },
+        data: { Quantity: parseFloat(ingredient.Quantity, 10) },
       });
     }
 
@@ -123,9 +128,25 @@ export async function deleteRecipe(id) {
 //#endregion Recipes
 
 //#region Ingredients
+export async function getIngredientsForRecipe() {
+  const ingredients = await getIngredients();
+  let ingredientsArray = [];
+  ingredients.forEach((ingredient) => {
+    ingredientsArray.push({
+      Ingredient: ingredient,
+      Quantity: 0,
+    });
+  });
+  return ingredientsArray;
+}
+
 export async function createIngredient(id, data) {
+  if (!data.countable && data.quantity == 0) {
+    throw new Error("Quantity is required for non-countable ingredients");
+  }
+
   let ingredients = {};
-  if (parseInt(id) <= 0) {
+  if (!id || parseInt(id) <= 0) {
     ingredients = await prisma.ingredients.create({
       data: {
         Name: data.name,
@@ -133,15 +154,9 @@ export async function createIngredient(id, data) {
         Carbs: parseFloat(data.carbs),
         Proteins: parseFloat(data.proteins),
         Fat: parseFloat(data.fat),
-        Countable: data.countable === null ? false : true,
+        Countable: data.countable,
         Quantity: parseFloat(data.quantity),
-        Calories: calculateCalories(
-          data.carbs,
-          data.proteins,
-          data.fat,
-          data.countable,
-          data.quantity || 0,
-        ),
+        Calories: calculateCalories(data.carbs, data.proteins, data.fat),
       },
     });
   } else {
@@ -155,21 +170,15 @@ export async function createIngredient(id, data) {
         Carbs: parseFloat(data.carbs),
         Proteins: parseFloat(data.proteins),
         Fat: parseFloat(data.fat),
-        Countable: data.countable === null ? false : true,
+        Countable: data.countable,
         Quantity: parseFloat(data.quantity),
-        Calories: calculateCalories(
-          data.carbs,
-          data.proteins,
-          data.fat,
-          data.countable,
-          data.quantity || 0,
-        ),
+        Calories: calculateCalories(data.carbs, data.proteins, data.fat),
       },
     });
   }
 
   revalidatePath("/ingredients");
-  redirect("/recipes/0/edit");
+  redirect("/ingredients");
 }
 
 export async function getIngredientById(id) {
@@ -202,17 +211,22 @@ export async function getIngredientsById(id) {
 }
 
 export async function getIngredients() {
-  let ingredientsArray = [];
   const ingredients = await prisma.ingredients.findMany();
 
-  ingredients.forEach((ingredient) => {
-    ingredientsArray.push(ingredient);
-  });
-
-  return ingredientsArray;
+  return ingredients;
 }
 
 export async function deleteIngredient(id) {
+  const existsInRelationships = await prisma.ingredientsRelationships.findFirst(
+    {
+      where: {
+        IngredientId: parseInt(id),
+      },
+    },
+  );
+  if (existsInRelationships) {
+    throw new Error("Ingredient is used in a recipe");
+  }
   const ingredient = await prisma.ingredients.delete({
     where: {
       Id: parseInt(id),
@@ -220,7 +234,7 @@ export async function deleteIngredient(id) {
   });
 
   revalidatePath("/ingredients");
-  redirect("/");
+  redirect("/ingredients");
 }
 //#endregion Ingredients
 

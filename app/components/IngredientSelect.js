@@ -4,7 +4,7 @@ import { MdEdit } from "react-icons/md";
 
 const IngredientSelect = ({
   index,
-  ingredients,
+  ingredientsRecipe,
   register,
   setValue,
   id,
@@ -15,12 +15,15 @@ const IngredientSelect = ({
   useEffect(() => {
     if (id > 0) {
       setShowEditIngredient(true);
-      if (ingredients) {
+      if (ingredientsRecipe) {
         setValue(
           `ingredients[${index}].Ingredient.Id`,
-          ingredients[index].Ingredient.Id,
+          ingredientsRecipe[index].Ingredient.Id,
         );
-        setValue(`ingredients[${index}].quantity`, ingredients[index].Quantity);
+        setValue(
+          `ingredients[${index}].quantity`,
+          ingredientsRecipe[index].Quantity,
+        );
       }
     }
   }, [setValue]);
@@ -36,8 +39,8 @@ const IngredientSelect = ({
         <option value="" onClick={() => setShowEditIngredient(false)}>
           Select Ingredient
         </option>
-        {ingredients &&
-          ingredients.map((item, index) => {
+        {ingredientsRecipe &&
+          ingredientsRecipe.map((item, index) => {
             return (
               <option
                 key={index}

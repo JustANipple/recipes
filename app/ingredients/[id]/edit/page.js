@@ -23,7 +23,6 @@ const Page = ({ params }) => {
 
   useEffect(() => {
     getIngredientById(id).then((data) => {
-      console.log(data);
       if (data != null) {
         reset({
           name: data.Name,
@@ -39,9 +38,9 @@ const Page = ({ params }) => {
     });
   }, []);
 
-  const createIngredientWithId = createIngredient.bind(null, id);
+  const createIngredientWithId = createIngredient.bind(id, null);
 
-  const onSubmit = (data) => createIngredientWithId(data);
+  const onSubmit = (data) => createIngredient(id, data);
 
   return (
     <div
@@ -129,19 +128,6 @@ const Page = ({ params }) => {
               step={0.1}
               className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.fat && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
               {...register("fat", { required: true })}
-            />
-          </div>
-          {/* Calories */}
-          <div className="grid gap-y-2">
-            <label htmlFor="name" className="text-sm">
-              Calories
-            </label>
-            <input
-              type="number"
-              name="calories"
-              placeholder="Calories"
-              className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.fat && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
-              {...register("calories", { required: true })}
             />
           </div>
           {/* Countable */}
