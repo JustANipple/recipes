@@ -206,7 +206,7 @@ export async function getIngredients() {
   const ingredients = await prisma.ingredients.findMany();
 
   ingredients.forEach((ingredient) => {
-    ingredientsArray.push({ Ingredient: ingredient });
+    ingredientsArray.push(ingredient);
   });
 
   return ingredientsArray;
