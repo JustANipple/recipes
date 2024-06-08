@@ -40,9 +40,10 @@ const Table = () => {
       <div className="flex gap-3">
         {recipes &&
           recipes.length > 0 &&
-          recipes.map((recipe) => (
+          recipes.map((recipe, index) => (
             <a
               href={`recipes/${recipe.Id}/edit`}
+              key={index}
               className="grid gap-y-5 rounded-md bg-White p-6 shadow-lg transition duration-300 ease-in-out hover:shadow-xl"
             >
               <img
