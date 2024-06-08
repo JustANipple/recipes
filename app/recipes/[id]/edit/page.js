@@ -192,13 +192,6 @@ const Page = ({ params, handleClick }) => {
                 <label htmlFor="ingredients" className="text-sm">
                   Ingredient
                 </label>
-                <UpdateIngredient
-                  showEditIngredient={true}
-                  id={0}
-                  icon={
-                    <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
-                  }
-                />
               </div>
               <div className="flex justify-end gap-2">
                 <button

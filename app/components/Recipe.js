@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { getRecipes } from "../lib/data";
 import { useEffect, useState } from "react";
+import Nutrition from "./Nutrition";
 
 const Recipe = () => {
   const [recipes, setRecipes] = useState([]);
@@ -30,13 +31,25 @@ const Recipe = () => {
             <div className="absolute left-2 right-2 top-2 flex justify-between">
               <div className="flex gap-3">
                 <Link
-                  href="recipes/0/edit" // Change this to the correct recipe ID
+                  href="ingredients"
+                  className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
+                >
+                  Ingredients
+                </Link>
+                <Link
+                  href="recipes"
+                  className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
+                >
+                  Recipes
+                </Link>
+                <Link
+                  href="recipes/0/edit"
                   className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
                 >
                   New
                 </Link>
                 <Link
-                  href={`recipes/${selectedRecipe.Id}/edit`} // Change this to the correct recipe ID
+                  href={`recipes/${selectedRecipe.Id}/edit`}
                   className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
                 >
                   Edit
@@ -148,90 +161,9 @@ const Recipe = () => {
 
             <hr className="border-LightGrey" />
 
-            <div className="grid gap-y-3">
-              <h2 className="font-Youngserif text-3xl text-[1.75rem] text-Nutmeg">
-                Nutrition
-              </h2>
-              <p className="font-Outfit text-WengeBrown">
-                The table below shows nutritional values per serving without the
-                additional fillings.
-              </p>
-              {/* Calories per macro: Carbs: 4, Protein: 4, Fat: 9 */}
-              <ul className="font-Outfit text-WengeBrown">
-                <li className="grid grid-cols-2 gap-x-4 border-b border-LightGrey px-8 py-3">
-                  Calories
-                  <span className="font-OutfitBold text-Nutmeg">
-                    {selectedRecipe &&
-                      selectedRecipe.Ingredients.reduce((acc, item) => {
-                        if (!item.Ingredient.Countable) {
-                          return (
-                            acc +
-                            (item.Quantity * item.Ingredient.Calories) /
-                              item.Ingredient.Quantity
-                          );
-                        } else {
-                          return acc + item.Ingredient.Calories / item.Quantity;
-                        }
-                      }, 0)}{" "}
-                    kcal
-                  </span>
-                </li>
-                <li className="grid grid-cols-2 gap-x-4 border-b border-LightGrey px-8 py-3">
-                  Carbs
-                  <span className="font-OutfitBold text-Nutmeg">
-                    {selectedRecipe &&
-                      selectedRecipe.Ingredients.reduce((acc, item) => {
-                        if (!item.Ingredient.Countable) {
-                          return (
-                            acc +
-                            (item.Quantity * item.Ingredient.Carbs) /
-                              item.Ingredient.Quantity
-                          );
-                        } else {
-                          return acc + item.Ingredient.Carbs / item.Quantity;
-                        }
-                      }, 0)}
-                    g
-                  </span>
-                </li>
-                <li className="grid grid-cols-2 gap-x-4 border-b border-LightGrey px-8 py-3">
-                  Protein
-                  <span className="font-OutfitBold text-Nutmeg">
-                    {selectedRecipe &&
-                      selectedRecipe.Ingredients.reduce((acc, item) => {
-                        if (!item.Ingredient.Countable) {
-                          return (
-                            acc +
-                            (item.Quantity * item.Ingredient.Proteins) /
-                              item.Ingredient.Quantity
-                          );
-                        } else {
-                          return acc + item.Ingredient.Proteins / item.Quantity;
-                        }
-                      }, 0)}
-                    g
-                  </span>
-                </li>
-                <li className="grid grid-cols-2 gap-x-4 px-8 py-3">
-                  Fat
-                  <span className="font-OutfitBold text-Nutmeg">
-                    {selectedRecipe &&
-                      selectedRecipe.Ingredients.reduce((acc, item) => {
-                        if (!item.Ingredient.Countable) {
-                          return (
-                            acc +
-                            (item.Quantity * item.Ingredient.Fat) /
-                              item.Ingredient.Quantity
-                          );
-                        } else {
-                          return acc + item.Ingredient.Fat / item.Quantity;
-                        }
-                      }, 0)}
-                    g
-                  </span>
-                </li>
-              </ul>
-            </div>
+            {selectedRecipe && (
+              <Nutrition ingredients={selectedRecipe.Ingredients} />
+            )}
           </div>
         </main>
       ) : (

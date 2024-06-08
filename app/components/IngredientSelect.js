@@ -60,11 +60,6 @@ const IngredientSelect = ({
         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
         {...register(`ingredients[${index}].Quantity`)}
       />
-      <UpdateIngredient
-        showEditIngredient={showEditIngredient}
-        id={watch(`ingredients[${index}].Ingredient.Id`)}
-        icon={<MdEdit className="m-auto h-full font-OutfitBold text-Nutmeg" />}
-      />
     </div>
   );
 };
