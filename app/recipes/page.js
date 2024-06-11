@@ -37,21 +37,21 @@ const Table = () => {
 
       <hr className="border-LightGrey" />
 
-      <div className="flex gap-3">
+      <div className="flex flex-wrap justify-center gap-3">
         {recipes &&
           recipes.length > 0 &&
           recipes.map((recipe, index) => (
             <a
               href={`recipes/${recipe.Id}/edit`}
               key={index}
-              className="grid gap-y-5 rounded-md bg-White p-6 shadow-lg transition duration-300 ease-in-out hover:shadow-xl"
+              className="grid w-72 gap-y-5 rounded-md bg-White p-6 shadow-lg transition duration-300 ease-in-out hover:shadow-xl"
             >
               <img
                 src={recipe.ImageLink}
                 alt={recipe.Title}
                 className="h-40 w-full rounded-md object-cover"
               />
-              <div className="flex gap-3">
+              <div className="grid gap-y-1">
                 <span className=" rounded-md bg-LightGrey px-3 py-1 text-xs font-OutfitBold text-Nutmeg">
                   PreparationTime time: {recipe.PreparationTime}
                 </span>

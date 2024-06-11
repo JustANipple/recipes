@@ -29,7 +29,7 @@ const Recipe = () => {
         <main className="m-auto grid  gap-y-9 bg-White md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6">
           <div className="relative truncate md:rounded-xl">
             <div className="absolute left-2 right-2 top-2 flex justify-between">
-              <div className="flex gap-3">
+              <div className="grid gap-3">
                 <Link
                   href="ingredients"
                   className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
@@ -57,7 +57,7 @@ const Recipe = () => {
               </div>
               <select
                 name="recipes"
-                className="rounded-md bg-LightGrey/75 px-4 py-1.5 font-Outfit text-Nutmeg"
+                className="h-fit rounded-md bg-LightGrey/75 px-4 py-1.5 font-Outfit text-Nutmeg"
                 onChange={(e) => {
                   setSelectedRecipe(
                     recipes.find(

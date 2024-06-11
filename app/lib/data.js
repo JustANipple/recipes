@@ -150,7 +150,7 @@ export async function createIngredient(id, data) {
     ingredients = await prisma.ingredients.create({
       data: {
         Name: data.name,
-        UM: data.um,
+        UM: data.Countable ? "pz" : "g",
         Carbs: parseFloat(data.carbs),
         Proteins: parseFloat(data.proteins),
         Fat: parseFloat(data.fat),
@@ -166,7 +166,7 @@ export async function createIngredient(id, data) {
       },
       data: {
         Name: data.name,
-        UM: data.um,
+        UM: data.countable ? "pz" : "g",
         Carbs: parseFloat(data.carbs),
         Proteins: parseFloat(data.proteins),
         Fat: parseFloat(data.fat),

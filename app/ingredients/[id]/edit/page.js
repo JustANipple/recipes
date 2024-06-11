@@ -75,19 +75,6 @@ const Page = ({ params }) => {
               {...register("name", { required: true })}
             />
           </div>
-          {/* UM */}
-          <div className="grid gap-y-2">
-            <label htmlFor="um" className="text-sm">
-              UM
-            </label>
-            <input
-              type="text"
-              name="um"
-              placeholder="UM"
-              className={`rounded-md border border-[lightGrey] px-4 py-1.5 outline-none ${errors.um && "border-Red placeholder:text-Red placeholder:opacity-50"}`}
-              {...register("um", { required: true })}
-            />
-          </div>
           {/* Carbs */}
           <div className="grid gap-y-2">
             <label htmlFor="carbs" className="text-sm">
