@@ -1,10 +1,9 @@
 "use server";
 
-import { PrismaClient, ingredients } from "@prisma/client";
+import { ingredients } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
-const prisma = new PrismaClient();
+import prisma from "../prisma";
 
 //CREATE
 export async function createIngredient(formData: FormData) {
@@ -14,10 +13,9 @@ export async function createIngredient(formData: FormData) {
 
   const ingredient = await prisma.ingredients.create({ data });
 
-  revalidatePath("/ingredients");
-  redirect("/ingredients");
-
   return ingredient;
+  // revalidatePath("/ingredients");
+  // redirect("/ingredients");
 }
 
 //READ ONE
@@ -54,8 +52,6 @@ export async function updateIngredient(id: number, formData: FormData) {
 
   revalidatePath("/ingredients");
   redirect("/ingredients");
-
-  return ingredient;
 }
 
 //DELETE
@@ -99,13 +95,12 @@ function createIngredientData(formData: FormData): ingredients {
 }
 
 function checkFormData(formData: FormData) {
-  if (!formData.get("name")) throw new Error("name is required");
-  if (!formData.get("carbs")) throw new Error("carbs are required");
-  if (!formData.get("proteins")) throw new Error("proteins are required");
-  if (!formData.get("fat")) throw new Error("fat is required");
-  if (!formData.get("countable"))
-    throw new Error("choose if ingredient is countable or not");
-  if (formData.get("countable") === "false" && !formData.get("quantity"))
+  if (formData.get("name") === "") throw new Error("name is required");
+  if (formData.get("carbs") === null) throw new Error("carbs are required");
+  if (formData.get("proteins") === null)
+    throw new Error("proteins are required");
+  if (formData.get("fat") === null) throw new Error("fat is required");
+  if (formData.get("countable") && formData.get("quantity") == null)
     throw new Error("must indicate a quantity if item is uncountable");
 }
 
