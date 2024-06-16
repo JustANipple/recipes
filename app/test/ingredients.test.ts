@@ -7,14 +7,14 @@ vi.mock("../lib/prisma");
 
 test("createIngredient should create an ingredient", async () => {
   const newIngredient: ingredients = {
-    Name: null,
+    Name: "Nome",
     UM: "pz",
-    Carbs: 1,
-    Proteins: 1,
-    Fat: 1,
-    Countable: true,
+    Carbs: parseFloat("2"),
+    Proteins: parseFloat("3"),
+    Fat: parseFloat("5"),
+    Countable: false,
     Id: 1,
-    Quantity: 100,
+    Quantity: parseFloat(""),
     Calories: 17,
   };
 
