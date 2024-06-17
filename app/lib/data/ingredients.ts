@@ -13,9 +13,8 @@ export async function createIngredient(formData: FormData) {
 
   const ingredient = await prisma.ingredients.create({ data });
 
+  // revalidatePath(`/ingredients${ingredient.Id}/edit`);
   return ingredient;
-  // revalidatePath("/ingredients");
-  // redirect("/ingredients");
 }
 
 //READ ONE
@@ -50,8 +49,8 @@ export async function updateIngredient(id: number, formData: FormData) {
     data,
   });
 
-  revalidatePath("/ingredients");
-  redirect("/ingredients");
+  // revalidatePath(`/ingredients${ingredient.Id}/edit`);
+  return ingredient;
 }
 
 //DELETE
@@ -72,8 +71,8 @@ export async function deleteIngredient(id: number) {
     },
   });
 
-  revalidatePath("/ingredients");
-  redirect("/ingredients");
+  return ingredient;
+  // redirect("/ingredients");
 }
 
 function createIngredientData(formData: FormData): ingredients {
@@ -96,21 +95,28 @@ function createIngredientData(formData: FormData): ingredients {
 
 function checkFormData(formData: FormData) {
   if (formData.get("name") === "") throw new Error("name is required");
-  if (formData.get("um") === "") throw new Error("um is required");
+
   if (isNaN(parseFloat(formData.get("carbs").toString())))
     throw new Error("carbs are required");
+
   if (isNaN(parseFloat(formData.get("proteins").toString())))
     throw new Error("proteins are required");
+
   if (isNaN(parseFloat(formData.get("fat").toString())))
     throw new Error("fat is required");
+
   if (
-    formData.get("countable").valueOf() === false &&
+    formData.get("countable").valueOf() === "false" &&
     isNaN(parseFloat(formData.get("quantity").toString()))
   )
     throw new Error("must indicate a quantity if item is uncountable");
 }
 
-function calculateCalories(carbs: number, proteins: number, fat: number) {
+export function calculateCalories(
+  carbs: number,
+  proteins: number,
+  fat: number,
+) {
   let calories = 0;
   //Carbs: 4kcal
   calories += carbs * 4;
