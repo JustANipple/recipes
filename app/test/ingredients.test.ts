@@ -11,41 +11,33 @@ import { ingredients } from "@prisma/client";
 vi.mock("../lib/prisma");
 
 const isCountable = false;
-const ingr: ingredients = {
+const newIngredient: ingredients = {
   Id: 1,
   Name: "Nome",
   Carbs: parseFloat("2"),
   Proteins: parseFloat("3"),
   Fat: parseFloat("5"),
   Countable: isCountable,
-  UM: isCountable ? "pz" : "g",
   Quantity: parseFloat("20"),
-  Calories: calculateCalories(
-    parseFloat("2"),
-    parseFloat("3"),
-    parseFloat("5"),
-  ),
 };
 
 const formData = new FormData();
-formData.append("name", ingr.Name);
-formData.append("um", ingr.UM);
-formData.append("carbs", ingr.Carbs.toString());
-formData.append("proteins", ingr.Proteins.toString());
-formData.append("fat", ingr.Fat.toString());
-formData.append("countable", ingr.Countable.toString());
-formData.append("id", ingr.Id.toString());
-formData.append("quantity", ingr.Quantity.toString());
-formData.append("calories", ingr.Calories.toString());
+formData.append("name", newIngredient.Name);
+formData.append("carbs", newIngredient.Carbs.toString());
+formData.append("proteins", newIngredient.Proteins.toString());
+formData.append("fat", newIngredient.Fat.toString());
+formData.append("countable", newIngredient.Countable.toString());
+formData.append("id", newIngredient.Id.toString());
+formData.append("quantity", newIngredient.Quantity.toString());
 
 test("createIngredient should create an ingredient", async () => {
-  prisma.ingredients.create.mockResolvedValue({ ...ingr, Id: 1 });
+  prisma.ingredients.create.mockResolvedValue({ ...newIngredient, Id: 1 });
   const ingredient = await createIngredient(formData);
   expect(ingredient).toStrictEqual({ ...ingredient, Id: 1 });
 });
 
 test("updateIngredient should update an ingredient", async () => {
-  prisma.ingredients.update.mockResolvedValue({ ...ingr, Id: 1 });
+  prisma.ingredients.update.mockResolvedValue({ ...newIngredient, Id: 1 });
   const ingredient = await updateIngredient(
     parseInt(formData.get("id").toString()),
     formData,
@@ -54,7 +46,7 @@ test("updateIngredient should update an ingredient", async () => {
 });
 
 test("deleteIngredient should delete an ingredient", async () => {
-  prisma.ingredients.delete.mockResolvedValue({ ...ingr, Id: 1 });
+  prisma.ingredients.delete.mockResolvedValue({ ...newIngredient, Id: 1 });
   const ingredient = await deleteIngredient(
     parseInt(formData.get("id").toString()),
   );

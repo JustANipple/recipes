@@ -79,17 +79,11 @@ function createIngredientData(formData: FormData): ingredients {
   return {
     Id: parseInt(formData.get("id").toString()),
     Name: formData.get("name").toString(),
-    UM: formData.get("countable").valueOf() ? "pz" : "g",
     Carbs: parseFloat(formData.get("carbs").toString()),
     Proteins: parseFloat(formData.get("proteins").toString()),
     Fat: parseFloat(formData.get("fat").toString()),
     Countable: formData.get("countable").valueOf() ? true : false,
     Quantity: parseFloat(formData.get("quantity").toString()),
-    Calories: calculateCalories(
-      parseFloat(formData.get("carbs").toString()),
-      parseFloat(formData.get("proteins").toString()),
-      parseFloat(formData.get("fat").toString()),
-    ),
   };
 }
 
