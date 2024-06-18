@@ -82,7 +82,7 @@ function createIngredientData(formData: FormData): ingredients {
     Carbs: parseFloat(formData.get("carbs").toString()),
     Proteins: parseFloat(formData.get("proteins").toString()),
     Fat: parseFloat(formData.get("fat").toString()),
-    Countable: formData.get("countable").valueOf() ? true : false,
+    Countable: formData.get("countable").valueOf() === "true",
     Quantity: parseFloat(formData.get("quantity").toString()),
   };
 }
