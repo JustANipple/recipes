@@ -1,18 +1,15 @@
-import { expect, test, vi } from "vitest";
+import { expect, test } from "vitest";
 import {
-  calculateCalories,
   createIngredient,
   deleteIngredient,
+  getIngredients,
   updateIngredient,
 } from "../lib/data/ingredients";
-import prisma from "../lib/__mocks__/prisma";
 import { ingredients } from "@prisma/client";
-
-vi.mock("../lib/prisma");
 
 const isCountable = false;
 const newIngredient: ingredients = {
-  Id: 1,
+  Id: undefined,
   Name: "Nome",
   Carbs: parseFloat("2"),
   Proteins: parseFloat("3"),
@@ -27,17 +24,20 @@ formData.append("carbs", newIngredient.Carbs.toString());
 formData.append("proteins", newIngredient.Proteins.toString());
 formData.append("fat", newIngredient.Fat.toString());
 formData.append("countable", newIngredient.Countable.toString());
-formData.append("id", newIngredient.Id.toString());
+formData.append("id", newIngredient.Id?.toString());
 formData.append("quantity", newIngredient.Quantity.toString());
 
 test("createIngredient should create an ingredient", async () => {
-  prisma.ingredients.create.mockResolvedValue({ ...newIngredient, Id: 1 });
   const ingredient = await createIngredient(formData);
   expect(ingredient).toStrictEqual({ ...ingredient, Id: 1 });
 });
 
+test("getIngredients should get all ingredients", async () => {
+  const ingredients = await getIngredients();
+  expect(ingredients.length).toBeGreaterThan(0);
+});
+
 test("updateIngredient should update an ingredient", async () => {
-  prisma.ingredients.update.mockResolvedValue({ ...newIngredient, Id: 1 });
   const ingredient = await updateIngredient(
     parseInt(formData.get("id").toString()),
     formData,
@@ -46,7 +46,6 @@ test("updateIngredient should update an ingredient", async () => {
 });
 
 test("deleteIngredient should delete an ingredient", async () => {
-  prisma.ingredients.delete.mockResolvedValue({ ...newIngredient, Id: 1 });
   const ingredient = await deleteIngredient(
     parseInt(formData.get("id").toString()),
   );

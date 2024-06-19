@@ -17,24 +17,11 @@ export async function createIngredient(formData: FormData) {
   return ingredient;
 }
 
-//READ ONE
-export async function getIngredient(id: number) {
-  let ingredient: ingredients;
-  if (id && id !== 0) {
-    ingredient = await prisma.ingredients.findFirst({
-      where: {
-        Id: id,
-      },
-    });
-  }
-
-  return ingredient;
-}
-
-//READ MULTIPLE
-export async function getIngredients() {
-  const ingredients = await prisma.ingredients.findMany();
-
+//READ
+export async function getIngredients(id?: number) {
+  const ingredients = await prisma.ingredients.findMany({
+    where: id ? { Id: id } : undefined,
+  });
   return ingredients;
 }
 
