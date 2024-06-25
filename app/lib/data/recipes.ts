@@ -1,6 +1,6 @@
 "use server";
 
-import { recipes } from "@prisma/client";
+import { ingredients, ingredientsRelationships, recipes } from "@prisma/client";
 import prisma from "../prisma";
 
 export async function createRecipe(formData: FormData) {
@@ -8,9 +8,10 @@ export async function createRecipe(formData: FormData) {
 
   const data = createRecipeData(formData);
 
-  if (!prisma.recipes.({ where: { Id: data.Id } }))
+  if (await prisma.recipes.findFirst({ where: { Id: data.Id } }))
     throw new Error(`Recipe with id ${data.Id} already exists`);
-  const recipe = await prisma.recipes.create({ data });
+
+  const recipeIngredients = createRecipeIngredientsData(formData);
 
   // revalidatePath(`/recipes${recipe.Id}/edit`);
   return recipe;
@@ -27,6 +28,21 @@ function createRecipeData(formData: FormData): recipes {
     // RecipeIngredients: formData.get("recipeIngredients").toString(),
     // RecipeInstructions: formData.get("recipeInstructions").toString()
   };
+}
+
+function createRecipeIngredientsData(
+  formData: FormData,
+): ingredientsRelationships[] {
+  const recipeIngredients = formData.getAll("recipeIngredients[]");
+
+  return recipeIngredients.map((recipeIngredient) => {
+    const ingredient = JSON.parse(recipeIngredient.toString());
+    return {
+      RecipeId: parseInt(formData.get("id").toString()),
+      IngredientId: parseInt(ingredient.ingredientId),
+      Quantity: parseFloat(ingredient.quantity),
+    };
+  });
 }
 
 function checkFormData(formData: FormData) {
