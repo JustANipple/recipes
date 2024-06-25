@@ -1,31 +1,22 @@
 "use server";
 
-import {
-  ingredients,
-  ingredientsRelationships,
-  instructions,
-  recipes,
-} from "@prisma/client";
+import { recipes } from "@prisma/client";
 import prisma from "../prisma";
 
-interface recipeCustom extends recipes {
-  RecipeIngredients: ingredients[];
-  RecipeInstructions: instructions[];
+export async function createRecipe(formData: FormData) {
+  checkFormData(formData);
+
+  const data = createRecipeData(formData);
+
+  if (!prisma.recipes.({ where: { Id: data.Id } }))
+    throw new Error(`Recipe with id ${data.Id} already exists`);
+  const recipe = await prisma.recipes.create({ data });
+
+  // revalidatePath(`/recipes${recipe.Id}/edit`);
+  return recipe;
 }
 
-function createRecipeIngredientsData(
-  datas: FormDataEntryValue[],
-): ingredientsRelationships[] {
-  return datas.map((data) => {
-    return {
-      RecipeId: data,
-      IngredientId: parseInt(data.toString()),
-      Quantity: 0,
-    };
-  });
-}
-
-function createRecipeData(formData: FormData): recipeCustom {
+function createRecipeData(formData: FormData): recipes {
   return {
     Id: parseInt(formData.get("id").toString()),
     ImageLink: formData.get("imageLink").toString(),
@@ -33,8 +24,8 @@ function createRecipeData(formData: FormData): recipeCustom {
     Description: formData.get("description").toString(),
     PreparationTime: parseFloat(formData.get("preparationTime").toString()),
     CookingTime: parseFloat(formData.get("cookingTime").toString()),
-    RecipeIngredients: Array.from(formData.getAll("recipeIngredients")),
-    RecipeInstructions: [],
+    // RecipeIngredients: formData.get("recipeIngredients").toString(),
+    // RecipeInstructions: formData.get("recipeInstructions").toString()
   };
 }
 
