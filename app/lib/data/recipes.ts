@@ -12,21 +12,52 @@ export async function createRecipe(formData: FormData) {
 
   const data = createRecipeData(formData);
 
-  if (await prisma.recipes.findFirst({ where: { Id: data.Id } }))
+  if (
+    !isNaN(data.Id) &&
+    data.Id > 0 &&
+    (await prisma.recipes.findFirst({ where: { Id: data.Id } }))
+  )
     throw new Error(`Recipe with id ${data.Id} already exists`);
 
-  const recipe = await prisma.recipes.create({ data });
+  let recipe: recipes;
+  await prisma.$transaction(async (prisma) => {
+    const recipe = await prisma.recipes.create({
+      data: {
+        ...data,
+        Ingredients: {
+          create: data.RecipeIngredients.map((ingredient) => ({
+            Ingredient: {
+              connect: { Id: ingredient.IngredientId },
+            },
+            Quantity: ingredient.Quantity,
+          })),
+        },
+        Instructions: {
+          create: data.RecipeInstructions.map((instruction) => ({
+            Title: instruction.Title,
+            Description: instruction.Description,
+          })),
+        },
+      },
+    });
+  });
 
   // revalidatePath(`/recipes${recipe.Id}/edit`);
   return recipe;
 }
 
-interface recipesRelations extends recipes {
+interface recipe {
+  Id?: number;
+  ImageLink: string;
+  Title: string;
+  Description: string;
+  PreparationTime: number;
+  CookingTime: number;
   RecipeIngredients: ingredientsRelationships[];
   RecipeInstructions: instructions[];
 }
 
-function createRecipeData(formData: FormData): recipesRelations {
+function createRecipeData(formData: FormData): recipe {
   const recipeIngredients: ingredientsRelationships[] = formData
     .getAll("recipeIngredients[]")
     .map((recipeIngredient) => {
@@ -43,15 +74,15 @@ function createRecipeData(formData: FormData): recipesRelations {
     .map((recipeInstruction) => {
       const instruction = JSON.parse(recipeInstruction.toString());
       return {
-        Id: parseInt(formData.get("id").toString()),
         RecipeId: parseInt(formData.get("id").toString()),
+        Id: parseInt(formData.get("id").toString()),
         Title: instruction.title,
         Description: instruction.description,
       };
     });
 
   return {
-    Id: parseInt(formData.get("id").toString()),
+    // Id: parseInt(formData.get("id").toString()),
     ImageLink: formData.get("imageLink").toString(),
     Title: formData.get("title").toString(),
     Description: formData.get("description").toString(),

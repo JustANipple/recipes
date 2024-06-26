@@ -7,13 +7,19 @@ import {
 import { expect, test } from "vitest";
 import { createRecipe } from "../lib/data/recipes";
 
-interface recipesRelations extends recipes {
+interface recipe {
+  Id?: number;
+  ImageLink: string;
+  Title: string;
+  Description: string;
+  PreparationTime: number;
+  CookingTime: number;
   RecipeIngredients: ingredientsRelationships[];
   RecipeInstructions: instructions[];
 }
 
 const newIngredient: ingredients = {
-  Id: undefined,
+  Id: 0,
   Name: "Nome",
   Carbs: parseFloat("2"),
   Proteins: parseFloat("3"),
@@ -24,19 +30,19 @@ const newIngredient: ingredients = {
 
 const newIngredientRelationship: ingredientsRelationships = {
   RecipeId: 1,
-  IngredientId: 1,
+  IngredientId: 125,
   Quantity: 20,
 };
 
 const newInstruction: instructions = {
-  Id: undefined,
+  Id: 211,
   RecipeId: 1,
   Title: "Title",
   Description: "Description",
 };
 
-const newRecipe: recipesRelations = {
-  Id: 1,
+const newRecipe: recipe = {
+  // Id: 0,
   ImageLink: "ImageLink",
   Title: "Title",
   Description: "Description",
@@ -47,7 +53,7 @@ const newRecipe: recipesRelations = {
 };
 
 const formData = new FormData();
-formData.append("id", newRecipe.Id.toString());
+formData.append("id", newRecipe.Id?.toString());
 formData.append("imageLink", newRecipe.ImageLink);
 formData.append("title", newRecipe.Title);
 formData.append("description", newRecipe.Description);
