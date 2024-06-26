@@ -1,10 +1,6 @@
 "use server";
 
-import {
-  ingredientsRelationships,
-  instructions,
-  recipes,
-} from "@prisma/client";
+import { recipes } from "@prisma/client";
 import prisma from "../prisma";
 import { ingredientRelationship, instruction, recipe } from "../interfaces";
 
@@ -22,11 +18,11 @@ export async function createRecipe(formData: FormData) {
 
   let recipe: recipes;
   await prisma.$transaction(async (prisma) => {
-    const recipe = await prisma.recipes.create({
+    recipe = await prisma.recipes.create({
       data: {
         ...data,
         Ingredients: {
-          create: data.RecipeIngredients.map((ingredient) => ({
+          create: data.Ingredients.map((ingredient) => ({
             Ingredient: {
               connect: { Id: ingredient.IngredientId },
             },
@@ -34,7 +30,7 @@ export async function createRecipe(formData: FormData) {
           })),
         },
         Instructions: {
-          create: data.RecipeInstructions.map((instruction) => ({
+          create: data.Instructions.map((instruction) => ({
             Title: instruction.Title,
             Description: instruction.Description,
           })),
@@ -47,7 +43,9 @@ export async function createRecipe(formData: FormData) {
   return recipe;
 }
 
-function createRecipeData(formData: FormData): recipe {
+function createRecipeIngredientsData(
+  formData: FormData,
+): ingredientRelationship[] {
   const recipeIngredients: ingredientRelationship[] = formData
     .getAll("recipeIngredients[]")
     .map((recipeIngredient) => {
@@ -59,16 +57,25 @@ function createRecipeData(formData: FormData): recipe {
       };
     });
 
+  return recipeIngredients;
+}
+
+function createRecipeInstructionsData(formData: FormData): instruction[] {
   const recipeInstructions: instruction[] = formData
     .getAll("recipeInstructions[]")
     .map((recipeInstruction) => {
       const instruction = JSON.parse(recipeInstruction.toString());
       return {
+        // RecipeId: parseInt(formData.get("id").toString()),
         Title: instruction.title,
         Description: instruction.description,
       };
     });
 
+  return recipeInstructions;
+}
+
+function createRecipeData(formData: FormData): recipe {
   return {
     // Id: parseInt(formData.get("id").toString()),
     ImageLink: formData.get("imageLink").toString(),
@@ -76,8 +83,8 @@ function createRecipeData(formData: FormData): recipe {
     Description: formData.get("description").toString(),
     PreparationTime: parseFloat(formData.get("preparationTime").toString()),
     CookingTime: parseFloat(formData.get("cookingTime").toString()),
-    RecipeIngredients: recipeIngredients,
-    RecipeInstructions: recipeInstructions,
+    Ingredients: createRecipeIngredientsData(formData),
+    Instructions: createRecipeInstructionsData(formData),
   };
 }
 

@@ -7,8 +7,8 @@ export interface recipe {
   Description: string;
   PreparationTime: number;
   CookingTime: number;
-  RecipeIngredients: ingredientRelationship[];
-  RecipeInstructions: instruction[];
+  Ingredients: ingredientRelationship[];
+  Instructions: instruction[];
 }
 
 export interface instruction {

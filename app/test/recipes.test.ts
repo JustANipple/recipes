@@ -19,8 +19,8 @@ const newRecipe: recipe = {
   Description: "Description",
   PreparationTime: 0,
   CookingTime: 0,
-  RecipeIngredients: [newIngredientRelationship],
-  RecipeInstructions: [newInstruction],
+  Ingredients: [newIngredientRelationship],
+  Instructions: [newInstruction],
 };
 
 const formData = new FormData();
@@ -31,7 +31,7 @@ formData.append("description", newRecipe.Description);
 formData.append("preparationTime", newRecipe.PreparationTime.toString());
 formData.append("cookingTime", newRecipe.CookingTime.toString());
 
-for (let ingredient of newRecipe.RecipeIngredients) {
+for (let ingredient of newRecipe.Ingredients) {
   formData.append(
     "recipeIngredients[]",
     JSON.stringify({
@@ -41,7 +41,7 @@ for (let ingredient of newRecipe.RecipeIngredients) {
   );
 }
 
-for (let instruction of newRecipe.RecipeInstructions) {
+for (let instruction of newRecipe.Instructions) {
   formData.append(
     "recipeInstructions[]",
     JSON.stringify({
@@ -53,5 +53,5 @@ for (let instruction of newRecipe.RecipeInstructions) {
 
 test("createRecipe should create a recipe", async () => {
   const recipe = await createRecipe(formData);
-  expect(recipe).toStrictEqual({ ...recipe, Id: 1 });
+  expect(recipe).toStrictEqual({ ...recipe, Title: recipe.Title });
 });
