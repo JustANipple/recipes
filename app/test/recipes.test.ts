@@ -13,7 +13,6 @@ const newInstruction: instruction = {
 };
 
 const newRecipe: recipe = {
-  // Id: 0,
   ImageLink: "ImageLink",
   Title: "Title",
   Description: "Description",
@@ -24,7 +23,6 @@ const newRecipe: recipe = {
 };
 
 const formData = new FormData();
-formData.append("id", newRecipe.Id?.toString());
 formData.append("imageLink", newRecipe.ImageLink);
 formData.append("title", newRecipe.Title);
 formData.append("description", newRecipe.Description);
