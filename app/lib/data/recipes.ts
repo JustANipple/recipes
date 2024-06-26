@@ -6,6 +6,7 @@ import {
   recipes,
 } from "@prisma/client";
 import prisma from "../prisma";
+import { ingredientRelationship, instruction, recipe } from "../interfaces";
 
 export async function createRecipe(formData: FormData) {
   checkFormData(formData);
@@ -46,36 +47,23 @@ export async function createRecipe(formData: FormData) {
   return recipe;
 }
 
-interface recipe {
-  Id?: number;
-  ImageLink: string;
-  Title: string;
-  Description: string;
-  PreparationTime: number;
-  CookingTime: number;
-  RecipeIngredients: ingredientsRelationships[];
-  RecipeInstructions: instructions[];
-}
-
 function createRecipeData(formData: FormData): recipe {
-  const recipeIngredients: ingredientsRelationships[] = formData
+  const recipeIngredients: ingredientRelationship[] = formData
     .getAll("recipeIngredients[]")
     .map((recipeIngredient) => {
       const ingredient = JSON.parse(recipeIngredient.toString());
       return {
-        RecipeId: parseInt(formData.get("id").toString()),
+        // RecipeId: parseInt(formData.get("id").toString()),
         IngredientId: parseInt(ingredient.ingredientId),
         Quantity: parseFloat(ingredient.quantity),
       };
     });
 
-  const recipeInstructions: instructions[] = formData
+  const recipeInstructions: instruction[] = formData
     .getAll("recipeInstructions[]")
     .map((recipeInstruction) => {
       const instruction = JSON.parse(recipeInstruction.toString());
       return {
-        RecipeId: parseInt(formData.get("id").toString()),
-        Id: parseInt(formData.get("id").toString()),
         Title: instruction.title,
         Description: instruction.description,
       };

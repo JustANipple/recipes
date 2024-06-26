@@ -1,42 +1,13 @@
-import {
-  ingredients,
-  ingredientsRelationships,
-  instructions,
-  recipes,
-} from "@prisma/client";
 import { expect, test } from "vitest";
 import { createRecipe } from "../lib/data/recipes";
+import { ingredientRelationship, instruction, recipe } from "../lib/interfaces";
 
-interface recipe {
-  Id?: number;
-  ImageLink: string;
-  Title: string;
-  Description: string;
-  PreparationTime: number;
-  CookingTime: number;
-  RecipeIngredients: ingredientsRelationships[];
-  RecipeInstructions: instructions[];
-}
-
-const newIngredient: ingredients = {
-  Id: 0,
-  Name: "Nome",
-  Carbs: parseFloat("2"),
-  Proteins: parseFloat("3"),
-  Fat: parseFloat("5"),
-  Countable: false,
-  Quantity: parseFloat("20"),
-};
-
-const newIngredientRelationship: ingredientsRelationships = {
-  RecipeId: 1,
+const newIngredientRelationship: ingredientRelationship = {
   IngredientId: 125,
   Quantity: 20,
 };
 
-const newInstruction: instructions = {
-  Id: 211,
-  RecipeId: 1,
+const newInstruction: instruction = {
   Title: "Title",
   Description: "Description",
 };
