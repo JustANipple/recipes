@@ -3,8 +3,9 @@
 import { recipes } from "@prisma/client";
 import prisma from "../prisma";
 import { ingredientRelationship, instruction, recipe } from "../interfaces";
+import { revalidatePath } from "next/cache";
 
-export async function createRecipe(formData: FormData) {
+export async function createRecipe(formData: FormData): Promise<recipes> {
   checkFormData(formData);
 
   const data = createRecipeData(formData);
@@ -43,6 +44,48 @@ export async function createRecipe(formData: FormData) {
   return recipe;
 }
 
+export async function updateRecipe(formData: FormData): Promise<recipes> {
+  checkFormData(formData);
+
+  const data = createRecipeData(formData);
+
+  const recipe = await prisma.recipes.update({
+    where: { Id: data.Id },
+    data: {
+      ...data,
+      Ingredients: {
+        updateMany: data.Ingredients.map((ingredient) => ({
+          where: {
+            RecipeId_IngredientId: {
+              RecipeId: data.Id,
+              IngredientId: ingredient.IngredientId,
+            },
+          },
+          data: {
+            Quantity: ingredient.Quantity,
+          },
+        })),
+      },
+      Instructions: {
+        updateMany: data.Instructions.map((instruction) => ({
+          where: {
+            RecipeId_Title: {
+              RecipeId: data.Id,
+              Title: instruction.Title,
+            },
+          },
+          data: {
+            Description: instruction.Description,
+          },
+        })),
+      },
+    },
+  });
+
+  // revalidatePath(`/recipes${recipe.Id}/edit`);
+  return recipe;
+}
+
 function createRecipeIngredientsData(
   formData: FormData,
 ): ingredientRelationship[] {
@@ -51,7 +94,6 @@ function createRecipeIngredientsData(
     .map((recipeIngredient) => {
       const ingredient = JSON.parse(recipeIngredient.toString());
       return {
-        // RecipeId: parseInt(formData.get("id").toString()),
         IngredientId: parseInt(ingredient.ingredientId),
         Quantity: parseFloat(ingredient.quantity),
       };
@@ -66,7 +108,6 @@ function createRecipeInstructionsData(formData: FormData): instruction[] {
     .map((recipeInstruction) => {
       const instruction = JSON.parse(recipeInstruction.toString());
       return {
-        // RecipeId: parseInt(formData.get("id").toString()),
         Title: instruction.title,
         Description: instruction.description,
       };
@@ -102,4 +143,10 @@ function checkFormData(formData: FormData) {
 
   if (isNaN(parseFloat(formData.get("cookingTime").toString())))
     throw new Error("cooking time is not a number");
+
+  if (formData.get("recipeIngredients[]") === null)
+    throw new Error("at least one ingredient is required");
+
+  if (formData.get("recipeInstructions[]") === null)
+    throw new Error("at least one instruction is required");
 }

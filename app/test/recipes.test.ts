@@ -53,3 +53,9 @@ test("createRecipe should create a recipe", async () => {
   const recipe = await createRecipe(formData);
   expect(recipe).toStrictEqual({ ...recipe, Title: recipe.Title });
 });
+
+test("updateRecipe should update a recipe", async () => {
+  formData.set("title", "Updated Title");
+  const recipe = await createRecipe(formData);
+  expect(recipe).toStrictEqual({ ...recipe, Title: "Updated Title" });
+});
