@@ -1,6 +1,10 @@
 "use server";
 
-import { ingredients, ingredientsRelationships, recipes } from "@prisma/client";
+import {
+  ingredientsRelationships,
+  instructions,
+  recipes,
+} from "@prisma/client";
 import prisma from "../prisma";
 
 export async function createRecipe(formData: FormData) {
@@ -11,13 +15,41 @@ export async function createRecipe(formData: FormData) {
   if (await prisma.recipes.findFirst({ where: { Id: data.Id } }))
     throw new Error(`Recipe with id ${data.Id} already exists`);
 
-  const recipeIngredients = createRecipeIngredientsData(formData);
+  const recipe = await prisma.recipes.create({ data });
 
   // revalidatePath(`/recipes${recipe.Id}/edit`);
   return recipe;
 }
 
-function createRecipeData(formData: FormData): recipes {
+interface recipesRelations extends recipes {
+  RecipeIngredients: ingredientsRelationships[];
+  RecipeInstructions: instructions[];
+}
+
+function createRecipeData(formData: FormData): recipesRelations {
+  const recipeIngredients: ingredientsRelationships[] = formData
+    .getAll("recipeIngredients[]")
+    .map((recipeIngredient) => {
+      const ingredient = JSON.parse(recipeIngredient.toString());
+      return {
+        RecipeId: parseInt(formData.get("id").toString()),
+        IngredientId: parseInt(ingredient.ingredientId),
+        Quantity: parseFloat(ingredient.quantity),
+      };
+    });
+
+  const recipeInstructions: instructions[] = formData
+    .getAll("recipeInstructions[]")
+    .map((recipeInstruction) => {
+      const instruction = JSON.parse(recipeInstruction.toString());
+      return {
+        Id: parseInt(formData.get("id").toString()),
+        RecipeId: parseInt(formData.get("id").toString()),
+        Title: instruction.title,
+        Description: instruction.description,
+      };
+    });
+
   return {
     Id: parseInt(formData.get("id").toString()),
     ImageLink: formData.get("imageLink").toString(),
@@ -25,24 +57,9 @@ function createRecipeData(formData: FormData): recipes {
     Description: formData.get("description").toString(),
     PreparationTime: parseFloat(formData.get("preparationTime").toString()),
     CookingTime: parseFloat(formData.get("cookingTime").toString()),
-    // RecipeIngredients: formData.get("recipeIngredients").toString(),
-    // RecipeInstructions: formData.get("recipeInstructions").toString()
+    RecipeIngredients: recipeIngredients,
+    RecipeInstructions: recipeInstructions,
   };
-}
-
-function createRecipeIngredientsData(
-  formData: FormData,
-): ingredientsRelationships[] {
-  const recipeIngredients = formData.getAll("recipeIngredients[]");
-
-  return recipeIngredients.map((recipeIngredient) => {
-    const ingredient = JSON.parse(recipeIngredient.toString());
-    return {
-      RecipeId: parseInt(formData.get("id").toString()),
-      IngredientId: parseInt(ingredient.ingredientId),
-      Quantity: parseFloat(ingredient.quantity),
-    };
-  });
 }
 
 function checkFormData(formData: FormData) {
