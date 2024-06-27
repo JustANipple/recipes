@@ -1,6 +1,12 @@
 import { expect, test } from "vitest";
-import { createRecipe } from "../lib/data/recipes";
+import {
+  createRecipe,
+  deleteRecipe,
+  getRecipes,
+  updateRecipe,
+} from "../lib/data/recipes";
 import { ingredientRelationship, instruction, recipe } from "../lib/interfaces";
+import { recipes } from "@prisma/client";
 
 const newIngredientRelationship: ingredientRelationship = {
   IngredientId: 125,
@@ -49,13 +55,27 @@ for (let instruction of newRecipe.Instructions) {
   );
 }
 
+let recipeTest: recipes;
+
 test("createRecipe should create a recipe", async () => {
-  const recipe = await createRecipe(formData);
-  expect(recipe).toStrictEqual({ ...recipe, Title: recipe.Title });
+  recipeTest = await createRecipe(formData);
+  expect(recipeTest).toStrictEqual({ ...recipeTest, Title: recipeTest.Title });
+});
+
+test("getRecipes should get all recipes", async () => {
+  const recipes = await getRecipes();
+  expect(recipes.length).toBeGreaterThan(0);
 });
 
 test("updateRecipe should update a recipe", async () => {
+  formData.set("id", recipeTest.Id.toString());
   formData.set("title", "Updated Title");
-  const recipe = await createRecipe(formData);
-  expect(recipe).toStrictEqual({ ...recipe, Title: "Updated Title" });
+  recipeTest = await updateRecipe(formData);
+  expect(recipeTest).toStrictEqual({ ...recipeTest, Title: "Updated Title" });
+});
+
+test("deleteRecipe should delete a recipe", async () => {
+  formData.set("id", recipeTest.Id.toString());
+  recipeTest = await deleteRecipe(recipeTest.Id);
+  expect(recipeTest).toStrictEqual({ ...recipeTest, Id: 138 });
 });

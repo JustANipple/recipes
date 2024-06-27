@@ -56,10 +56,8 @@ export async function updateRecipe(formData: FormData): Promise<recipes> {
       Ingredients: {
         updateMany: data.Ingredients.map((ingredient) => ({
           where: {
-            RecipeId_IngredientId: {
-              RecipeId: data.Id,
-              IngredientId: ingredient.IngredientId,
-            },
+            RecipeId: data.Id,
+            IngredientId: ingredient.IngredientId,
           },
           data: {
             Quantity: ingredient.Quantity,
@@ -69,10 +67,8 @@ export async function updateRecipe(formData: FormData): Promise<recipes> {
       Instructions: {
         updateMany: data.Instructions.map((instruction) => ({
           where: {
-            RecipeId_Title: {
-              RecipeId: data.Id,
-              Title: instruction.Title,
-            },
+            RecipeId: data.Id,
+            Title: instruction.Title,
           },
           data: {
             Description: instruction.Description,
@@ -83,6 +79,30 @@ export async function updateRecipe(formData: FormData): Promise<recipes> {
   });
 
   // revalidatePath(`/recipes${recipe.Id}/edit`);
+  return recipe;
+}
+
+export async function getRecipes(id?: number): Promise<recipes[]> {
+  const recipes = await prisma.recipes.findMany({
+    where: id ? { Id: id } : undefined,
+    include: {
+      Ingredients: true,
+      Instructions: true,
+    },
+  });
+
+  return recipes;
+}
+
+export async function deleteRecipe(id: number) {
+  const recipe = await prisma.recipes.delete({
+    where: {
+      Id: id,
+    },
+  });
+
+  // revalidatePath("/recipes");
+  // redirect("/");
   return recipe;
 }
 
@@ -117,8 +137,8 @@ function createRecipeInstructionsData(formData: FormData): instruction[] {
 }
 
 function createRecipeData(formData: FormData): recipe {
-  return {
-    // Id: parseInt(formData.get("id").toString()),
+  // create recipe before returning it
+  const recipe: recipe = {
     ImageLink: formData.get("imageLink").toString(),
     Title: formData.get("title").toString(),
     Description: formData.get("description").toString(),
@@ -127,6 +147,12 @@ function createRecipeData(formData: FormData): recipe {
     Ingredients: createRecipeIngredientsData(formData),
     Instructions: createRecipeInstructionsData(formData),
   };
+
+  if (formData.get("id") != null) {
+    recipe.Id = parseInt(formData.get("id").toString());
+  }
+
+  return recipe;
 }
 
 function checkFormData(formData: FormData) {
