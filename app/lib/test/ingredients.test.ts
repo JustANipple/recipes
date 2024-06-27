@@ -4,17 +4,16 @@ import {
   deleteIngredient,
   getIngredients,
   updateIngredient,
-} from "../lib/data/ingredients";
+} from "../data/ingredients";
 import { ingredients } from "@prisma/client";
 
-const isCountable = false;
 const newIngredient: ingredients = {
   Id: undefined,
   Name: "Nome",
   Carbs: parseFloat("2"),
   Proteins: parseFloat("3"),
   Fat: parseFloat("5"),
-  Countable: isCountable,
+  Countable: false,
   Quantity: parseFloat("20"),
 };
 

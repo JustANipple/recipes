@@ -1,9 +1,7 @@
 "use server";
 
 import { ingredients } from "@prisma/client";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import prisma from "../prisma";
+import prisma from "../utils/prisma";
 
 //CREATE
 export async function createIngredient(formData: FormData) {

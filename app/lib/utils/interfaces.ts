@@ -1,5 +1,3 @@
-import { ingredientsRelationships, instructions } from "@prisma/client";
-
 export interface recipe {
   Id?: number;
   ImageLink: string;

@@ -1,9 +1,12 @@
 "use server";
 
 import { recipes } from "@prisma/client";
-import prisma from "../prisma";
-import { ingredientRelationship, instruction, recipe } from "../interfaces";
-import { revalidatePath } from "next/cache";
+import prisma from "../utils/prisma";
+import {
+  ingredientRelationship,
+  instruction,
+  recipe,
+} from "../utils/interfaces";
 
 export async function createRecipe(formData: FormData): Promise<recipes> {
   checkFormData(formData);

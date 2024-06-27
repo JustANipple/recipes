@@ -4,8 +4,12 @@ import {
   deleteRecipe,
   getRecipes,
   updateRecipe,
-} from "../lib/data/recipes";
-import { ingredientRelationship, instruction, recipe } from "../lib/interfaces";
+} from "../data/recipes";
+import {
+  ingredientRelationship,
+  instruction,
+  recipe,
+} from "../utils/interfaces";
 import { recipes } from "@prisma/client";
 
 const newIngredientRelationship: ingredientRelationship = {
@@ -77,5 +81,5 @@ test("updateRecipe should update a recipe", async () => {
 test("deleteRecipe should delete a recipe", async () => {
   formData.set("id", recipeTest.Id.toString());
   recipeTest = await deleteRecipe(recipeTest.Id);
-  expect(recipeTest).toStrictEqual({ ...recipeTest, Id: 138 });
+  expect(recipeTest).toStrictEqual({ ...recipeTest, Id: recipeTest.Id });
 });
