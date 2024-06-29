@@ -1,27 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { getRecipes } from "../lib/data";
+import { getRecipes } from "../lib/data/recipes";
 import { useEffect, useState } from "react";
 import Nutrition from "./Nutrition";
+import { recipes } from "@prisma/client";
 
 const Recipe = () => {
   const [recipes, setRecipes] = useState([]);
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [selectedRecipe, setSelectedRecipe] = useState<recipes>(null);
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const data = await getRecipes();
+      const data: recipes[] = await getRecipes();
       setRecipes(data);
       setSelectedRecipe(data[0]);
     };
 
     fetchRecipes();
   }, []);
-
-  useEffect(() => {
-    if (selectedRecipe) console.log(selectedRecipe.Ingredients);
-  });
 
   return (
     <>
@@ -127,14 +124,13 @@ const Recipe = () => {
               </h2>
               <ul className="grid gap-y-1 px-2 font-Outfit text-WengeBrown">
                 {selectedRecipe &&
-                  selectedRecipe.Ingredients.map((item) => {
+                  selectedRecipe..map((item) => {
                     return (
                       <li
-                        key={item.Ingredient.Id}
+                        key={item.IngredientId}
                         className="flex items-center before:pe-7 before:text-xl before:content-['•']"
                       >
                         {item.Quantity != 0 && item.Quantity}{" "}
-                        {item.Ingredient.Name}
                       </li>
                     );
                   })}

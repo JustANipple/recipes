@@ -10,6 +10,7 @@ export interface recipe {
 }
 
 export interface instruction {
+  Id?: number;
   Title: string;
   Description: string;
 }
