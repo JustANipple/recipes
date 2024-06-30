@@ -1,10 +1,9 @@
 "use client";
-
 import {
   createIngredient,
   deleteIngredient,
-  getIngredientById,
-} from "@/app/lib/data";
+  getIngredients,
+} from "../../../lib/data/ingredients";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -22,25 +21,16 @@ const Page = ({ params }) => {
   } = useForm();
 
   useEffect(() => {
-    getIngredientById(id).then((data) => {
+    getIngredients(id).then((data) => {
       if (data != null) {
-        reset({
-          name: data.Name,
-          um: data.UM,
-          carbs: data.Carbs,
-          proteins: data.Proteins,
-          fat: data.Fat,
-          countable: data.Countable,
-          quantity: data.Quantity,
-          calories: data.Calories,
-        });
+        reset(data);
       }
     });
   }, []);
 
   const createIngredientWithId = createIngredient.bind(id, null);
 
-  const onSubmit = (data) => createIngredient(id, data);
+  const onSubmit = (data) => createIngredient(data);
 
   return (
     <div

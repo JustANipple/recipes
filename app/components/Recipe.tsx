@@ -4,15 +4,15 @@ import Link from "next/link";
 import { getRecipes } from "../lib/data/recipes";
 import { useEffect, useState } from "react";
 import Nutrition from "./Nutrition";
-import { recipes } from "@prisma/client";
+import { recipe } from "../lib/utils/interfaces";
 
 const Recipe = () => {
-  const [recipes, setRecipes] = useState([]);
-  const [selectedRecipe, setSelectedRecipe] = useState<recipes>(null);
+  const [recipes, setRecipes] = useState<recipe[]>();
+  const [selectedRecipe, setSelectedRecipe] = useState<recipe>(null);
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const data: recipes[] = await getRecipes();
+      const data: recipe[] = await getRecipes();
       setRecipes(data);
       setSelectedRecipe(data[0]);
     };
@@ -124,13 +124,15 @@ const Recipe = () => {
               </h2>
               <ul className="grid gap-y-1 px-2 font-Outfit text-WengeBrown">
                 {selectedRecipe &&
-                  selectedRecipe..map((item) => {
+                  selectedRecipe.Ingredients.map((item) => {
                     return (
                       <li
                         key={item.IngredientId}
                         className="flex items-center before:pe-7 before:text-xl before:content-['•']"
                       >
                         {item.Quantity != 0 && item.Quantity}{" "}
+                        {item.Ingredient.Countable ? "pc" : "g"}{" "}
+                        {item.Ingredient.Name}
                       </li>
                     );
                   })}

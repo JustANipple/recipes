@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import UpdateIngredient from "./UpdateIngredient";
-import { MdEdit } from "react-icons/md";
 
 const IngredientSelect = ({
   index,

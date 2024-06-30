@@ -3,12 +3,13 @@
 import UpdateIngredient from "../components/UpdateIngredient";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { getIngredients } from "../lib/data";
+import { calculateCalories, getIngredients } from "../lib/data/ingredients";
 import { RxCross2 } from "react-icons/rx";
 import { MdEdit } from "react-icons/md";
+import { ingredient } from "../lib/utils/interfaces";
 
 const Table = () => {
-  const [ingredients, setIngredients] = useState([]);
+  const [ingredients, setIngredients] = useState<ingredient[]>();
 
   useEffect(() => {
     getIngredients().then((data) => {
@@ -82,7 +83,7 @@ const Table = () => {
                   {ingredient.Name}
                 </td>
                 <td className="overflow-hidden whitespace-nowrap px-3 py-4">
-                  {ingredient.UM}
+                  {ingredient.Countable ? "pc" : "g"}
                 </td>
                 <td className="overflow-hidden whitespace-nowrap px-3 py-4">
                   {ingredient.Carbs}
@@ -100,16 +101,20 @@ const Table = () => {
                   {ingredient.Quantity || 0}
                 </td>
                 <td className="overflow-hidden whitespace-nowrap px-3 py-4">
-                  {ingredient.Calories || 0}
+                  {calculateCalories(
+                    ingredient.Carbs,
+                    ingredient.Proteins,
+                    ingredient.Fat,
+                  )}
                 </td>
                 <td className="sticky right-0 bg-White shadow-md">
-                  <UpdateIngredient
-                    showEditIngredient={true}
-                    id={ingredient.Id}
-                    icon={
-                      <MdEdit className="m-auto h-7 w-7 rounded-md bg-LightGrey p-2 font-OutfitBold text-Nutmeg" />
-                    }
-                  />
+                  {/* <UpdateIngredient
+                      showEditIngredient={true}
+                      id={ingredient.Id}
+                      icon={
+                        <MdEdit className="m-auto h-7 w-7 rounded-md bg-LightGrey p-2 font-OutfitBold text-Nutmeg" />
+                      }
+                    /> */}
                 </td>
               </tr>
             ))}

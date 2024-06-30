@@ -2,6 +2,7 @@
 
 import { ingredients } from "@prisma/client";
 import prisma from "../utils/prisma";
+import { ingredient } from "../utils/interfaces";
 
 //CREATE
 export async function createIngredient(formData: FormData) {
@@ -16,7 +17,7 @@ export async function createIngredient(formData: FormData) {
 }
 
 //READ
-export async function getIngredients(id?: number) {
+export async function getIngredients(id?: number): Promise<ingredient[]> {
   const ingredients = await prisma.ingredients.findMany({
     where: id ? { Id: id } : undefined,
   });
@@ -91,7 +92,7 @@ function checkFormData(formData: FormData) {
     throw new Error("must indicate a quantity if item is uncountable");
 }
 
-export function calculateCalories(
+export async function calculateCalories(
   carbs: number,
   proteins: number,
   fat: number,

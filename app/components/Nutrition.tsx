@@ -1,32 +1,39 @@
 import React, { useEffect, useState } from "react";
+import { ingredientRelationship } from "../lib/utils/interfaces";
 
-const Nutrition = ({ ingredients }) => {
+const Nutrition = ({
+  ingredients: recipeIngredients,
+}: {
+  ingredients: ingredientRelationship[];
+}) => {
   const [carbs, setCarbs] = useState(0);
   const [protein, setProtein] = useState(0);
   const [fat, setFat] = useState(0);
   const [calories, setCalories] = useState(0);
 
   useEffect(() => {
-    if (ingredients) {
+    if (recipeIngredients) {
       let carbs = 0;
       let protein = 0;
       let fat = 0;
       let calories = 0;
-      ingredients.forEach((ingredient) => {
-        if (ingredient.Ingredient.Countable) {
-          carbs += ingredient.Ingredient.Carbs / ingredient.Quantity;
-          protein += ingredient.Ingredient.Proteins / ingredient.Quantity;
-          fat += ingredient.Ingredient.Fat / ingredient.Quantity;
+      recipeIngredients.forEach((recipeIngredient) => {
+        if (recipeIngredient.Ingredient.Countable) {
+          carbs +=
+            recipeIngredient.Ingredient.Carbs / recipeIngredient.Quantity;
+          protein +=
+            recipeIngredient.Ingredient.Proteins / recipeIngredient.Quantity;
+          fat += recipeIngredient.Ingredient.Fat / recipeIngredient.Quantity;
         } else {
           carbs +=
-            (ingredient.Quantity * ingredient.Ingredient.Carbs) /
-            ingredient.Ingredient.Quantity;
+            (recipeIngredient.Quantity * recipeIngredient.Ingredient.Carbs) /
+            recipeIngredient.Ingredient.Quantity;
           protein +=
-            (ingredient.Quantity * ingredient.Ingredient.Proteins) /
-            ingredient.Ingredient.Quantity;
+            (recipeIngredient.Quantity * recipeIngredient.Ingredient.Proteins) /
+            recipeIngredient.Ingredient.Quantity;
           fat +=
-            (ingredient.Quantity * ingredient.Ingredient.Fat) /
-            ingredient.Ingredient.Quantity;
+            (recipeIngredient.Quantity * recipeIngredient.Ingredient.Fat) /
+            recipeIngredient.Ingredient.Quantity;
         }
       });
       //round to 2 decimal places
@@ -40,7 +47,7 @@ const Nutrition = ({ ingredients }) => {
       setFat(fat);
       setCalories(calories);
     }
-  }, [ingredients]);
+  }, [recipeIngredients]);
 
   return (
     <div className="grid gap-y-3">

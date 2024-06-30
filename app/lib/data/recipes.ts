@@ -85,11 +85,15 @@ export async function updateRecipe(formData: FormData): Promise<recipes> {
   return recipe;
 }
 
-export async function getRecipes(id?: number): Promise<recipes[]> {
+export async function getRecipes(id?: number): Promise<recipe[]> {
   const recipes = await prisma.recipes.findMany({
     where: id ? { Id: id } : undefined,
     include: {
-      Ingredients: true,
+      Ingredients: {
+        include: {
+          Ingredient: true,
+        },
+      },
       Instructions: true,
     },
   });

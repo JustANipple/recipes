@@ -1,3 +1,5 @@
+import { ingredients } from "@prisma/client";
+
 export interface recipe {
   Id?: number;
   ImageLink: string;
@@ -9,6 +11,16 @@ export interface recipe {
   Instructions: instruction[];
 }
 
+export interface ingredient {
+  Id?: number;
+  Name: string;
+  Carbs: number;
+  Proteins: number;
+  Fat: number;
+  Countable: boolean;
+  Quantity: number;
+}
+
 export interface instruction {
   Id?: number;
   Title: string;
@@ -18,4 +30,5 @@ export interface instruction {
 export interface ingredientRelationship {
   IngredientId: number;
   Quantity: number;
+  Ingredient?: ingredients;
 }
