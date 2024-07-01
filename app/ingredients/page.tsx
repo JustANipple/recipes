@@ -3,10 +3,11 @@
 import UpdateIngredient from "../components/UpdateIngredient";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { calculateCalories, getIngredients } from "../lib/data/ingredients";
+import { getIngredients } from "../lib/data/ingredients";
 import { RxCross2 } from "react-icons/rx";
 import { MdEdit } from "react-icons/md";
 import { ingredient } from "../lib/utils/interfaces";
+import { calculateCalories } from "../lib/utils/scripts";
 
 const Table = () => {
   const [ingredients, setIngredients] = useState<ingredient[]>();
@@ -74,50 +75,51 @@ const Table = () => {
             </tr>
           </thead>
           <tbody>
-            {ingredients.map((ingredient, index) => (
-              <tr
-                key={index}
-                className="bg-white dark:bg-gray-800 dark:border-gray-700 border-t border-LightGrey font-Outfit text-WengeBrown"
-              >
-                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
-                  {ingredient.Name}
-                </td>
-                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
-                  {ingredient.Countable ? "pc" : "g"}
-                </td>
-                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
-                  {ingredient.Carbs}
-                </td>
-                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
-                  {ingredient.Proteins}
-                </td>
-                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
-                  {ingredient.Fat}
-                </td>
-                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
-                  {ingredient.Countable ? "Yes" : "No"}
-                </td>
-                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
-                  {ingredient.Quantity || 0}
-                </td>
-                <td className="overflow-hidden whitespace-nowrap px-3 py-4">
-                  {calculateCalories(
-                    ingredient.Carbs,
-                    ingredient.Proteins,
-                    ingredient.Fat,
-                  )}
-                </td>
-                <td className="sticky right-0 bg-White shadow-md">
-                  {/* <UpdateIngredient
+            {ingredients &&
+              ingredients.map((ingredient, index) => (
+                <tr
+                  key={index}
+                  className="bg-white dark:bg-gray-800 dark:border-gray-700 border-t border-LightGrey font-Outfit text-WengeBrown"
+                >
+                  <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                    {ingredient.Name}
+                  </td>
+                  <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                    {ingredient.Countable ? "pc" : "g"}
+                  </td>
+                  <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                    {ingredient.Carbs}
+                  </td>
+                  <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                    {ingredient.Proteins}
+                  </td>
+                  <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                    {ingredient.Fat}
+                  </td>
+                  <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                    {ingredient.Countable ? "Yes" : "No"}
+                  </td>
+                  <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                    {ingredient.Quantity || 0}
+                  </td>
+                  <td className="overflow-hidden whitespace-nowrap px-3 py-4">
+                    {calculateCalories(
+                      ingredient.Carbs,
+                      ingredient.Proteins,
+                      ingredient.Fat,
+                    )}
+                  </td>
+                  <td className="sticky right-0 bg-White shadow-md">
+                    <UpdateIngredient
                       showEditIngredient={true}
                       id={ingredient.Id}
                       icon={
                         <MdEdit className="m-auto h-7 w-7 rounded-md bg-LightGrey p-2 font-OutfitBold text-Nutmeg" />
                       }
-                    /> */}
-                </td>
-              </tr>
-            ))}
+                    />
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
