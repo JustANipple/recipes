@@ -10,5 +10,9 @@ export function calculateCalories(
   calories += proteins * 4;
   //Fat: 9kcal
   calories += fat * 9;
+
+  //Round calories to 2 decimals
+  calories = Math.round(calories * 100) / 100;
+
   return calories;
 }

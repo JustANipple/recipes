@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { getRecipes } from "../lib/data";
+import { getRecipes } from "../lib/data/recipes";
 import { RxCross2 } from "react-icons/rx";
 import { MdEdit } from "react-icons/md";
+import { recipe } from "../lib/utils/interfaces";
 
 const Table = () => {
-  const [recipes, setRecipes] = useState([]);
+  const [recipes, setRecipes] = useState<recipe[]>();
 
   useEffect(() => {
     getRecipes().then((data) => {

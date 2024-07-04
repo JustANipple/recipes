@@ -3,6 +3,8 @@
 import { ingredients } from "@prisma/client";
 import prisma from "../utils/prisma";
 import { ingredient } from "../utils/interfaces";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 //CREATE
 export async function createIngredient(formData: FormData) {
@@ -12,8 +14,9 @@ export async function createIngredient(formData: FormData) {
 
   const ingredient = await prisma.ingredients.create({ data });
 
-  // revalidatePath(`/ingredients${ingredient.Id}/edit`);
-  return ingredient;
+  revalidatePath(`/ingredients${ingredient.Id}/edit`);
+  redirect("/ingredients");
+  // return ingredient;
 }
 
 //READ
@@ -35,8 +38,9 @@ export async function updateIngredient(id: number, formData: FormData) {
     data,
   });
 
-  // revalidatePath(`/ingredients${ingredient.Id}/edit`);
-  return ingredient;
+  revalidatePath(`/ingredients${ingredient.Id}/edit`);
+  redirect("/ingredients");
+  // return ingredient;
 }
 
 //DELETE
@@ -57,37 +61,42 @@ export async function deleteIngredient(id: number) {
     },
   });
 
-  return ingredient;
-  // redirect("/ingredients");
+  redirect("/ingredients");
+  // return ingredient;
 }
 
-function createIngredientData(formData: FormData): ingredients {
-  return {
-    Id: parseInt(formData.get("id").toString()),
-    Name: formData.get("name").toString(),
-    Carbs: parseFloat(formData.get("carbs").toString()),
-    Proteins: parseFloat(formData.get("proteins").toString()),
-    Fat: parseFloat(formData.get("fat").toString()),
-    Countable: formData.get("countable").valueOf() === "true",
-    Quantity: parseFloat(formData.get("quantity").toString()),
+function createIngredientData(formData: FormData): ingredient {
+  const ingredient: ingredient = {
+    Name: formData.get("Name").toString(),
+    Carbs: parseFloat(formData.get("Carbs").toString()),
+    Proteins: parseFloat(formData.get("Proteins").toString()),
+    Fat: parseFloat(formData.get("Fat").toString()),
+    Countable: formData.get("Countable").valueOf() === "true",
+    Quantity: parseFloat(formData.get("Quantity").toString()),
   };
+
+  if (formData.get("Id") != null) {
+    ingredient.Id = parseInt(formData.get("Id").toString());
+  }
+
+  return ingredient;
 }
 
 function checkFormData(formData: FormData) {
-  if (formData.get("name") === "") throw new Error("name is required");
+  if (formData.get("Name") === "") throw new Error("name is required");
 
-  if (isNaN(parseFloat(formData.get("carbs").toString())))
+  if (isNaN(parseFloat(formData.get("Carbs").toString())))
     throw new Error("carbs are required");
 
-  if (isNaN(parseFloat(formData.get("proteins").toString())))
+  if (isNaN(parseFloat(formData.get("Proteins").toString())))
     throw new Error("proteins are required");
 
-  if (isNaN(parseFloat(formData.get("fat").toString())))
+  if (isNaN(parseFloat(formData.get("Fat").toString())))
     throw new Error("fat is required");
 
   if (
-    formData.get("countable").valueOf() === "false" &&
-    isNaN(parseFloat(formData.get("quantity").toString()))
+    formData.get("Countable").valueOf() === "false" &&
+    isNaN(parseFloat(formData.get("Quantity").toString()))
   )
     throw new Error("must indicate a quantity if item is uncountable");
 }

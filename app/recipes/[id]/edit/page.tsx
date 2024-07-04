@@ -1,38 +1,32 @@
 "use client";
 
-import IngredientSelect from "@/app/components/IngredientSelect";
+import IngredientSelect from "../../../components/IngredientSelect";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { RxCross2, RxPlus } from "react-icons/rx";
 import {
   createRecipe,
-  deleteRecipe,
-  getIngredientsForRecipe,
-  getIngredientsById,
   getRecipes,
-} from "@/app/lib/data";
+  deleteRecipe,
+} from "../../../lib/data/recipes";
+import { getIngredients } from "../../../lib/data/ingredients";
 import { useForm } from "react-hook-form";
-import UpdateIngredient from "@/app/components/UpdateIngredient";
+import {
+  ingredient,
+  ingredientRelationship,
+  instruction,
+  recipe,
+} from "../../../lib/utils/interfaces";
 
 const Page = ({ params, handleClick }) => {
   const id = params.id;
 
-  const [ingredients, setIngredients] = useState();
-
-  const [ingredientSelects, setIngredientSelects] = useState([0]);
-  const [instructionInputs, setInstructionInputs] = useState([0]);
+  const [ingredients, setIngredients] = useState<ingredient[]>();
+  const [recipe, setRecipe] = useState<recipe>();
 
   useEffect(() => {
     if (id == 0) {
-      getIngredientsForRecipe().then((data) => {
-        if (parseInt(id) > 0 && data != null) {
-          setIngredients(data);
-        } else {
-          setIngredients(data);
-        }
-      });
-    } else {
-      getIngredientsById(id).then((data) => {
+      getIngredients().then((data) => {
         if (parseInt(id) > 0 && data != null) {
           setIngredients(data);
         } else {
@@ -42,24 +36,25 @@ const Page = ({ params, handleClick }) => {
     }
     getRecipes(id).then((data) => {
       if (data != null) {
-        setIngredientSelects(data.Ingredients.map((item) => item));
-        setInstructionInputs(data.Instructions.map((item) => item));
-
+        setRecipe(data[0]);
         reset({
-          imageLink: data.ImageLink,
-          title: data.Title,
-          description: data.Description,
-          preparationTime: data.PreparationTime,
-          cookingTime: data.CookingTime,
-          ingredients: data.Ingredients,
-          instructions: data.Instructions,
+          imageLink: data[0].ImageLink,
+          title: data[0].Title,
+          description: data[0].Description,
+          preparationTime: data[0].PreparationTime,
+          cookingTime: data[0].CookingTime,
+          ingredients: data[0].Ingredients,
+          instructions: data[0].Instructions,
         });
       }
     });
   }, []);
 
   function handleIngredientPlusClick() {
-    setIngredientSelects([...ingredientSelects, ingredientSelects.length]);
+    setIngredientSelects([
+      ...ingredientSelects,
+      { IngredientId: 0, Quantity: 0 },
+    ]);
   }
 
   function handleIngredientCrossClick() {
@@ -69,7 +64,10 @@ const Page = ({ params, handleClick }) => {
   }
 
   function handleInstructionPlusClick() {
-    setInstructionInputs([...instructionInputs, instructionInputs.length]);
+    setInstructionInputs([
+      ...instructionInputs,
+      { Title: "", Description: "" },
+    ]);
   }
 
   function handleInstructionCrossClick() {
