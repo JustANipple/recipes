@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 const IngredientSelect = ({
   index,
-  ingredientsRecipe,
+  recipeIngredients,
   register,
   setValue,
   id,
@@ -13,14 +13,14 @@ const IngredientSelect = ({
   useEffect(() => {
     if (id > 0) {
       setShowEditIngredient(true);
-      if (ingredientsRecipe) {
+      if (recipeIngredients) {
         setValue(
           `ingredients[${index}].Ingredient.Id`,
-          ingredientsRecipe[index].Ingredient.Id,
+          recipeIngredients[index].Ingredient.Id,
         );
         setValue(
           `ingredients[${index}].quantity`,
-          ingredientsRecipe[index].Quantity,
+          recipeIngredients[index].Quantity,
         );
       }
     }
@@ -29,7 +29,7 @@ const IngredientSelect = ({
   return (
     <div className="flex items-center gap-3" id="ingredientRow">
       <select
-        className={`h-full w-full basis-2/3 rounded-md border border-[lightGrey] bg-White px-4 py-1.5 disabled:opacity-50`}
+        className={`h-full w-full basis-2/3 cursor-pointer rounded-md border border-[lightGrey] bg-White px-4 py-1.5 disabled:opacity-50`}
         disabled={id > 0}
         name="ingredient"
         {...register(`ingredients[${index}].Ingredient.Id`)}
@@ -37,15 +37,15 @@ const IngredientSelect = ({
         <option value="" onClick={() => setShowEditIngredient(false)}>
           Select Ingredient
         </option>
-        {ingredientsRecipe &&
-          ingredientsRecipe.map((item, index) => {
+        {recipeIngredients &&
+          recipeIngredients.map((item, index) => {
             return (
               <option
                 key={index}
                 onClick={() => setShowEditIngredient(true)}
-                value={item.Ingredient.Id}
+                value={item.Id}
               >
-                {item.Ingredient.Name}
+                {item.Name}
               </option>
             );
           })}

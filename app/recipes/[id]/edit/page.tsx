@@ -11,18 +11,15 @@ import {
 } from "../../../lib/data/recipes";
 import { getIngredients } from "../../../lib/data/ingredients";
 import { useForm } from "react-hook-form";
-import {
-  ingredient,
-  ingredientRelationship,
-  instruction,
-  recipe,
-} from "../../../lib/utils/interfaces";
+import { ingredient, recipe } from "../../../lib/utils/interfaces";
 
 const Page = ({ params, handleClick }) => {
   const id = params.id;
 
   const [ingredients, setIngredients] = useState<ingredient[]>();
   const [recipe, setRecipe] = useState<recipe>();
+  const [ingredientRows, setIngredientRows] = useState<number[]>([0]);
+  const [instructionRows, setInstructionRows] = useState<number[]>([0]);
 
   useEffect(() => {
     if (id == 0) {
@@ -34,45 +31,41 @@ const Page = ({ params, handleClick }) => {
         }
       });
     }
-    getRecipes(id).then((data) => {
-      if (data != null) {
-        setRecipe(data[0]);
-        reset({
-          imageLink: data[0].ImageLink,
-          title: data[0].Title,
-          description: data[0].Description,
-          preparationTime: data[0].PreparationTime,
-          cookingTime: data[0].CookingTime,
-          ingredients: data[0].Ingredients,
-          instructions: data[0].Instructions,
-        });
-      }
-    });
+    if (id != 0) {
+      getRecipes(id).then((data) => {
+        if (data != null) {
+          setRecipe(data[0]);
+          reset({
+            imageLink: data[0].ImageLink,
+            title: data[0].Title,
+            description: data[0].Description,
+            preparationTime: data[0].PreparationTime,
+            cookingTime: data[0].CookingTime,
+            ingredients: data[0].Ingredients,
+            instructions: data[0].Instructions,
+          });
+        }
+      });
+    }
   }, []);
 
   function handleIngredientPlusClick() {
-    setIngredientSelects([
-      ...ingredientSelects,
-      { IngredientId: 0, Quantity: 0 },
-    ]);
+    setIngredientRows([...ingredientRows, ingredientRows.length]);
   }
 
   function handleIngredientCrossClick() {
-    if (ingredientSelects.length > 1) {
-      setIngredientSelects(ingredientSelects.slice(0, -1));
+    if (ingredientRows.length > 1) {
+      setIngredientRows(ingredientRows.slice(0, -1));
     }
   }
 
   function handleInstructionPlusClick() {
-    setInstructionInputs([
-      ...instructionInputs,
-      { Title: "", Description: "" },
-    ]);
+    setInstructionRows([...instructionRows, instructionRows.length]);
   }
 
   function handleInstructionCrossClick() {
-    if (instructionInputs.length > 1) {
-      setInstructionInputs(instructionInputs.slice(0, -1));
+    if (instructionRows.length > 1) {
+      setInstructionRows(instructionRows.slice(0, -1));
     }
   }
 
@@ -85,7 +78,7 @@ const Page = ({ params, handleClick }) => {
     formState: { errors },
     reset,
     setValue,
-  } = useForm();
+  } = useForm<recipe>();
 
   const onSubmit = (data) => createRecipeWithId(data);
 
@@ -121,7 +114,7 @@ const Page = ({ params, handleClick }) => {
               id="imageLink"
               placeholder="ImageLink"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              {...register("imageLink")}
+              {...register("ImageLink")}
             />
           </div>
           {/* Title */}
@@ -135,9 +128,9 @@ const Page = ({ params, handleClick }) => {
               id="title"
               placeholder="Title"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              {...register("title", { required: true })}
+              {...register("Title", { required: true })}
             />
-            {errors.title && (
+            {errors.Title && (
               <span className="text-xs text-Red">This field is required</span>
             )}
           </div>
@@ -152,7 +145,7 @@ const Page = ({ params, handleClick }) => {
               id="description"
               placeholder="Description"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              {...register("description")}
+              {...register("Description")}
             />
           </div>
           {/* Preparation time */}
@@ -166,7 +159,7 @@ const Page = ({ params, handleClick }) => {
               id="preparationTime"
               placeholder="Preparation Time"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              {...register("preparationTime")}
+              {...register("PreparationTime")}
             />
           </div>
           {/* Cooking time */}
@@ -180,7 +173,7 @@ const Page = ({ params, handleClick }) => {
               id="cookingTime"
               placeholder="Cooking Time"
               className="rounded-md border border-[lightGrey] px-4 py-1.5"
-              {...register("cookingTime")}
+              {...register("CookingTime")}
             />
           </div>
           {/* Ingredients */}
@@ -210,13 +203,13 @@ const Page = ({ params, handleClick }) => {
                 </button>
               </div>
             </div>
-            {ingredientSelects &&
-              ingredientSelects.map((_, index) => {
+            {ingredientRows &&
+              ingredientRows.map((_, index) => {
                 return (
                   <IngredientSelect
                     key={index}
                     index={index}
-                    ingredientsRecipe={ingredients}
+                    recipeIngredients={ingredients}
                     register={register}
                     setValue={setValue}
                     id={id}
@@ -250,27 +243,28 @@ const Page = ({ params, handleClick }) => {
                 </button>
               </div>
             </div>
-            {instructionInputs.map((_, index) => {
-              return (
-                <div className="flex gap-3" key={index}>
-                  <input
-                    type="text"
-                    name="instructionTitle"
-                    placeholder="Title"
-                    disabled={id > 0}
-                    className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
-                    {...register(`instructions[${index}].Title`)}
-                  />
-                  <input
-                    type="text"
-                    name="instructionDescription"
-                    placeholder="Description"
-                    className="w-full basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
-                    {...register(`instructions[${index}].Description`)}
-                  />
-                </div>
-              );
-            })}
+            {instructionRows &&
+              instructionRows.map((_, index) => {
+                return (
+                  <div className="flex gap-3" key={index}>
+                    <input
+                      type="text"
+                      name="instructionTitle"
+                      placeholder="Title"
+                      disabled={id > 0}
+                      className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
+                      {...register(`Instructions[${index}].Title`)}
+                    />
+                    <input
+                      type="text"
+                      name="instructionDescription"
+                      placeholder="Description"
+                      className="w-full basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+                      {...register(`instructions[${index}].Description`)}
+                    />
+                  </div>
+                );
+              })}
           </div>
         </form>
       </div>
