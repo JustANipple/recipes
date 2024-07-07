@@ -8,9 +8,10 @@ import {
   createRecipe,
   getRecipes,
   deleteRecipe,
+  updateRecipe,
 } from "../../../lib/data/recipes";
 import { getIngredients } from "../../../lib/data/ingredients";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { ingredient, recipe } from "../../../lib/utils/interfaces";
 
 const Page = ({ params, handleClick }) => {
@@ -36,13 +37,13 @@ const Page = ({ params, handleClick }) => {
         if (data != null) {
           setRecipe(data[0]);
           reset({
-            imageLink: data[0].ImageLink,
-            title: data[0].Title,
-            description: data[0].Description,
-            preparationTime: data[0].PreparationTime,
-            cookingTime: data[0].CookingTime,
-            ingredients: data[0].Ingredients,
-            instructions: data[0].Instructions,
+            ImageLink: data[0].ImageLink,
+            Title: data[0].Title,
+            Description: data[0].Description,
+            PreparationTime: data[0].PreparationTime,
+            CookingTime: data[0].CookingTime,
+            Ingredients: data[0].Ingredients,
+            Instructions: data[0].Instructions,
           });
         }
       });
@@ -80,7 +81,58 @@ const Page = ({ params, handleClick }) => {
     setValue,
   } = useForm<recipe>();
 
-  const onSubmit = (data) => createRecipeWithId(data);
+  const onSubmit: SubmitHandler<recipe> = (data) => {
+    const formData = new FormData();
+    for (const [key, value] of Object.entries(data)) {
+      if (key === "Ingredients") {
+        const filteredValues = value
+          .filter((ingredient) => {
+            return (
+              ingredient.Ingredient.Id != null &&
+              ingredient.Ingredient.Id &&
+              ingredient.Quantity != null &&
+              ingredient.Quantity
+            );
+          })
+          .map((ingredient) => {
+            return {
+              IngredientId: ingredient.Ingredient.Id,
+              Quantity: ingredient.Quantity,
+            };
+          });
+
+        // Serialize the array of ingredients to JSON
+        formData.append(key, JSON.stringify(filteredValues));
+      } else if (key === "Instructions") {
+        const filteredValues = value
+          .filter((instruction) => {
+            return (
+              instruction.Title != null &&
+              instruction.Title &&
+              instruction.Description != null &&
+              instruction.Description
+            );
+          })
+          .map((instruction) => {
+            return {
+              Title: instruction.Title,
+              Description: instruction.Description,
+            };
+          });
+
+        // Serialize the array of instructions to JSON
+        formData.append(key, JSON.stringify(filteredValues));
+      } else {
+        formData.append(key, value);
+      }
+    }
+
+    if (formData.get("Id") != null) {
+      updateRecipe(formData);
+    } else {
+      createRecipe(formData);
+    }
+  };
 
   return (
     <main className="m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6">
@@ -253,14 +305,14 @@ const Page = ({ params, handleClick }) => {
                       placeholder="Title"
                       disabled={id > 0}
                       className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
-                      {...register(`Instructions[${index}].Title`)}
+                      {...register(`Instructions.${index}.Title`)}
                     />
                     <input
                       type="text"
                       name="instructionDescription"
                       placeholder="Description"
                       className="w-full basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
-                      {...register(`instructions[${index}].Description`)}
+                      {...register(`Instructions.${index}.Description`)}
                     />
                   </div>
                 );

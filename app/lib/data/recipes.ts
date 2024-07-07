@@ -3,10 +3,13 @@
 import { recipes } from "@prisma/client";
 import prisma from "../utils/prisma";
 import {
+  ingredient,
   ingredientRelationship,
   instruction,
   recipe,
 } from "../utils/interfaces";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function createRecipe(formData: FormData): Promise<recipes> {
   checkFormData(formData);
@@ -43,8 +46,9 @@ export async function createRecipe(formData: FormData): Promise<recipes> {
     });
   });
 
-  // revalidatePath(`/recipes${recipe.Id}/edit`);
-  return recipe;
+  revalidatePath(`/recipes${recipe.Id}/edit`);
+  redirect("/recipes");
+  // return recipe;
 }
 
 export async function updateRecipe(formData: FormData): Promise<recipes> {
@@ -116,28 +120,28 @@ export async function deleteRecipe(id: number) {
 function createRecipeIngredientsData(
   formData: FormData,
 ): ingredientRelationship[] {
-  const recipeIngredients: ingredientRelationship[] = formData
-    .getAll("recipeIngredients[]")
-    .map((recipeIngredient) => {
-      const ingredient = JSON.parse(recipeIngredient.toString());
-      return {
-        IngredientId: parseInt(ingredient.ingredientId),
-        Quantity: parseFloat(ingredient.quantity),
-      };
-    });
-
-  return recipeIngredients;
+  return formData.getAll("Ingredients").flatMap((recipeIngredient) => {
+    const ingredients: ingredientRelationship[] = JSON.parse(
+      recipeIngredient.toString(),
+    );
+    return ingredients.map((ingredient) => ({
+      IngredientId: parseInt(ingredient.IngredientId.toString()),
+      Quantity: parseFloat(ingredient.Quantity.toString()),
+    }));
+  });
 }
 
 function createRecipeInstructionsData(formData: FormData): instruction[] {
   const recipeInstructions: instruction[] = formData
-    .getAll("recipeInstructions[]")
-    .map((recipeInstruction) => {
-      const instruction = JSON.parse(recipeInstruction.toString());
-      return {
-        Title: instruction.title,
-        Description: instruction.description,
-      };
+    .getAll("Instructions")
+    .flatMap((recipeInstruction) => {
+      const instructions: instruction[] = JSON.parse(
+        recipeInstruction.toString(),
+      );
+      return instructions.map((instruction) => ({
+        Title: instruction.Title,
+        Description: instruction.Description,
+      }));
     });
 
   return recipeInstructions;
@@ -146,40 +150,40 @@ function createRecipeInstructionsData(formData: FormData): instruction[] {
 function createRecipeData(formData: FormData): recipe {
   // create recipe before returning it
   const recipe: recipe = {
-    ImageLink: formData.get("imageLink").toString(),
-    Title: formData.get("title").toString(),
-    Description: formData.get("description").toString(),
-    PreparationTime: parseFloat(formData.get("preparationTime").toString()),
-    CookingTime: parseFloat(formData.get("cookingTime").toString()),
+    ImageLink: formData.get("ImageLink").toString(),
+    Title: formData.get("Title").toString(),
+    Description: formData.get("Description").toString(),
+    PreparationTime: parseFloat(formData.get("PreparationTime").toString()),
+    CookingTime: parseFloat(formData.get("CookingTime").toString()),
     Ingredients: createRecipeIngredientsData(formData),
     Instructions: createRecipeInstructionsData(formData),
   };
 
-  if (formData.get("id") != null) {
-    recipe.Id = parseInt(formData.get("id").toString());
+  if (formData.get("Id") != null) {
+    recipe.Id = parseInt(formData.get("Id").toString());
   }
 
   return recipe;
 }
 
 function checkFormData(formData: FormData) {
-  if (formData.get("title") === "") throw new Error("title is required");
+  if (formData.get("Title") === "") throw new Error("title is required");
 
-  if (formData.get("description") === "")
+  if (formData.get("Description") === "")
     throw new Error("description is required");
 
-  if (formData.get("preparationTime") === "")
+  if (formData.get("PreparationTime") === "")
     throw new Error("preparation time is required");
 
-  if (isNaN(parseFloat(formData.get("preparationTime").toString())))
+  if (isNaN(parseFloat(formData.get("PreparationTime").toString())))
     throw new Error("preparation time is not a number");
 
-  if (isNaN(parseFloat(formData.get("cookingTime").toString())))
+  if (isNaN(parseFloat(formData.get("CookingTime").toString())))
     throw new Error("cooking time is not a number");
 
-  if (formData.get("recipeIngredients[]") === null)
+  if (formData.get("Ingredients") === null)
     throw new Error("at least one ingredient is required");
 
-  if (formData.get("recipeInstructions[]") === null)
+  if (formData.get("Instructions") === null)
     throw new Error("at least one instruction is required");
 }

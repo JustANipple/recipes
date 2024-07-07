@@ -1,4 +1,10 @@
 import { useEffect, useState } from "react";
+import { ingredient, recipe } from "../lib/utils/interfaces";
+import {
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
 
 const IngredientSelect = ({
   index,
@@ -7,6 +13,13 @@ const IngredientSelect = ({
   setValue,
   id,
   watch,
+}: {
+  index: number;
+  recipeIngredients: ingredient[];
+  register: UseFormRegister<recipe>;
+  setValue: UseFormSetValue<recipe>;
+  id: number;
+  watch: UseFormWatch<recipe>;
 }) => {
   const [showEditIngredient, setShowEditIngredient] = useState(false);
 
@@ -15,11 +28,11 @@ const IngredientSelect = ({
       setShowEditIngredient(true);
       if (recipeIngredients) {
         setValue(
-          `ingredients[${index}].Ingredient.Id`,
-          recipeIngredients[index].Ingredient.Id,
+          `Ingredients.${index}.Ingredient.Id`,
+          recipeIngredients[index].Id,
         );
         setValue(
-          `ingredients[${index}].quantity`,
+          `Ingredients.${index}.Quantity`,
           recipeIngredients[index].Quantity,
         );
       }
@@ -32,7 +45,7 @@ const IngredientSelect = ({
         className={`h-full w-full basis-2/3 cursor-pointer rounded-md border border-[lightGrey] bg-White px-4 py-1.5 disabled:opacity-50`}
         disabled={id > 0}
         name="ingredient"
-        {...register(`ingredients[${index}].Ingredient.Id`)}
+        {...register(`Ingredients.${index}.Ingredient.Id`)}
       >
         <option value="" onClick={() => setShowEditIngredient(false)}>
           Select Ingredient
@@ -56,7 +69,7 @@ const IngredientSelect = ({
         name={`ingredients[${index}].Quantity`}
         placeholder="Qty"
         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5"
-        {...register(`ingredients[${index}].Quantity`)}
+        {...register(`Ingredients.${index}.Quantity`)}
       />
     </div>
   );
