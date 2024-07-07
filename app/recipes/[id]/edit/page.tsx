@@ -12,12 +12,18 @@ import {
 } from "../../../lib/data/recipes";
 import { getIngredients } from "../../../lib/data/ingredients";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { ingredient, recipe } from "../../../lib/utils/interfaces";
+import {
+  ingredient,
+  ingredientRelationship,
+  recipe,
+} from "../../../lib/utils/interfaces";
 
 const Page = ({ params, handleClick }) => {
   const id = params.id;
 
   const [ingredients, setIngredients] = useState<ingredient[]>();
+  const [recipeIngredients, setRecipeIngredients] =
+    useState<ingredientRelationship[]>();
   const [recipe, setRecipe] = useState<recipe>();
   const [ingredientRows, setIngredientRows] = useState<number[]>([0]);
   const [instructionRows, setInstructionRows] = useState<number[]>([0]);
@@ -36,6 +42,7 @@ const Page = ({ params, handleClick }) => {
       getRecipes(id).then((data) => {
         if (data != null) {
           setRecipe(data[0]);
+          setRecipeIngredients(data[0].Ingredients);
           reset({
             ImageLink: data[0].ImageLink,
             Title: data[0].Title,
@@ -255,20 +262,35 @@ const Page = ({ params, handleClick }) => {
                 </button>
               </div>
             </div>
-            {ingredientRows &&
-              ingredientRows.map((_, index) => {
-                return (
-                  <IngredientSelect
-                    key={index}
-                    index={index}
-                    recipeIngredients={ingredients}
-                    register={register}
-                    setValue={setValue}
-                    id={id}
-                    watch={watch}
-                  />
-                );
-              })}
+            {id > 0
+              ? recipeIngredients &&
+                recipeIngredients.map((_, index) => {
+                  return (
+                    <IngredientSelect
+                      key={index}
+                      index={index}
+                      recipeIngredients={recipeIngredients}
+                      register={register}
+                      setValue={setValue}
+                      id={id}
+                      watch={watch}
+                    />
+                  );
+                })
+              : ingredientRows &&
+                ingredientRows.map((_, index) => {
+                  return (
+                    <IngredientSelect
+                      key={index}
+                      index={index}
+                      recipeIngredients={ingredients}
+                      register={register}
+                      setValue={setValue}
+                      id={id}
+                      watch={watch}
+                    />
+                  );
+                })}
           </div>
           {/* Instructions */}
           <div className="grid gap-y-2">

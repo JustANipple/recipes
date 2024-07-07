@@ -91,7 +91,7 @@ export async function updateRecipe(formData: FormData): Promise<recipes> {
 
 export async function getRecipes(id?: number): Promise<recipe[]> {
   const recipes = await prisma.recipes.findMany({
-    where: id ? { Id: id } : undefined,
+    where: id ? { Id: parseInt(id.toString()) } : undefined,
     include: {
       Ingredients: {
         include: {

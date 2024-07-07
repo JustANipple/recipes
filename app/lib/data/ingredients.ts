@@ -1,6 +1,5 @@
 "use server";
 
-import { ingredients } from "@prisma/client";
 import prisma from "../utils/prisma";
 import { ingredient } from "../utils/interfaces";
 import { revalidatePath } from "next/cache";

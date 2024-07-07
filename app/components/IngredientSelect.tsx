@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { ingredient, recipe } from "../lib/utils/interfaces";
+import {
+  ingredient,
+  ingredientRelationship,
+  recipe,
+} from "../lib/utils/interfaces";
 import {
   UseFormRegister,
   UseFormSetValue,
@@ -15,7 +19,7 @@ const IngredientSelect = ({
   watch,
 }: {
   index: number;
-  recipeIngredients: ingredient[];
+  recipeIngredients: ingredientRelationship[] | ingredient[];
   register: UseFormRegister<recipe>;
   setValue: UseFormSetValue<recipe>;
   id: number;
@@ -27,42 +31,66 @@ const IngredientSelect = ({
     if (id > 0) {
       setShowEditIngredient(true);
       if (recipeIngredients) {
-        setValue(
-          `Ingredients.${index}.Ingredient.Id`,
-          recipeIngredients[index].Id,
-        );
-        setValue(
-          `Ingredients.${index}.Quantity`,
-          recipeIngredients[index].Quantity,
-        );
+        if (recipeIngredients as ingredientRelationship[]) {
+          setValue(
+            `Ingredients.${index}.Ingredient.Id`,
+            (recipeIngredients as ingredientRelationship[])[index].Ingredient
+              .Id,
+          );
+          setValue(
+            `Ingredients.${index}.Quantity`,
+            (recipeIngredients as ingredientRelationship[])[index].Quantity,
+          );
+        } else if (recipeIngredients as ingredient[]) {
+          setValue(
+            `Ingredients.${index}.Ingredient.Id`,
+            (recipeIngredients as ingredient[])[index].Id,
+          );
+          setValue(
+            `Ingredients.${index}.Quantity`,
+            (recipeIngredients as ingredient[])[index].Quantity,
+          );
+        }
       }
     }
   }, [setValue]);
 
   return (
     <div className="flex items-center gap-3" id="ingredientRow">
-      <select
-        className={`h-full w-full basis-2/3 cursor-pointer rounded-md border border-[lightGrey] bg-White px-4 py-1.5 disabled:opacity-50`}
-        disabled={id > 0}
-        name="ingredient"
-        {...register(`Ingredients.${index}.Ingredient.Id`)}
-      >
-        <option value="" onClick={() => setShowEditIngredient(false)}>
-          Select Ingredient
-        </option>
-        {recipeIngredients &&
-          recipeIngredients.map((item, index) => {
-            return (
-              <option
-                key={index}
-                onClick={() => setShowEditIngredient(true)}
-                value={item.Id}
-              >
-                {item.Name}
-              </option>
-            );
-          })}
-      </select>
+      {id > 0 ? (
+        <input
+          type="text"
+          className="h-full w-full basis-2/3 border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
+          disabled
+          value={
+            (recipeIngredients as ingredientRelationship[])[0].Ingredient.Name
+          }
+        />
+      ) : (
+        <select
+          className={`h-full w-full basis-2/3 cursor-pointer rounded-md border border-[lightGrey] bg-White px-4 py-1.5 disabled:opacity-50`}
+          disabled={id > 0}
+          name="ingredient"
+          {...register(`Ingredients.${index}.Ingredient.Id`)}
+        >
+          <option value="" onClick={() => setShowEditIngredient(false)}>
+            Select Ingredient
+          </option>
+          {recipeIngredients &&
+            (recipeIngredients as ingredientRelationship[]).map(
+              (item, index) => {
+                return (
+                  <option
+                    key={index}
+                    onClick={() => setShowEditIngredient(true)}
+                  >
+                    {item.Ingredient.Name}
+                  </option>
+                );
+              },
+            )}
+        </select>
+      )}
 
       <input
         type="number"
