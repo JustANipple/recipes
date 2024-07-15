@@ -39,18 +39,6 @@ const Recipe = () => {
                 >
                   Recipes
                 </Link>
-                <Link
-                  href="recipes/0/edit"
-                  className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
-                >
-                  New
-                </Link>
-                <Link
-                  href={`recipes/${selectedRecipe.Id}/edit`}
-                  className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
-                >
-                  Edit
-                </Link>
               </div>
               <select
                 name="recipes"

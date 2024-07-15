@@ -80,7 +80,11 @@ const IngredientSelect = ({
           {recipeIngredients &&
             (recipeIngredients as ingredient[]).map((item, index) => {
               return (
-                <option key={index} onClick={() => setShowEditIngredient(true)}>
+                <option
+                  key={index}
+                  value={item.Id}
+                  onClick={() => setShowEditIngredient(true)}
+                >
                   {item.Name}
                 </option>
               );

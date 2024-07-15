@@ -31,12 +31,14 @@ export async function createRecipe(formData: FormData): Promise<recipes> {
         data: {
           ...data,
           Ingredients: {
-            create: data.Ingredients.map((ingredient) => ({
-              Ingredient: {
-                connect: { Id: ingredient.IngredientId },
-              },
-              Quantity: ingredient.Quantity,
-            })),
+            create: data.Ingredients.map(
+              (ingredient: ingredientRelationship) => ({
+                Ingredient: {
+                  connect: { Id: ingredient.IngredientId },
+                },
+                Quantity: ingredient.Quantity,
+              }),
+            ),
           },
           Instructions: {
             create: data.Instructions.map((instruction) => ({
@@ -71,15 +73,17 @@ export async function updateRecipe(formData: FormData): Promise<recipes> {
       data: {
         ...data,
         Ingredients: {
-          updateMany: data.Ingredients.map((ingredient) => ({
-            where: {
-              RecipeId: data.Id,
-              IngredientId: ingredient.IngredientId,
-            },
-            data: {
-              Quantity: ingredient.Quantity,
-            },
-          })),
+          updateMany: data.Ingredients.map(
+            (ingredient: ingredientRelationship) => ({
+              where: {
+                RecipeId: data.Id,
+                IngredientId: ingredient.IngredientId,
+              },
+              data: {
+                Quantity: ingredient.Quantity,
+              },
+            }),
+          ),
         },
         Instructions: {
           updateMany: data.Instructions.map((instruction) => ({
@@ -101,8 +105,9 @@ export async function updateRecipe(formData: FormData): Promise<recipes> {
     await prisma.$disconnect();
   }
 
-  // revalidatePath(`/recipes${recipe.Id}/edit`);
-  return recipe;
+  revalidatePath(`/recipes${recipe.Id}/edit`);
+  redirect("/recipes");
+  // return recipe;
 }
 
 export async function getRecipes(id?: number): Promise<recipe[]> {

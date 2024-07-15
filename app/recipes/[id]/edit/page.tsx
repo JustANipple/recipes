@@ -15,8 +15,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import {
   ingredient,
   ingredientRelationship,
+  instruction,
   recipe,
 } from "../../../lib/utils/interfaces";
+import { instructions } from "@prisma/client";
 
 const Page = ({ params, handleClick }) => {
   const id = params.id;
@@ -24,6 +26,7 @@ const Page = ({ params, handleClick }) => {
   const [ingredients, setIngredients] = useState<ingredient[]>();
   const [recipeIngredients, setRecipeIngredients] =
     useState<ingredientRelationship[]>();
+  const [recipeInstructions, setRecipeInstructions] = useState<instruction[]>();
   const [recipe, setRecipe] = useState<recipe>();
   const [ingredientRows, setIngredientRows] = useState<number[]>([0]);
   const [instructionRows, setInstructionRows] = useState<number[]>([0]);
@@ -43,6 +46,7 @@ const Page = ({ params, handleClick }) => {
         if (data != null) {
           setRecipe(data[0]);
           setRecipeIngredients(data[0].Ingredients);
+          setRecipeInstructions(data[0].Instructions);
           reset({
             ImageLink: data[0].ImageLink,
             Title: data[0].Title,
@@ -93,7 +97,7 @@ const Page = ({ params, handleClick }) => {
     for (const [key, value] of Object.entries(data)) {
       if (key === "Ingredients") {
         const filteredValues = value
-          .filter((ingredient) => {
+          .filter((ingredient: ingredientRelationship) => {
             return (
               ingredient.Ingredient.Id != null &&
               ingredient.Ingredient.Id &&
@@ -101,7 +105,7 @@ const Page = ({ params, handleClick }) => {
               ingredient.Quantity
             );
           })
-          .map((ingredient) => {
+          .map((ingredient: ingredientRelationship) => {
             return {
               IngredientId: ingredient.Ingredient.Id,
               Quantity: ingredient.Quantity,
@@ -318,28 +322,51 @@ const Page = ({ params, handleClick }) => {
                 </button>
               </div>
             </div>
-            {instructionRows &&
-              instructionRows.map((_, index) => {
-                return (
-                  <div className="flex gap-3" key={index}>
-                    <input
-                      type="text"
-                      name="instructionTitle"
-                      placeholder="Title"
-                      disabled={id > 0}
-                      className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
-                      {...register(`Instructions.${index}.Title`)}
-                    />
-                    <input
-                      type="text"
-                      name="instructionDescription"
-                      placeholder="Description"
-                      className="w-full basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
-                      {...register(`Instructions.${index}.Description`)}
-                    />
-                  </div>
-                );
-              })}
+            {id > 0
+              ? recipeInstructions &&
+                recipeInstructions.map((_, index) => {
+                  return (
+                    <div className="flex gap-3" key={index}>
+                      <input
+                        type="text"
+                        name="instructionTitle"
+                        placeholder="Title"
+                        disabled={id > 0}
+                        className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
+                        {...register(`Instructions.${index}.Title`)}
+                      />
+                      <input
+                        type="text"
+                        name="instructionDescription"
+                        placeholder="Description"
+                        className="w-full basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+                        {...register(`Instructions.${index}.Description`)}
+                      />
+                    </div>
+                  );
+                })
+              : instructionRows &&
+                instructionRows.map((_, index) => {
+                  return (
+                    <div className="flex gap-3" key={index}>
+                      <input
+                        type="text"
+                        name="instructionTitle"
+                        placeholder="Title"
+                        disabled={id > 0}
+                        className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
+                        {...register(`Instructions.${index}.Title`)}
+                      />
+                      <input
+                        type="text"
+                        name="instructionDescription"
+                        placeholder="Description"
+                        className="w-full basis-2/3 rounded-md border border-[lightGrey] px-4 py-1.5"
+                        {...register(`Instructions.${index}.Description`)}
+                      />
+                    </div>
+                  );
+                })}
           </div>
         </form>
       </div>
