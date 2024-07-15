@@ -24,27 +24,35 @@ export async function createRecipe(formData: FormData): Promise<recipes> {
     throw new Error(`Recipe with id ${data.Id} already exists`);
 
   let recipe: recipes;
-  await prisma.$transaction(async (prisma) => {
-    recipe = await prisma.recipes.create({
-      data: {
-        ...data,
-        Ingredients: {
-          create: data.Ingredients.map((ingredient) => ({
-            Ingredient: {
-              connect: { Id: ingredient.IngredientId },
-            },
-            Quantity: ingredient.Quantity,
-          })),
+
+  try {
+    await prisma.$transaction(async (prisma) => {
+      recipe = await prisma.recipes.create({
+        data: {
+          ...data,
+          Ingredients: {
+            create: data.Ingredients.map((ingredient) => ({
+              Ingredient: {
+                connect: { Id: ingredient.IngredientId },
+              },
+              Quantity: ingredient.Quantity,
+            })),
+          },
+          Instructions: {
+            create: data.Instructions.map((instruction) => ({
+              Title: instruction.Title,
+              Description: instruction.Description,
+            })),
+          },
         },
-        Instructions: {
-          create: data.Instructions.map((instruction) => ({
-            Title: instruction.Title,
-            Description: instruction.Description,
-          })),
-        },
-      },
+      });
     });
-  });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
 
   revalidatePath(`/recipes${recipe.Id}/edit`);
   redirect("/recipes");
@@ -55,66 +63,92 @@ export async function updateRecipe(formData: FormData): Promise<recipes> {
   checkFormData(formData);
 
   const data = createRecipeData(formData);
+  let recipe: recipes;
 
-  const recipe = await prisma.recipes.update({
-    where: { Id: data.Id },
-    data: {
-      ...data,
-      Ingredients: {
-        updateMany: data.Ingredients.map((ingredient) => ({
-          where: {
-            RecipeId: data.Id,
-            IngredientId: ingredient.IngredientId,
-          },
-          data: {
-            Quantity: ingredient.Quantity,
-          },
-        })),
+  try {
+    recipe = await prisma.recipes.update({
+      where: { Id: data.Id },
+      data: {
+        ...data,
+        Ingredients: {
+          updateMany: data.Ingredients.map((ingredient) => ({
+            where: {
+              RecipeId: data.Id,
+              IngredientId: ingredient.IngredientId,
+            },
+            data: {
+              Quantity: ingredient.Quantity,
+            },
+          })),
+        },
+        Instructions: {
+          updateMany: data.Instructions.map((instruction) => ({
+            where: {
+              RecipeId: data.Id,
+              Title: instruction.Title,
+            },
+            data: {
+              Description: instruction.Description,
+            },
+          })),
+        },
       },
-      Instructions: {
-        updateMany: data.Instructions.map((instruction) => ({
-          where: {
-            RecipeId: data.Id,
-            Title: instruction.Title,
-          },
-          data: {
-            Description: instruction.Description,
-          },
-        })),
-      },
-    },
-  });
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
 
   // revalidatePath(`/recipes${recipe.Id}/edit`);
   return recipe;
 }
 
 export async function getRecipes(id?: number): Promise<recipe[]> {
-  const recipes = await prisma.recipes.findMany({
-    where: id ? { Id: parseInt(id.toString()) } : undefined,
-    include: {
-      Ingredients: {
-        include: {
-          Ingredient: true,
+  let recipes: recipe[];
+
+  try {
+    recipes = await prisma.recipes.findMany({
+      where: id ? { Id: parseInt(id.toString()) } : undefined,
+      include: {
+        Ingredients: {
+          include: {
+            Ingredient: true,
+          },
         },
+        Instructions: true,
       },
-      Instructions: true,
-    },
-  });
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
 
   return recipes;
 }
 
 export async function deleteRecipe(id: number) {
-  const recipe = await prisma.recipes.delete({
-    where: {
-      Id: id,
-    },
-  });
+  let recipe: recipes;
 
-  // revalidatePath("/recipes");
-  // redirect("/");
-  return recipe;
+  try {
+    recipe = await prisma.recipes.delete({
+      where: {
+        Id: id,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+    throw error;
+  } finally {
+    await prisma.$disconnect();
+  }
+
+  revalidatePath("/recipes");
+  redirect("/");
+  // return recipe;
 }
 
 function createRecipeIngredientsData(

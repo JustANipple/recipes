@@ -134,7 +134,8 @@ const Page = ({ params, handleClick }) => {
       }
     }
 
-    if (formData.get("Id") != null) {
+    if (id != null && id != 0) {
+      formData.append("Id", id.toString());
       updateRecipe(formData);
     } else {
       createRecipe(formData);
@@ -347,7 +348,7 @@ const Page = ({ params, handleClick }) => {
         <button
           className="text-black flex gap-1 rounded-md bg-Nutmeg px-4 py-2"
           type="button"
-          onClick={() => deleteRecipe(id)}
+          onClick={() => deleteRecipe(parseInt(id))}
         >
           <p className="my-auto font-Outfit text-White">Delete</p>
         </button>

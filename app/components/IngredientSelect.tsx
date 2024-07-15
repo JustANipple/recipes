@@ -28,8 +28,8 @@ const IngredientSelect = ({
   const [showEditIngredient, setShowEditIngredient] = useState(false);
 
   useEffect(() => {
+    setShowEditIngredient(true);
     if (id > 0) {
-      setShowEditIngredient(true);
       if (recipeIngredients) {
         if (recipeIngredients as ingredientRelationship[]) {
           setValue(
@@ -63,7 +63,8 @@ const IngredientSelect = ({
           className="h-full w-full basis-2/3 border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
           disabled
           value={
-            (recipeIngredients as ingredientRelationship[])[0].Ingredient.Name
+            (recipeIngredients as ingredientRelationship[])[index].Ingredient
+              .Name
           }
         />
       ) : (
@@ -77,18 +78,13 @@ const IngredientSelect = ({
             Select Ingredient
           </option>
           {recipeIngredients &&
-            (recipeIngredients as ingredientRelationship[]).map(
-              (item, index) => {
-                return (
-                  <option
-                    key={index}
-                    onClick={() => setShowEditIngredient(true)}
-                  >
-                    {item.Ingredient.Name}
-                  </option>
-                );
-              },
-            )}
+            (recipeIngredients as ingredient[]).map((item, index) => {
+              return (
+                <option key={index} onClick={() => setShowEditIngredient(true)}>
+                  {item.Name}
+                </option>
+              );
+            })}
         </select>
       )}
 
