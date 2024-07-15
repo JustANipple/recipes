@@ -18,9 +18,10 @@ import {
   instruction,
   recipe,
 } from "../../../lib/utils/interfaces";
-import { instructions } from "@prisma/client";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
-const Page = ({ params, handleClick }) => {
+const Page = ({ params }) => {
   const id = params.id;
 
   const [ingredients, setIngredients] = useState<ingredient[]>();
@@ -155,7 +156,7 @@ const Page = ({ params, handleClick }) => {
         <Link href="/" className="h-fit">
           <RxCross2
             className="font-OutfitBold text-Nutmeg"
-            onClick={handleClick}
+            onClick={() => redirect("/recipes")}
           />
         </Link>
       </div>
