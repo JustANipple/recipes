@@ -6,7 +6,7 @@ import { getRecipes } from "../../../lib/data/recipes";
 import Link from "next/link";
 import Nutrition from "../../../components/Nutrition";
 
-const page = ({ params }: { params: { id: string } }) => {
+const Page = ({ params }: { params: { id: string } }) => {
   const [recipe, setRecipe] = useState<recipe>();
 
   useEffect(() => {
@@ -122,4 +122,4 @@ const page = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default page;
+export default Page;
