@@ -246,27 +246,29 @@ const Page = ({ params }) => {
             <div className="flex justify-between">
               <div className="flex gap-3">
                 <label htmlFor="ingredients" className="text-sm">
-                  Ingredient
+                  Ingredients
                 </label>
               </div>
-              <div className="flex justify-end gap-2">
-                <button
-                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
-                  type="button"
-                  disabled={id > 0}
-                  onClick={handleIngredientPlusClick}
-                >
-                  <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
-                </button>
-                <button
-                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
-                  type="button"
-                  disabled={id > 0}
-                  onClick={handleIngredientCrossClick}
-                >
-                  <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
-                </button>
-              </div>
+              {parseInt(id) === 0 && (
+                <div className="flex justify-end gap-2">
+                  <button
+                    className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
+                    type="button"
+                    disabled={id > 0}
+                    onClick={handleIngredientPlusClick}
+                  >
+                    <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
+                  </button>
+                  <button
+                    className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
+                    type="button"
+                    disabled={id > 0}
+                    onClick={handleIngredientCrossClick}
+                  >
+                    <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
+                  </button>
+                </div>
+              )}
             </div>
             {id > 0
               ? recipeIngredients &&
@@ -302,26 +304,28 @@ const Page = ({ params }) => {
           <div className="grid gap-y-2">
             <div className="flex justify-between">
               <label htmlFor="instructions" className="text-sm">
-                Instruction
+                Instructions
               </label>
-              <div className="flex justify-end gap-2">
-                <button
-                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
-                  type="button"
-                  disabled={id > 0}
-                  onClick={handleInstructionPlusClick}
-                >
-                  <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
-                </button>
-                <button
-                  className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
-                  type="button"
-                  disabled={id > 0}
-                  onClick={handleInstructionCrossClick}
-                >
-                  <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
-                </button>
-              </div>
+              {parseInt(id) === 0 && (
+                <div className="flex justify-end gap-2">
+                  <button
+                    className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
+                    type="button"
+                    disabled={id > 0}
+                    onClick={handleInstructionPlusClick}
+                  >
+                    <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
+                  </button>
+                  <button
+                    className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
+                    type="button"
+                    disabled={id > 0}
+                    onClick={handleInstructionCrossClick}
+                  >
+                    <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
+                  </button>
+                </div>
+              )}
             </div>
             {id > 0
               ? recipeInstructions &&
