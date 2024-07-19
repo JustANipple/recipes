@@ -1,7 +1,7 @@
-import Recipe from "./components/Recipe";
+import Table from "./recipes/page";
 
 async function Home() {
-  return <Recipe />;
+  return <Table />;
 }
 
 export default Home;

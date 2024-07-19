@@ -56,7 +56,7 @@ const Page = ({ params }) => {
         <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
           {id > 0 ? "Edit" : "New"} Ingredient
         </h1>
-        <Link href="/">
+        <Link href="/ingredients">
           <RxCross2 className="font-OutfitBold text-Nutmeg" />
         </Link>
       </div>

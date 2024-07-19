@@ -1,68 +1,38 @@
 "use client";
 
-import Link from "next/link";
-import { getRecipes } from "../lib/data/recipes";
 import { useEffect, useState } from "react";
-import Nutrition from "./Nutrition";
-import { recipe } from "../lib/utils/interfaces";
+import { recipe } from "../../../lib/utils/interfaces";
+import { getRecipes } from "../../../lib/data/recipes";
+import Link from "next/link";
+import Nutrition from "../../../components/Nutrition";
 
-const Recipe = () => {
-  const [recipes, setRecipes] = useState<recipe[]>();
-  const [selectedRecipe, setSelectedRecipe] = useState<recipe>(null);
+const page = ({ params }: { params: { id: string } }) => {
+  const [recipe, setRecipe] = useState<recipe>();
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      const data: recipe[] = await getRecipes();
-      setRecipes(data);
-      setSelectedRecipe(data[0]);
+    const fetchRecipe = async () => {
+      const data: recipe[] = await getRecipes(parseInt(params.id));
+      setRecipe(data[0]);
     };
 
-    fetchRecipes();
+    fetchRecipe();
   }, []);
 
   return (
     <>
-      {selectedRecipe ? (
+      {recipe && (
         <main className="m-auto grid  gap-y-9 bg-White md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6">
           <div className="relative truncate md:rounded-xl">
             <div className="absolute left-2 right-2 top-2 flex justify-between">
-              <div className="grid gap-3">
-                <Link
-                  href="ingredients"
-                  className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
-                >
-                  Ingredients
-                </Link>
-                <Link
-                  href="recipes"
-                  className="text-black my-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
-                >
-                  Recipes
-                </Link>
-              </div>
-              <select
-                name="recipes"
-                className="h-fit rounded-md bg-LightGrey/75 px-4 py-1.5 font-Outfit text-Nutmeg"
-                onChange={(e) => {
-                  setSelectedRecipe(
-                    recipes.find(
-                      (recipe) => recipe.Id === parseInt(e.target.value),
-                    ),
-                  );
-                }}
+              <Link
+                href={`/recipes/${params.id}/edit`}
+                className="text-black my-auto ms-auto flex gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
               >
-                {recipes &&
-                  recipes.map((recipe) => {
-                    return (
-                      <option key={recipe.Id} value={recipe.Id}>
-                        {recipe.Title}
-                      </option>
-                    );
-                  })}
-              </select>
+                Edit
+              </Link>
             </div>
             <img
-              src={selectedRecipe && selectedRecipe.ImageLink}
+              src={recipe && recipe.ImageLink}
               alt="food picture"
               className="max-h-72 w-full object-cover"
             />
@@ -70,10 +40,10 @@ const Recipe = () => {
           <div className="grid gap-y-8 px-8 md:px-0">
             <div className="grid gap-y-6">
               <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
-                {selectedRecipe && selectedRecipe.Title}
+                {recipe && recipe.Title}
               </h1>
               <p className="font-Outfit text-WengeBrown">
-                {selectedRecipe && selectedRecipe.Description}
+                {recipe && recipe.Description}
               </p>
             </div>
 
@@ -85,22 +55,19 @@ const Recipe = () => {
                 <li className="flex items-center before:px-2 before:pe-7 before:text-xl before:content-['•']">
                   <p>
                     <b>Total</b>: Approximately{" "}
-                    {selectedRecipe &&
-                      selectedRecipe.PreparationTime +
-                        selectedRecipe.CookingTime}{" "}
+                    {recipe && recipe.PreparationTime + recipe.CookingTime}{" "}
                     minutes
                   </p>
                 </li>
                 <li className="flex items-center before:px-2 before:pe-7 before:text-xl before:content-['•']">
                   <p>
-                    <b>Preparation</b>:{" "}
-                    {selectedRecipe && selectedRecipe.PreparationTime} minutes
+                    <b>Preparation</b>: {recipe && recipe.PreparationTime}{" "}
+                    minutes
                   </p>
                 </li>
                 <li className="flex items-center before:px-2 before:pe-7 before:text-xl before:content-['•']">
                   <p>
-                    <b>Cooking</b>:{" "}
-                    {selectedRecipe && selectedRecipe.CookingTime} minutes
+                    <b>Cooking</b>: {recipe && recipe.CookingTime} minutes
                   </p>
                 </li>
               </ul>
@@ -111,8 +78,8 @@ const Recipe = () => {
                 Ingredients
               </h2>
               <ul className="grid gap-y-1 px-2 font-Outfit text-WengeBrown">
-                {selectedRecipe &&
-                  selectedRecipe.Ingredients.map((item) => {
+                {recipe &&
+                  recipe.Ingredients.map((item) => {
                     return (
                       <li
                         key={item.IngredientId}
@@ -134,8 +101,8 @@ const Recipe = () => {
                 Instructions
               </h2>
               <ol className="grid list-decimal gap-y-2 px-6 font-Outfit text-WengeBrown marker:font-Outfit marker:font-OutfitBold marker:text-Nutmeg">
-                {selectedRecipe &&
-                  selectedRecipe.Instructions.map((item) => {
+                {recipe &&
+                  recipe.Instructions.map((item) => {
                     return (
                       <li key={item.Id} className="ps-4">
                         <b>{item.Title}:</b> {item.Description}
@@ -147,23 +114,7 @@ const Recipe = () => {
 
             <hr className="border-LightGrey" />
 
-            {selectedRecipe && (
-              <Nutrition ingredients={selectedRecipe.Ingredients} />
-            )}
-          </div>
-        </main>
-      ) : (
-        <main className="m-auto grid w-fit gap-y-9 bg-White md:my-32 md:rounded-3xl md:p-6 md:pb-6">
-          <div className="relative flex items-center justify-center gap-2 truncate">
-            <span className="font-Outfit text-WengeBrown">
-              Non hai creato ricette, crea la prima!
-            </span>
-            <Link
-              href="recipes/0/edit" // Change this to the correct recipe ID
-              className="text-black my-auto flex w-fit gap-1 rounded-md bg-LightGrey/75 px-3 py-1 font-Outfit text-Nutmeg"
-            >
-              New
-            </Link>
+            {recipe && <Nutrition ingredients={recipe.Ingredients} />}
           </div>
         </main>
       )}
@@ -171,4 +122,4 @@ const Recipe = () => {
   );
 };
 
-export default Recipe;
+export default page;
