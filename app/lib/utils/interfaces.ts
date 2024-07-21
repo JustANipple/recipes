@@ -32,3 +32,9 @@ export interface ingredientRelationship {
   Quantity: number;
   Ingredient?: ingredients;
 }
+
+export interface personalMacros {
+  Carbs: number;
+  Proteins: number;
+  Fat: number;
+}
