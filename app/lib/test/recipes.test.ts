@@ -11,6 +11,7 @@ import {
   recipe,
 } from "../utils/interfaces";
 import { recipes } from "@prisma/client";
+import { calculateMacros } from "../utils/scripts";
 
 const newIngredientRelationship: ingredientRelationship = {
   IngredientId: 125,
@@ -82,4 +83,106 @@ test("deleteRecipe should delete a recipe", async () => {
   formData.set("id", recipeTest.Id.toString());
   recipeTest = await deleteRecipe(recipeTest.Id);
   expect(recipeTest).toStrictEqual({ ...recipeTest, Id: recipeTest.Id });
+});
+
+// Test for calculateMacros method
+const pancakeIngredients: ingredientRelationship[] = [
+  {
+    IngredientId: 1,
+    Quantity: 50,
+    Ingredient: {
+      Id: 1,
+      Name: "Farina d'avena",
+      Carbs: 33,
+      Proteins: 7,
+      Fat: 3.5,
+      Countable: false,
+      Quantity: 100,
+    },
+  },
+  {
+    IngredientId: 2,
+    Quantity: 10,
+    Ingredient: {
+      Id: 2,
+      Name: "Miele d'arancio",
+      Carbs: 8.27,
+      Proteins: 0,
+      Fat: 0,
+      Countable: false,
+      Quantity: 100,
+    },
+  },
+  {
+    IngredientId: 3,
+    Quantity: 200,
+    Ingredient: {
+      Id: 3,
+      Name: "Albume naturelle",
+      Carbs: 0,
+      Proteins: 20.2,
+      Fat: 0,
+      Countable: false,
+      Quantity: 100,
+    },
+  },
+];
+
+const pancakeRecipe: recipe = {
+  ImageLink: "https://...",
+  Title: "Pancake",
+  Description: "Pancake",
+  PreparationTime: 10,
+  CookingTime: 15,
+  Ingredients: pancakeIngredients,
+  Instructions: [],
+};
+
+test("calculateMacros should calculate macros", async () => {
+  expect(
+    calculateMacros(pancakeRecipe, { Carbs: 60, Proteins: 45, Fat: 20 }),
+  ).toStrictEqual({
+    ...pancakeRecipe,
+    Ingredients: [
+      {
+        IngredientId: 1,
+        Quantity: 72.5,
+        Ingredient: {
+          Id: 1,
+          Name: "Farina d'avena",
+          Carbs: 47.8,
+          Proteins: 10.15,
+          Fat: 5,
+          Countable: false,
+          Quantity: 100,
+        },
+      },
+      {
+        IngredientId: 2,
+        Quantity: 14.5,
+        Ingredient: {
+          Id: 2,
+          Name: "Miele d'arancio",
+          Carbs: 11.99,
+          Proteins: 0,
+          Fat: 0,
+          Countable: false,
+          Quantity: 100,
+        },
+      },
+      {
+        IngredientId: 3,
+        Quantity: 290,
+        Ingredient: {
+          Id: 3,
+          Name: "Albume naturelle",
+          Carbs: 0,
+          Proteins: 29.29,
+          Fat: 0,
+          Countable: false,
+          Quantity: 100,
+        },
+      },
+    ],
+  });
 });
