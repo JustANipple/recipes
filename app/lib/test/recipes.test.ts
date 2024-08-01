@@ -146,24 +146,24 @@ test("calculateMacros should calculate macros", async () => {
     Ingredients: [
       {
         IngredientId: 1,
-        Quantity: 72.5,
+        Quantity: 82.72,
         Ingredient: {
           Id: 1,
           Name: "Farina d'avena",
-          Carbs: 47.8,
-          Proteins: 10.15,
-          Fat: 5,
+          Carbs: 54.6,
+          Proteins: 11.58,
+          Fat: 5.79,
           Countable: false,
           Quantity: 100,
         },
       },
       {
         IngredientId: 2,
-        Quantity: 14.5,
+        Quantity: 16.54,
         Ingredient: {
           Id: 2,
           Name: "Miele d'arancio",
-          Carbs: 11.99,
+          Carbs: 13.68,
           Proteins: 0,
           Fat: 0,
           Countable: false,
@@ -172,12 +172,12 @@ test("calculateMacros should calculate macros", async () => {
       },
       {
         IngredientId: 3,
-        Quantity: 290,
+        Quantity: 330.88,
         Ingredient: {
           Id: 3,
           Name: "Albume naturelle",
           Carbs: 0,
-          Proteins: 29.29,
+          Proteins: 33.42,
           Fat: 0,
           Countable: false,
           Quantity: 100,

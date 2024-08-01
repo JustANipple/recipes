@@ -48,13 +48,14 @@ export function calculateMacros(recipe: recipe, macros: personalMacros) {
   const recipeGrams = recipeIngredients
     .map((x) => x.Quantity)
     .reduce((accumulator, quantity) => accumulator + quantity, 0);
+
   const newGrams = (recipeGrams * myProteins) / recipeProteins;
 
   const unit = newGrams / recipeGrams;
 
   // Adatto i grammi a seconda dei nuovi macro
   recipe.Ingredients.map((x) => {
-    x.Quantity = x.Quantity * unit;
+    x.Quantity = Math.round(x.Quantity * unit);
   });
 
   /* Calcolo in proporzione i macro sulla base dei grammi nuovi della ricetta
@@ -62,9 +63,9 @@ export function calculateMacros(recipe: recipe, macros: personalMacros) {
     72.5g farina d’avena - (47.8 carbs - 10.15 proteins - 5 fat - 277.67kcal)
   */
   recipe.Ingredients.map((x) => {
-    x.Ingredient.Carbs = x.Ingredient.Carbs * unit;
-    x.Ingredient.Proteins = x.Ingredient.Proteins * unit;
-    x.Ingredient.Fat = x.Ingredient.Fat * unit;
+    x.Ingredient.Carbs = Math.round(x.Ingredient.Carbs * unit);
+    x.Ingredient.Proteins = Math.round(x.Ingredient.Proteins * unit);
+    x.Ingredient.Fat = Math.round(x.Ingredient.Fat * unit);
   });
 
   return recipe;

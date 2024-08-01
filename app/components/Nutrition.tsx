@@ -13,41 +13,27 @@ const Nutrition = ({
 
   useEffect(() => {
     if (recipeIngredients) {
-      let carbs = 0;
-      let protein = 0;
-      let fat = 0;
-      let calories = 0;
-      recipeIngredients.forEach((recipeIngredient) => {
-        if (recipeIngredient.Ingredient.Countable) {
-          carbs +=
-            recipeIngredient.Ingredient.Carbs / recipeIngredient.Quantity;
-          protein +=
-            recipeIngredient.Ingredient.Proteins / recipeIngredient.Quantity;
-          fat += recipeIngredient.Ingredient.Fat / recipeIngredient.Quantity;
-        } else {
-          carbs +=
-            (recipeIngredient.Quantity * recipeIngredient.Ingredient.Carbs) /
-            recipeIngredient.Ingredient.Quantity;
-          protein +=
-            (recipeIngredient.Quantity * recipeIngredient.Ingredient.Proteins) /
-            recipeIngredient.Ingredient.Quantity;
-          fat +=
-            (recipeIngredient.Quantity * recipeIngredient.Ingredient.Fat) /
-            recipeIngredient.Ingredient.Quantity;
-        }
-      });
-      //round to 2 decimal places
-      carbs = Math.round(carbs * 100) / 100;
-      protein = Math.round(protein * 100) / 100;
-      fat = Math.round(fat * 100) / 100;
-      calories = carbs * 4 + protein * 4 + fat * 9;
+      const recipeCarbs = recipeIngredients
+        .map((x) => x.Ingredient.Carbs)
+        .reduce((accumulator, carbs) => accumulator + carbs, 0);
+      const recipeProteins = recipeIngredients
+        .map((x) => x.Ingredient.Proteins)
+        .reduce((accumulator, proteins) => accumulator + proteins, 0);
+      const recipeFat = recipeIngredients
+        .map((x) => x.Ingredient.Fat)
+        .reduce((accumulator, fat) => accumulator + fat, 0);
 
-      setCarbs(carbs);
-      setProtein(protein);
-      setFat(fat);
-      setCalories(calories);
+      setCarbs(recipeCarbs);
+      setProtein(recipeProteins);
+      setFat(recipeFat);
+
+      const recipeCalories =
+        Math.round(
+          (recipeCarbs * 4 + recipeProteins * 4 + recipeFat * 9) * 100,
+        ) / 100;
+      setCalories(recipeCalories);
     }
-  }, [recipeIngredients]);
+  });
 
   return (
     <div className="grid gap-y-3">

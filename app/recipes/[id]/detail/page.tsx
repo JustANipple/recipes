@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { recipe } from "../../../lib/utils/interfaces";
+import { personalMacros, recipe } from "../../../lib/utils/interfaces";
 import { getRecipes } from "../../../lib/data/recipes";
 import Link from "next/link";
 import Nutrition from "../../../components/Nutrition";
+import { RxPlus } from "react-icons/rx";
+import { calculateMacros } from "../../../lib/utils/scripts";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [recipe, setRecipe] = useState<recipe>();
@@ -17,6 +20,16 @@ const Page = ({ params }: { params: { id: string } }) => {
 
     fetchRecipe();
   }, []);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<personalMacros>();
+
+  const onSubmit: SubmitHandler<personalMacros> = (data) => {
+    setRecipe(calculateMacros(recipe, data));
+  };
 
   return (
     <>
@@ -92,6 +105,77 @@ const Page = ({ params }: { params: { id: string } }) => {
                     );
                   })}
               </ul>
+            </div>
+
+            <div className="grid gap-y-3 rounded-xl bg-RoseWhite px-6 py-4 font-Outfit md:px-7 md:py-5">
+              <h2 className="text-xl font-OutfitBold text-DarkRaspberry">
+                Adapt Ingredients
+              </h2>
+              <p className="font-Outfit text-WengeBrown">
+                Adapt ingredients grams based on personal macros
+              </p>
+              <form className="grid gap-y-3" onSubmit={handleSubmit(onSubmit)}>
+                <div>
+                  {/* personal Carbs */}
+                  <div className="flex justify-center gap-x-4 align-middle">
+                    <label
+                      htmlFor="personalCarbs"
+                      className="h-fit font-Outfit text-WengeBrown"
+                    >
+                      Carbs
+                    </label>
+                    <input
+                      type="number"
+                      name="personalCarbs"
+                      id="personalCarbs"
+                      placeholder="g"
+                      className="w-20 rounded-md border border-[lightGrey] px-4 py-1.5"
+                      {...register("Carbs")}
+                    />
+                  </div>
+                  {/* personal Proteins */}
+                  <div className="flex justify-center gap-x-4 align-middle">
+                    <label
+                      htmlFor="personalProteins"
+                      className="h-fit font-Outfit text-WengeBrown"
+                    >
+                      Proteins
+                    </label>
+                    <input
+                      type="number"
+                      name="personalProteins"
+                      id="personalProteins"
+                      placeholder="g"
+                      className="w-20 rounded-md border border-[lightGrey] px-4 py-1.5"
+                      {...register("Proteins")}
+                    />
+                  </div>
+                  {/* personal Fat */}
+                  <div className="flex justify-center gap-x-4 align-middle">
+                    <label
+                      htmlFor="personalFat"
+                      className="h-fit font-Outfit text-WengeBrown"
+                    >
+                      Fat
+                    </label>
+                    <input
+                      type="number"
+                      name="personalFat"
+                      id="personalFat"
+                      placeholder="g"
+                      className="w-20 rounded-md border border-[lightGrey] px-4 py-1.5"
+                      {...register("Fat")}
+                    />
+                  </div>
+                </div>
+                <button
+                  className="text-black flex w-full justify-center gap-3 rounded-md bg-LightGrey py-2 text-sm disabled:opacity-50"
+                  type="submit"
+                >
+                  <RxPlus className="h-full font-OutfitBold text-Nutmeg" />
+                  <span className="">Submit</span>
+                </button>
+              </form>
             </div>
 
             <hr className="border-LightGrey" />

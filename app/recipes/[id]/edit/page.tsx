@@ -21,7 +21,7 @@ import {
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-const Page = ({ params }) => {
+const Page = ({ params }: { params: { id: string } }) => {
   const id = params.id;
 
   const [ingredients, setIngredients] = useState<ingredient[]>();
@@ -33,7 +33,7 @@ const Page = ({ params }) => {
   const [instructionRows, setInstructionRows] = useState<number[]>([0]);
 
   useEffect(() => {
-    if (id == 0) {
+    if (parseInt(id) == 0) {
       getIngredients().then((data) => {
         if (parseInt(id) > 0 && data != null) {
           setIngredients(data);
@@ -42,8 +42,8 @@ const Page = ({ params }) => {
         }
       });
     }
-    if (id != 0) {
-      getRecipes(id).then((data) => {
+    if (parseInt(id) != 0) {
+      getRecipes(parseInt(id)).then((data) => {
         if (data != null) {
           setRecipe(data[0]);
           setRecipeIngredients(data[0].Ingredients);
@@ -139,7 +139,7 @@ const Page = ({ params }) => {
       }
     }
 
-    if (id != null && id != 0) {
+    if (id != null && parseInt(id) != 0) {
       formData.append("Id", id.toString());
       updateRecipe(formData);
     } else {
@@ -151,7 +151,7 @@ const Page = ({ params }) => {
     <main className="m-auto grid gap-y-9 bg-White p-8 md:my-32 md:max-w-desktop md:rounded-3xl md:p-10 md:pb-6">
       <div className="flex items-center justify-between">
         <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
-          {id > 0 ? "Edit" : "New"} Recipe
+          {parseInt(id) > 0 ? "Edit" : "New"} Recipe
         </h1>
         <Link href="/" className="h-fit">
           <RxCross2
@@ -254,7 +254,7 @@ const Page = ({ params }) => {
                   <button
                     className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
                     type="button"
-                    disabled={id > 0}
+                    disabled={parseInt(id) > 0}
                     onClick={handleIngredientPlusClick}
                   >
                     <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
@@ -262,7 +262,7 @@ const Page = ({ params }) => {
                   <button
                     className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
                     type="button"
-                    disabled={id > 0}
+                    disabled={parseInt(id) > 0}
                     onClick={handleIngredientCrossClick}
                   >
                     <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
@@ -270,7 +270,7 @@ const Page = ({ params }) => {
                 </div>
               )}
             </div>
-            {id > 0
+            {parseInt(id) > 0
               ? recipeIngredients &&
                 recipeIngredients.map((_, index) => {
                   return (
@@ -280,7 +280,7 @@ const Page = ({ params }) => {
                       recipeIngredients={recipeIngredients}
                       register={register}
                       setValue={setValue}
-                      id={id}
+                      id={parseInt(id)}
                       watch={watch}
                     />
                   );
@@ -294,7 +294,7 @@ const Page = ({ params }) => {
                       recipeIngredients={ingredients}
                       register={register}
                       setValue={setValue}
-                      id={id}
+                      id={parseInt(id)}
                       watch={watch}
                     />
                   );
@@ -311,7 +311,7 @@ const Page = ({ params }) => {
                   <button
                     className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
                     type="button"
-                    disabled={id > 0}
+                    disabled={parseInt(id) > 0}
                     onClick={handleInstructionPlusClick}
                   >
                     <RxPlus className="m-auto h-full font-OutfitBold text-Nutmeg" />
@@ -319,7 +319,7 @@ const Page = ({ params }) => {
                   <button
                     className="text-black aspect-square h-full rounded-md bg-LightGrey text-sm disabled:opacity-50"
                     type="button"
-                    disabled={id > 0}
+                    disabled={parseInt(id) > 0}
                     onClick={handleInstructionCrossClick}
                   >
                     <RxCross2 className="m-auto h-full font-OutfitBold text-Nutmeg" />
@@ -327,7 +327,7 @@ const Page = ({ params }) => {
                 </div>
               )}
             </div>
-            {id > 0
+            {parseInt(id) > 0
               ? recipeInstructions &&
                 recipeInstructions.map((_, index) => {
                   return (
@@ -336,7 +336,7 @@ const Page = ({ params }) => {
                         type="text"
                         name="instructionTitle"
                         placeholder="Title"
-                        disabled={id > 0}
+                        disabled={parseInt(id) > 0}
                         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
                         {...register(`Instructions.${index}.Title`)}
                       />
@@ -358,7 +358,7 @@ const Page = ({ params }) => {
                         type="text"
                         name="instructionTitle"
                         placeholder="Title"
-                        disabled={id > 0}
+                        disabled={parseInt(id) > 0}
                         className="w-full basis-1/3 rounded-md border border-[lightGrey] px-4 py-1.5 disabled:opacity-50"
                         {...register(`Instructions.${index}.Title`)}
                       />
@@ -377,7 +377,7 @@ const Page = ({ params }) => {
       </div>
       <hr className="border-LightGrey" />
       <div className="flex justify-end gap-3 align-middle">
-        {id > 0 && (
+        {parseInt(id) > 0 && (
           <button
             className="text-black flex gap-1 rounded-md bg-Nutmeg px-4 py-2"
             type="button"
