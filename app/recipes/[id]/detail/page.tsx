@@ -114,13 +114,16 @@ const Page = ({ params }: { params: { id: string } }) => {
               <p className="font-Outfit text-WengeBrown">
                 Adapt ingredients grams based on personal macros
               </p>
-              <form className="grid gap-y-3" onSubmit={handleSubmit(onSubmit)}>
-                <div>
+              <form
+                className="grid gap-y-5 px-8 py-3"
+                onSubmit={handleSubmit(onSubmit)}
+              >
+                <div className="grid gap-y-3">
                   {/* personal Carbs */}
-                  <div className="flex justify-center gap-x-4 align-middle">
+                  <div className="flex justify-between gap-x-4">
                     <label
                       htmlFor="personalCarbs"
-                      className="h-fit font-Outfit text-WengeBrown"
+                      className="my-auto h-fit basis-1/2 font-Outfit text-WengeBrown"
                     >
                       Carbs
                     </label>
@@ -129,15 +132,15 @@ const Page = ({ params }: { params: { id: string } }) => {
                       name="personalCarbs"
                       id="personalCarbs"
                       placeholder="g"
-                      className="w-20 rounded-md border border-[lightGrey] px-4 py-1.5"
+                      className="h-full w-full basis-1/2 rounded-md border border-[lightGrey] bg-[rgba(255,255,255,0.25)] px-4 py-1.5"
                       {...register("Carbs")}
                     />
                   </div>
                   {/* personal Proteins */}
-                  <div className="flex justify-center gap-x-4 align-middle">
+                  <div className="flex justify-between gap-x-4">
                     <label
                       htmlFor="personalProteins"
-                      className="h-fit font-Outfit text-WengeBrown"
+                      className="my-auto h-fit basis-1/2 font-Outfit text-WengeBrown"
                     >
                       Proteins
                     </label>
@@ -146,15 +149,15 @@ const Page = ({ params }: { params: { id: string } }) => {
                       name="personalProteins"
                       id="personalProteins"
                       placeholder="g"
-                      className="w-20 rounded-md border border-[lightGrey] px-4 py-1.5"
+                      className="h-full w-full basis-1/2 rounded-md border border-[lightGrey] bg-[rgba(255,255,255,0.25)] px-4 py-1.5"
                       {...register("Proteins")}
                     />
                   </div>
                   {/* personal Fat */}
-                  <div className="flex justify-center gap-x-4 align-middle">
+                  <div className="flex justify-center gap-x-4">
                     <label
                       htmlFor="personalFat"
-                      className="h-fit font-Outfit text-WengeBrown"
+                      className="my-auto h-fit basis-1/2 font-Outfit text-WengeBrown"
                     >
                       Fat
                     </label>
@@ -163,17 +166,16 @@ const Page = ({ params }: { params: { id: string } }) => {
                       name="personalFat"
                       id="personalFat"
                       placeholder="g"
-                      className="w-20 rounded-md border border-[lightGrey] px-4 py-1.5"
+                      className="h-full w-full basis-1/2 rounded-md border border-[lightGrey] bg-[rgba(255,255,255,0.25)] px-4 py-1.5"
                       {...register("Fat")}
                     />
                   </div>
                 </div>
                 <button
-                  className="text-black flex w-full justify-center gap-3 rounded-md bg-LightGrey py-2 text-sm disabled:opacity-50"
+                  className="text-black flex w-full justify-center gap-3 rounded-md bg-DarkRaspberry py-2 text-sm disabled:opacity-50"
                   type="submit"
                 >
-                  <RxPlus className="h-full font-OutfitBold text-Nutmeg" />
-                  <span className="">Submit</span>
+                  <span className="font-OutfitBold text-White">Submit</span>
                 </button>
               </form>
             </div>
