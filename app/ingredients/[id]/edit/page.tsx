@@ -161,7 +161,7 @@ const Page = ({ params }) => {
             type="button"
             onClick={() => deleteIngredient(parseInt(id))}
           >
-            <p className="my-auto font-Outfit text-Nutmeg">Delete</p>
+            <p className="my-auto font-Outfit text-White">Delete</p>
           </button>
         )}
         <button
