@@ -18,7 +18,7 @@ const Table = () => {
 
   return (
     <div
-      className={`m-auto grid gap-y-4 bg-White p-8 md:mx-10 md:my-32 md:rounded-3xl md:p-10 md:pb-6`}
+      className={`grid gap-y-4 bg-White p-8 md:mx-10 md:my-32 md:rounded-3xl md:p-10 md:pb-6`}
     >
       <h1 className="font-Youngserif text-4xl text-DarkCharcoal md:text-[2.5rem]">
         Recipes

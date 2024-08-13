@@ -36,6 +36,10 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   background-color: #f3e5d8;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 img,
 picture,
