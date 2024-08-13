@@ -90,4 +90,4 @@ This was only the beginning, but i'd like to move on to other project to test mo
 
 ## Author
 
-- Frontend Mentor - [@yourusername](https://www.frontendmentor.io/profile/JustANipple)
+- Frontend Mentor - [@JustANipple](https://www.frontendmentor.io/profile/JustANipple)
